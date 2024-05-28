@@ -1,0 +1,290 @@
+:root {
+  --arrowpanel-menuitem-padding: 0 4px !important; 
+  --tab-curve-width: 0px; 
+  --tabs-border: transparent !important; 
+  --tab-border-radius: 0 !important; 
+   
+  /* Color Variables */ 
+  --zproger-bg: #1a1b26;
+  --zproger-icon-color: #e0fbfc;  
+  --zproge-sidebar-color: #e0fbfc;
+  --zproger-tab-selected-bg: #4d4168;
+  --zproger-urlbar-color: #98c1d9;
+  --zproger-urlbar-focused-color: #e0fbfc;
+  --zproger-urlbar-results-color: #e0fbfc;
+  --zproger-urlbar-results-url-color: #98c1d9;
+  
+  /* Browser Fonts */
+  --zproger-urlbar-results-font-family: "JetBrainsMono Nerd Font", medium;
+  --zproger-urlbar-results-font-weight: 700;
+
+  /* Overriden Firefox variables */
+  --autocomplete-popup-background: var(--zproger-bg) !important;
+  --default-arrowpanel-background: var(--zproger-bg) !important;
+  --default-arrowpanel-color: #fefefa !important;
+  --lwt-toolbarbutton-icon-fill: var(--zproger-icon-color) !important;
+  --panel-disabled-color: #f9f9fa80;
+  --toolbar-bgcolor: var(--zproger-bg) !important;
+  --urlbar-separator-color: transparent !important;
+}
+
+.tabbrowser-tab[selected="true"] .tab-background {
+  background: var(--zproger-tab-selected-bg) !important;
+}
+
+/* TODO: Some parameters are outdated, styles need to be rebuilt */
+/* .tabbrowser-tab::after,  */
+/* .tabbrowser-tab::before {  */
+/*   border-left: none !important;  */
+/* }  */
+/*  */
+/* .tab-background {  */
+/*   border: none !important;  */
+/* }  */
+/*  */
+/* .tabbrowser-arrowscrollbox {  */
+/*   margin-inline-start: 4px !important;  */
+/*   margin-inline-end: 0px !important;  */
+/* }  */
+
+
+/* Make all tabs small except selected one */ 
+.tabbrowser-tab[fadein]:not([selected]):not([pinned]) { 
+    max-width: 150px !important; 
+    min-width: 150px !important; 
+} 
+
+/* Make selected tabs to bigger */ 
+.tabbrowser-tab[selected][fadein]:not([pinned]) { 
+    max-width: 200px !important; 
+    min-width: 200px !important; 
+} 
+
+
+/* Reduce spacing between pinned and regular tabs */ 
+#tabbrowser-tabs[haspinnedtabs]:not([positionpinnedtabs])>#tabbrowser-arrowscrollbox>.tabbrowser-tab[first-visible-unpinned-tab] { 
+    margin-inline-start: initial !important; 
+} 
+
+/* Show the favicon for tabs that are pinned */ 
+hbox.tab-content[pinned=true] .tab-icon-image { 
+  display: initial !important; 
+} 
+
+hbox.tab-content[pinned=true] .tab-text { 
+  display: none !important; 
+} 
+
+#tabbrowser-tabs { 
+  --tab-loading-fill: #033433 !important; 
+} 
+
+.tab-line { 
+  display: none !important; 
+} 
+
+/* Customize Browser Tabs */ 
+.tabbrowser-tab {
+  border-radius: 8px !important; 
+  height: 50px !important; 
+  margin-top: 6px !important; 
+  margin-left: 6px !important;
+  margin-bottom: 4px !important;
+  max-height: 80% !important; 
+  min-height: 80% !important; 
+} 
+
+.tabbrowser-tab[soundplaying="false"] { 
+  background-color: #ee6c4d !important; 
+} 
+
+.tab-icon-sound { 
+  display: none !important; 
+} 
+
+.tab-secondary-label[soundplaying="true"]:not([pictureinpicture]){ display: none } 
+
+
+.urlbar-icon > image { 
+  fill: var(--zproger-icon-color) !important; 
+  color: var(--zproger-icon-color) !important; 
+} 
+
+.toolbarbutton-text { 
+  color: var(--zproger-icon-color)  !important; 
+} 
+.urlbar-icon { 
+  color: var(--zproger-icon-color)  !important; 
+
+} 
+
+#urlbar-results { 
+  font-family: var(--zproger-urlbar-results-font-family); 
+  font-weight: var(--zproger-urlbar-results-font-weight); 
+  font-size: 12pt !important; 
+  color: var(--zproger-urlbar-results-color) !important; 
+} 
+
+#urlbar:not([focused]) > #urlbar-background  { 
+    border: none !important; 
+    box-shadow: none !important; 
+    outline: none !important; 
+} 
+
+.urlbarView-row[type="bookmark"] > span{ 
+  color: green !important; 
+} 
+
+.urlbarView-row[type="switchtab"] > span{ 
+  color: orange !important; 
+} 
+
+.urlbarView-url, .search-panel-one-offs-container { 
+  color: var(--zproger-urlbar-results-url-color) !important; 
+  font-family: var(--zproger-urlbar-results-font-family); 
+  font-weight: var(--zproger-urlbar-results-font-weight); 
+  font-size: 12pt !important; 
+} 
+
+.urlbarView-favicon, .urlbarView-type-icon { 
+  display: none !important; 
+} 
+
+#urlbar-input { 
+  font-size: 12pt !important; 
+  color: var(--zproger-urlbar-color) !important; 
+  font-family: var(--zproger-urlbar-results-font-family) !important; 
+  font-weight: var(--zproger-urlbar-results-font-weight)!important; 
+  text-align: center !important; 
+} 
+
+tracking-protection-icon-container, #identity-box { 
+  display: none; 
+} 
+
+#back-button > .toolbarbutton-icon{ 
+  --backbutton-background: transparent !important; 
+  border: none !important; 
+} 
+
+#back-button { 
+  list-style-image: url("left-arrow.svg") !important; 
+} 
+
+#forward-button { 
+  list-style-image: url("right-arrow.svg") !important; 
+} 
+
+toolbar { 
+  background-image: none !important; 
+} 
+
+#urlbar-background { 
+  outline: none !important; 
+  opacity: .95 !important; 
+} 
+
+#navigator-toolbox, toolbaritem { 
+  border: none !important; 
+} 
+
+#urlbar-background { 
+  background-color: var(--zproger-bg) !important; 
+  border: none !important; 
+} 
+
+.toolbar-items { 
+  background-color: var(--zproger-bg) !important; 
+} 
+
+#sidebar-search-container { 
+  background-color: var(--zproger-bg) !important; 
+} 
+
+box.panel-arrowbox { 
+  display: none; 
+} 
+
+box.panel-arrowcontent { 
+  border-radius: 8px !important; 
+  border: none !important; 
+} 
+
+tab.tabbrowser-tab { 
+  overflow: hidden; 
+} 
+
+tab.tabbrowser-tab:hover { 
+  box-shadow: 0 1px 4px rgba(0,0,0,.05); 
+} 
+
+toolbar#nav-bar { 
+  padding: 8px !important; 
+} 
+
+toolbar#nav-bar { 
+  padding: 4px !important; 
+} 
+
+#urlbar { 
+  max-width: 70% !important; 
+  margin: 0 15% !important; 
+} 
+
+#urlbar-input:focus { 
+  color: var(--zproger-urlbar-focused-color) !important; 
+} 
+
+
+.megabar[breakout-extend="true"]:not([open="true"]) > #urlbar-background { 
+  box-shadow: none !important; 
+  background-color: transparent !important; 
+} 
+
+toolbarbutton { 
+  box-shadow: none !important; 
+} 
+
+toolbarbutton.bookmark-item:hover, 
+#PlacesToolbar menu:hover, 
+#PlacesToolbar menuitem:hover { 
+    background-color: var(--zproger-tab-selected-bg) !important; 
+} 
+
+.close-icon, .urlbar-icon { 
+  fill: var(--zproger-icon-color) !important; 
+} 
+
+.sidebar-placesTree { 
+  color: var(--zproge-sidebar-color) !important; 
+} 
+
+#sidebar-switcher-target { 
+  color: white !important; 
+} 
+
+#sidebar-box { 
+  --sidebar-background-color: var(--zproger-bg) !important; 
+} 
+
+splitter#sidebar-splitter { 
+  opacity: 0 !important; 
+} 
+
+splitter#sidebar-splitter { 
+  border: none !important; 
+  background-color: transparent !important; 
+} 
+
+image#sidebar-icon { 
+  display: none; 
+} 
+
+.panel-arrowcontent { 
+  padding: 0px !important; 
+  margin: 0px !important; 
+} 
+
+toolbarseparator { 
+  display: none; 
+} 

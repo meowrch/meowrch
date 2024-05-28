@@ -1,0 +1,24 @@
+user: 189
+group: 189
+permission:
+  read: blue
+  write: blue
+  exec: blue
+  exec-sticky: blue
+  no-access: blue
+date:
+  hour-old: 189
+  day-old: 189
+  older: 189
+size:
+  none: blue
+  small: blue
+  medium: blue
+  large: blue
+inode:
+  valid: 189
+  invalid: 210
+links:
+  valid: 159
+  invalid: red
+tree-edge: 189
