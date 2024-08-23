@@ -1,0 +1,121 @@
+
+# █▄▀ █▀▀ █▄█ █▄▄ █ █▄░█ █▀▄ █ █▄░█ █▀▀ █▀
+# █░█ ██▄ ░█░ █▄█ █ █░▀█ █▄▀ █ █░▀█ █▄█ ▄█
+
+
+##==> SYSTEM BINDS
+##############################################################################################
+super + {Return,e,w,t,p,v,d,x,l,c,b,period}
+    {kitty, \
+    nemo, \
+    python ~/.config/meowrch/meowrch.py --action select-wallpaper, \
+    python ~/.config/meowrch/meowrch.py --action select-theme, \
+    pavucontrol, \
+    sh $HOME/bin/rofi-menus/clipboard-manager.sh, \
+    rofi -show drun, \
+    sh $HOME/bin/rofi-menus/powermenu.sh, \
+    sh $HOME/bin/screen-lock.sh, \
+    sh $HOME/bin/color-picker.sh, \
+    sh $HOME/bin/toggle-bar.sh, \
+    rofimoji --action copy}
+
+ctrl + shift + Escape 
+	alacritty -e btop
+
+Print
+    flameshot gui
+##############################################################################################
+
+##==> USER APPS
+##############################################################################################
+super + shift + {c,f,t,o}
+	{code, \
+	firefox, \
+	telegram-desktop, \
+	obs}
+##############################################################################################
+
+##==> SYSTEM CONTROLS
+##############################################################################################
+#--------------------------------------------------------------------------------------------## VOLUME
+XF86Audio{RaiseVolume,LowerVolume,Mute}
+    sh $HOME/bin/volume.sh --device output --action {increase,decrease,toggle}
+#--------------------------------------------------------------------------------------------## PLAYER
+XF86Audio{Play,Pause,Next,Prev,Stop}
+	{playerctl play-pause, \
+	playerctl play-pause, \
+	playerctl next, \
+	playerctl previous, \
+	playerctl stop}
+#--------------------------------------------------------------------------------------------## BRIGHTNESS	
+XF86MonBrightness{Up,Down}
+	{sh $HOME/bin/brightnessctl.sh --up, \
+	sh $HOME/bin/brightnessctl.sh --down}				  
+##############################################################################################
+
+
+##==> BSPWM
+##############################################################################################
+#--------------------------------------------------------------------------------------------# Session actions
+super + Delete
+	bspc quit	
+
+ctrl + shift + r
+	bspc wm -r	
+	
+super + Escape + r
+	pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config' -t 1500
+
+#--------------------------------------------------------------------------------------------# Window actions
+super + q
+	bspc node -c
+
+super + space
+	bspc node -t "~"{floating,tiled}												 
+																							 	
+alt + Return 																				 
+	bspc node -t \~fullscreen
+#--------------------------------------------------------------------------------------------## Move/Change window focus
+super + {_,shift + }{Right,Left,Up,Down}
+	bspc node -{f,s} {
+		east, \
+		west, \
+		north, \
+		south}
+
+alt + Tab
+	bspc node -f last
+#--------------------------------------------------------------------------------------------## Switch workspaces
+super + {1-9,0}
+	bspc desktop -f {1-9,10}
+	
+super + ctrl + Right
+	bspc desktop -f next	
+																							 
+super + ctrl + Left
+	bspc desktop -f prev
+																							 
+super + button4
+    bspc desktop -f next.local
+    																						 
+super + button5
+    bspc desktop -f prev.local
+
+super + ctrl + Down
+	bspc desktop $(bspc query -D -d '.!occupied' | head -n 1) --focus						
+#--------------------------------------------------------------------------------------------## Resize windows
+super + shift + {Right,Left,Up,Down}
+	{bspc node -z right 30 0, \
+	bspc node -z left -30 0, \
+	bspc node -z top 0 -30, \
+	bspc node -z bottom 0 30}
+#--------------------------------------------------------------------------------------------## Move focused window to a workspace
+super + shift + {1-9,0}
+    bspc node -d '^{1-9,10}'
+#--------------------------------------------------------------------------------------------## Move focused window around the current workspace
+super + shift + ctrl + {Left,Right,Up,Down}
+    {bspc node -s west, \
+    bspc node -s east, \
+    bspc node -s north, \
+    bspc node -s south}
+##############################################################################################
