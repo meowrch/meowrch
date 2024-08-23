@@ -1,38 +1,50 @@
+from utils.schemes import Packages, DistributionPackages
 
 
-##==> Базовые пакеты (обязательные)
-#######################################
-BASE_PACKAGES = [
-    "tumbler", "ffmpegthumbnailer", "lsd", "alacritty", "bat", "brightnessctl", "calc",
-    "automake", "blueman", "bluez", "bluez-utils", "dunst", "fakeroot", "feh", "firefox",
-    "fish", "dpkg", "gcc", "git", "gnu-netcat", "btop", "lxappearance", "micro",
-    "mat2", "mpd", "mpv", "thunar", "ncmpcpp", "neofetch", "network-manager-applet", "nitrogen",
-    "pamixer", "papirus-icon-theme", "pavucontrol", "polybar", "autoconf", "mpc", "pulseaudio",
-    "pulseaudio-alsa", "python-pyalsa", "ranger", "redshift", "reflector", "rofi", "rofi-calc", "calcurse",
-    "rofi-emoji", "scrot", "sudo", "slop", "tree", "unrar", "zip", "unzip", "uthash", "xarchiver",
-    "xfce4-power-manager", "xfce4-settings", "xorg-xbacklight", "zathura", "zathura-djvu", "zathura-pdf-mupdf",
-    "cmake", "clang", "gzip", "imagemagick", "make", "openssh", "pulseaudio-bluetooth", "shellcheck",
-    "vlc", "usbutils", "networkmanager-openvpn", "alsa-plugins", "alsa-tools", "alsa-utils", "ffmpeg",
-    "p7zip", "gparted", "sshfs", "openvpn", "xclip", "gpick", "wget", "ueberzug", "netctl", "light", "libreoffice",
-    "breeze", "vulkan-intel", "intel-ucode", "ttf-jetbrains-mono", "ttf-jetbrains-mono-nerd", "ttf-fira-code",
-    "ttf-iosevka-nerd", "playerctl", "starship", "upower", "zenity", "gvfs", "qt5ct", "qt6ct", "flameshot",
-    "timeshift", "pyenv", "code"
-]
+BASE = Packages(
+	pacman=DistributionPackages(
+		common=[
+			"pacman-contrib", "downgrade", "libnotify", "ffmpeg","ffmpegthumbnailer", "jq", "parallel", "kitty", "fastfetch", "lsd", "bat", "brightnessctl", 
+			"automake", "blueman", "bluez", "bluez-utils", "dunst", "fakeroot", "firefox", "fish", "fisher", "dpkg", "gcc", "git", "gnu-netcat", "btop", 
+			"micro", "mat2", "nemo", "papirus-icon-theme", "pavucontrol", "pamixer", "pipewire", "pipewire-pulse", "pipewire-audio",
+			"pipewire-jack", "pipewire-alsa", "wireplumber", "python-pyalsa", "ranger", "redshift", "reflector", "sudo", "tree", "unrar",
+			"zip", "unzip", "uthash", "ark", "cmake", "clang", "gzip", "imagemagick",
+			"make", "openssh", "shellcheck", "vlc", "loupe", "usbutils", "openvpn", "networkmanager-openvpn", "p7zip", "gparted",
+			"sshfs", "wget", "netctl", "libreoffice", "ttf-jetbrains-mono", "ttf-jetbrains-mono-nerd", "ttf-fira-code",
+        	"ttf-iosevka-nerd", "playerctl", "starship", "upower", "udiskie", "zenity", "gvfs", "qt5ct", "qt6ct",
+        	"timeshift", "sddm", "qt5-graphicaleffects", "qt5-svg",  "qt5-quickcontrols2", "clipnotify",
+			"xdg-desktop-portal-gtk", "code", "gnome-disk-utility", "evince", "neovim",
+			"youtube-dl", "tmux", "cowsay", "update-grub", "xdg-desktop-portal-gtk", "polkit-gnome"
+		],
+		bspwm_packages=["xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", "lxappearance", "polybar", "xorg-xrandr", "xsettingsd"],
+		hyprland_packages=["hyprland", "waybar", "swww", "cliphist", "wl-clipboard", "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland"]
+	),
+	aur=DistributionPackages(
+		common=[
+			"gnome-calculator-gtk3", "flameshot-git", "rofi-lbonn-wayland-git", "bibata-cursor-theme", "tela-circle-icon-theme-dracula",
+			"themix-theme-oomox-git", "themix-plugin-base16-git", "themix-icons-papirus-git", "themix-gui-git", "themix-export-spotify-git",
+			"themix-theme-materia-git", "oomox-qt5-styleplugin-git", "oomox-qt6-styleplugin-git", "cava", "pokemon-colorscripts"
+		],
+		bspwm_packages=["i3lock-color", "picom-ftlabs-git"],
+		hyprland_packages=["hyprpicker", "swaylock-effects-git", "wlr-randr-git"]
+	)
+)
 
-AUR_PACKAGES = [
-    "cava", "i3lock-color", "ptpython", "greenclip", "update-grub", "tela-circle-icon-theme-dracula",
-    "bibata-cursor-theme", "picom-ftlabs-git", "pokemon-colorscripts"
-]
-
-
-##==> Дев пакеты (не обязательные)
-#######################################
-DEV_PACKAGES = [
-    "bleachbit", "gnome-firmware", "touche", "neovim", "obs-studio", "telegram-desktop",
-    "tmux", "youtube-dl", "cowsay", "sqlitebrowser", "obsidian",
-    "python-pip", "bpython", "ipython",
-	"evince", "gnome-calculator", "gnome-disk-utility", "gucharmap",
-    "gthumb", "gnome-clocks"
-]
-
-AUR_DEV_PACKAGES = []
+CUSTOM = {
+	"games": Packages(
+		pacman=DistributionPackages(
+			common=["steam", "gamemode", "mangohud"]
+		),
+		aur=DistributionPackages(
+			common=["portproton"]
+		)
+	),
+	"social_media": Packages(
+		pacman=DistributionPackages(
+			common=["telegram-desktop"]
+		),
+		aur=DistributionPackages(
+			common=["vesktop"]
+		)
+	)
+}
