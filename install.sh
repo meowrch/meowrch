@@ -36,15 +36,15 @@ declare -a packages=(
 )
 
 if [[ -z "$installed_python_version" || "$installed_python_version" < "3.11.0" ]]; then
-    pyenv install 3.11.0
-    pyenv global 3.11.0
+    pyenv install 3.11.8
+    pyenv global 3.11.8
 else
     pyenv global "$installed_python_version"
 fi
 
 for package in "${packages[@]}"; do
-    if ! pip show $package &> /dev/null; then
-        pip install $package
+    if ! pyenv exec pip show $package &> /dev/null; then
+        pyenv exec pip install $package
     fi
 done
 #######################################################
