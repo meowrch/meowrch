@@ -153,7 +153,7 @@ class Builder:
 
 		return BuildOptions(
 			install_bspwm='bspwm' in answers['install_wm'],
-			install_hyrpland='hyprland' in answers['install_wm'],
+			install_hyprland='hyprland' in answers['install_wm'],
 			enable_multilib=answers['enable_multilib'] == 'Yes',
 			update_arch_database=answers['update_arch_database'] == 'Yes',
 			install_game_depends=answers['install_game_depends'] == 'Yes',
