@@ -4,6 +4,7 @@ from typing import List
 from loguru import logger
 
 from .package_manager import PackageManager
+from packages import DRIVERS
 
 
 class DriversManager:
@@ -48,29 +49,12 @@ class DriversManager:
 
 	@staticmethod
 	def install_intel_drivers() -> None:
-		PackageManager.install_packages(
-			packages_list=[
-				"lib32-mesa", "vulkan-intel", "lib32-vulkan-intel", 
-				"vulkan-icd-loader", "lib32-vulkan-icd-loader", "intel-media-driver",
-				"libva-intel-driver", "xf86-video-intel"
-			]
-		)
+		PackageManager.install_packages(packages_list=DRIVERS["intel"].pacman.common)
 
 	@staticmethod
 	def install_amd_drivers() -> None:
-		PackageManager.install_packages(
-			packages_list=[
-				"lib32-mesa", "vulkan-radeon", "lib32-vulkan-radeon", 
-				"vulkan-icd-loader", "lib32-vulkan-icd-loader"
-			]
-		)
+		PackageManager.install_packages(packages_list=DRIVERS["amd"].pacman.common)
 
 	@staticmethod
 	def install_nvidia_drivers() -> None:
-		PackageManager.install_packages(
-			packages_list=[
-				"nvidia-dkms", "nvidia-utils", "lib32-nvidia-utils",
-				"nvidia-settings", "vulkan-icd-loader", "lib32-vulkan-icd-loader",
-				"lib32-opencl-nvidia", "opencl-nvidia", "libxnvctrl"
-			]
-		)
+		PackageManager.install_packages(packages_list=DRIVERS["nvidia"].pacman.common)
