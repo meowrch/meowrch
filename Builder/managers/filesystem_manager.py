@@ -53,7 +53,7 @@ class FileSystemManager:
 
 		destination = home / ".icons" / "default" / "index.theme"
 		destination.parent.mkdir(parents=True, exist_ok=True)
-		shutil.copy(src=Path("./home/icons/default/index.theme"), dst=destination)
+		shutil.copy(src=Path("./home/.icons/default/index.theme"), dst=destination)
 
 		##==> Удаляем лишнее
 		##############################################
