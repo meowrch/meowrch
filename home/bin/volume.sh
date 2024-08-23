@@ -1,60 +1,137 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-## Script To Manage Speaker Volume For Axyl OS.
+# ┏━━━┳━━┳━┓┏━┳━━━┳┓╋╋┏━━┳━┓┏━┓
+# ┗┓┏┓┣┫┣┫┃┗┛┃┃┏━━┫┃╋╋┗┫┣┻┓┗┛┏┛
+# ╋┃┃┃┃┃┃┃┏┓┏┓┃┗━━┫┃╋╋╋┃┃╋┗┓┏┛
+# ╋┃┃┃┃┃┃┃┃┃┃┃┃┏━━┫┃╋┏┓┃┃╋┏┛┗┓
+# ┏┛┗┛┣┫┣┫┃┃┃┃┃┃╋╋┃┗━┛┣┫┣┳┛┏┓┗┓
+# ┗━━━┻━━┻┛┗┛┗┻┛╋╋┗━━━┻━━┻━┛┗━┛
+# The program was created by DIMFLIX
+# Github: https://github.com/DIMFLIX-OFFICIAL
 
-# Get Volume
+SESSION_TYPE="$XDG_SESSION_TYPE"
+ENABLED_COLOR="#A3BE8C"
+DISABLED_COLOR="#D35F5E"
+
+print_error() {
+    echo "Usage: $0 --device <input|output> --action <increase|decrease|toggle> [--status] [--enabled-color] [--disabled-color]"
+    exit 1
+}
+
+notify_vol() {
+    vol=$(get_volume)
+    notify-send -u low "Volume" "${vol}%"
+}
+
 get_volume() {
-	volume=$(echo $(pamixer --get-volume))
-	echo "$volume"
+    if [[ "${srce}" == "--default-source" ]]; then
+        pamixer "${srce}" --get-volume
+    else
+        pamixer --get-volume
+    fi
 }
 
-# Get icons
-get_icon() {
-	vol="$(get_volume)"
-	current="${vol%%%}"
-	if [[ "$current" -eq "0" ]]; then
-		icon='/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-muted-symbolic.svg'
-	elif [[ ("$current" -ge "0") && ("$current" -le "30") ]]; then
-		icon='/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-low-symbolic.svg'
-	elif [[ ("$current" -ge "30") && ("$current" -le "60") ]]; then
-		icon='/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-medium-symbolic.svg'
-	elif [[ ("$current" -ge "60") && ("$current" -le "90") ]]; then
-		icon='/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-high-symbolic.svg'
-	elif [[ ("$current" -ge "90") && ("$current" -le "100") ]]; then
-		icon='/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-overamplified-symbolic.svg'
-	fi
+print_status() {
+    local vol=$(get_volume)
+    
+    if [[ "${device}" == "output" ]]; then
+        if [[ $(pamixer --get-mute) == "true" ]]; then
+            local icon="婢 $vol%"
+			local color=$DISABLED_COLOR
+        elif [[ "$vol" -le 30 ]]; then
+            local icon=" $vol%"
+			local color=$ENABLED_COLOR
+        elif [[ "$vol" -le 60 ]]; then
+            local icon=" $vol%"
+			local color=$ENABLED_COLOR
+        elif [[ "$vol" -le 80 ]]; then
+            local icon="  $vol%"
+			local color=$ENABLED_COLOR
+        else
+            local icon="  $vol%" 
+			local color=$ENABLED_COLOR
+        fi
+    elif [[ "${device}" == "input" ]]; then
+        if [[ $(pamixer "${srce}" --get-mute) == "true" ]]; then
+            local icon="  $vol%"
+			local color=$DISABLED_COLOR
+        else
+            local icon=" $vol%"
+			local color=$ENABLED_COLOR
+        fi
+    fi
+
+	if [[ "$SESSION_TYPE" == "wayland" ]]; then
+        echo "<span color=\"$color\">$icon</span>"
+    elif [[ "$SESSION_TYPE" == "x11" ]]; then
+        echo "%{F$color}$icon%{F-}"
+    fi
 }
 
-# Increase Volume
-up_volume() {
-	pamixer -i 2 --unmute && get_icon && dunstify -u low --replace=69 -i "$icon" "Volume : $(get_volume)%"
+action_volume() {
+    case "${action}" in
+        increase) 
+            pamixer "${srce}" -i 2 
+            ;;
+        decrease) 
+            pamixer "${srce}" -d 2 
+            ;;
+        toggle) 
+            pamixer "${srce}" -t 
+            notify_mute 
+            exit 0 
+            ;;
+        *) 
+            print_error 
+            ;;
+    esac
 }
 
-# Decrease Volume
-down_volume() {
-	pamixer -d 2 --unmute && get_icon && dunstify -u low --replace=69 -i "$icon" "Volume : $(get_volume)%"
+notify_mute() {
+    if [[ $(pamixer "${srce}" --get-mute) == "true" ]]; then
+        notify-send -u low "Muted"
+    else
+        notify-send -u low "Unmuted"
+    fi
 }
 
-# Toggle Mute
-toggle_mute() {
-    status=$(pamixer --get-mute)
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --device) device="$2"; shift ;;
+        --action) action="$2"; shift ;;
+		--enabled-color)
+			ENABLED_COLOR="$2"
+			shift
+			;;
+		--disabled-color)
+			DISABLED_COLOR="$2"
+			shift
+			;;
+        --status) status=true ;;
+        *) print_error ;;
+    esac
+    shift
+done
 
-	if [[ "$status" == "true" ]]; then
-		pamixer --unmute && get_icon && dunstify -u low --replace=69 -i "$icon" "Unmute"
-	else
-		pamixer --mute && dunstify -u low --replace=69 -i '/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-muted-symbolic.svg' "Mute"
-	fi
-}
+case "${device}" in
+    input) srce="--default-source" ;;
+    output) srce="" ;;
+    *) print_error ;;
+esac
 
-# Execute accordingly
-if [[ "$1" == "--get" ]]; then
-	get_volume
-elif [[ "$1" == "--up" ]]; then
-	up_volume
-elif [[ "$1" == "--down" ]]; then
-        down_volume
-elif [[ "$1" == "--toggle" ]]; then
-	toggle_mute
-else
-	get_volume
+if [[ -z "${device}" ]]; then
+    print_error
 fi
+
+if [[ "$status" == true ]]; then
+    print_status
+    exit 0
+fi
+
+if [[ -z "${action}" ]]; then
+    print_error
+fi
+
+# Execute action
+action_volume

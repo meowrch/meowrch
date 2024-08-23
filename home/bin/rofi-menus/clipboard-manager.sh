@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # ┏━━━┳━━┳━┓┏━┳━━━┳┓╋╋┏━━┳━┓┏━┓
 # ┗┓┏┓┣┫┣┫┃┗┛┃┃┏━━┫┃╋╋┗┫┣┻┓┗┛┏┛
@@ -7,11 +7,15 @@
 # ┏┛┗┛┣┫┣┫┃┃┃┃┃┃╋╋┃┗━┛┣┫┣┳┛┏┓┗┓
 # ┗━━━┻━━┻┛┗┛┗┻┛╋╋┗━━━┻━━┻━┛┗━┛
 # The program was created by DIMFLIX
-# https://github.com/DIMFLIX-OFFICIAL/rofi-sys-tools
+# Github: https://github.com/DIMFLIX-OFFICIAL
 
+session_type=$XDG_SESSION_TYPE
 
-selected=$(greenclip print | rofi -dmenu -i -p "Clipboard:")
+if [ "$session_type" == "wayland" ]; then
+    cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy
 
-if [ -n "$selected" ]; then
-    echo -n "$selected" | xclip -selection clipboard
+elif [ "$session_type" == "x11" ]; then
+    cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | xclip -selection clipboard
+else
+    echo "Тип сеанса не определен или не является Wayland/X11."
 fi
