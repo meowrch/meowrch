@@ -33,8 +33,8 @@
 	"group/system-levels": {
 		"orientation": "horizontal",
 		"modules": [
-			"custom/battery",
 			"custom/brightness",
+			"custom/battery",
 			"custom/volume",
 			"custom/microphone"
 		]
@@ -157,7 +157,7 @@
         "tooltip": false
     },
     "custom/brightness": {
-        "exec": "sh ~bin/brightness.sh --status --color \"#61afef\" | cat",
+        "exec": "sh ~/bin/brightness.sh --status --color \"#61afef\" | cat",
         "return-type": "raw",
         "format": "{}  ",
         "interval": 0,
