@@ -48,29 +48,15 @@ class AppsManager:
 		temp_sddm_config_path = "/tmp/sddm.conf"
 		path_to_theme = f"/usr/share/sddm/themes{theme_name}"
 
-		if os.path.exists(sddm_config_file):
-			new_lines = []
+		with open(temp_sddm_config_path, 'w') as file:
+			file.writelines([f"Current={theme_name}", "FacesDir=/var/lib/AccountsService/icons/"])
 
-			with open(sddm_config_file, 'r') as file:
-				lines = file.readlines()
-
-			for line in lines:
-				if line.startswith("Current="):
-					line = f"Current={theme_name}"
-
-				new_lines.append(line)
-			
-			with open(temp_sddm_config_path, 'w') as file:
-				file.writelines(new_lines)
-
-			try:
-				subprocess.run(["sudo", "mv", temp_sddm_config_path, sddm_config_file], check=True)
-				subprocess.run(["sudo", "mv", "./misc/sddm_theme", path_to_theme], check=True)
-				logger.success("The SDDM theme has been successfully installed!")
-			except Exception:
-				logger.error(f"The installation of the SDDM theme failed: {traceback.format_exc()}")	
-		else:
-			logger.warning("SDDM configuration skipped... (file not found)")
+		try:
+			subprocess.run(["sudo", "mv", temp_sddm_config_path, sddm_config_file], check=True)
+			subprocess.run(["sudo", "mv", "./misc/sddm_theme", path_to_theme], check=True)
+			logger.success("The SDDM theme has been successfully installed!")
+		except Exception:
+			logger.error(f"The installation of the SDDM theme failed: {traceback.format_exc()}")	
 
 	@staticmethod
 	def configure_grub() -> None:
