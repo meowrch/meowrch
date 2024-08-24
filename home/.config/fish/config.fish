@@ -35,6 +35,7 @@ end
 ##==> Shell Customization
 #####################################
 starship init fish | source
+set fish_greeting
 
 #####################################
 ##==> Development Tools
