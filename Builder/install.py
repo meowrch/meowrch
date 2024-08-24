@@ -61,12 +61,12 @@ class Builder:
 				aur.extend(getattr(BASE.aur, f'{wm}_packages'))
 
 				if self.build_options.install_game_depends:
-					pacman.extend(getattr(CUSTOM["games"].pacman, wm))
-					aur.extend(getattr(CUSTOM["games"].aur, wm))
+					pacman.extend(getattr(CUSTOM["games"].pacman, f"{wm}_packages"))
+					aur.extend(getattr(CUSTOM["games"].aur, f"{wm}_packages"))
 
 				if self.build_options.install_social_media_depends:
-					pacman.extend(getattr(CUSTOM["social_media"].pacman, wm))
-					aur.extend(getattr(CUSTOM["social_media"].aur, wm))
+					pacman.extend(getattr(CUSTOM["social_media"].pacman, f"{wm}_packages"))
+					aur.extend(getattr(CUSTOM["social_media"].aur, f"{wm}_packages"))
 
 		PackageManager.install_packages(pacman)
 		PackageManager.install_packages(aur, aur=True)
