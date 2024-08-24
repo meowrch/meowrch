@@ -12,8 +12,8 @@ class FileSystemManager:
 		logger.success("Starting the process of creating default directories")
 		
 		default_folders = [
-			"~/.config", "~/Desktop", "~/Downloads", "~/Templates", "~/Public",
-			"~/Documents", "~/Music", "~/Pictures", "~/Videos"
+			".config", "Desktop", "Downloads", "Templates", "Public",
+			"Documents", "Music", "Pictures", "Videos"
 		]
 
 		expanded_folders = [str(Path.home() / folder) for folder in default_folders]
@@ -43,7 +43,7 @@ class FileSystemManager:
 		##==> Копирование дотфайлов
 		##############################################
 		shutil.copytree(src=Path("./home/.config"), dst=home / ".config", dirs_exist_ok=True)
-		shutil.copytree(src=Path("./home/bin"), dst=home, dirs_exist_ok=True)
+		shutil.copytree(src=Path("./home/bin"), dst=home / "bin", dirs_exist_ok=True)
 		shutil.copytree(src=Path("./home/.local/share/nemo"), dst=home / ".local" / "share" / "nemo", dirs_exist_ok=True)
 		shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
 		shutil.copy(src=Path("./home/.env"), dst=home / ".env")
