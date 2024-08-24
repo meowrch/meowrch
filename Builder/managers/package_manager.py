@@ -17,16 +17,27 @@ class PackageManager:
 			logger.error(f"Error updating package database: {traceback.format_exc()}")
 
 	@staticmethod
+	def check_yay_installed() -> bool:
+		try:
+			subprocess.run(['yay', '--version'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			return True
+		except subprocess.CalledProcessError:
+			return False
+		except FileNotFoundError:
+			return False
+
+	@staticmethod
 	def install_aur_manager() -> None:
 		logger.info("Starting the yay package manager installation process.")
 
 		try:
-			subprocess.run(["sudo", "pacman", "-S", "--needed", "git"], check=True)
+			subprocess.run(["sudo", "pacman", "-S", "--noconfirm", "--needed", "git"], check=True)
 
-			if not os.path.exists("/tmp/yay"):
-				subprocess.run(["git", "-C", "/tmp", "clone", "https://aur.archlinux.org/yay.git"], check=True)
+			if not PackageManager.check_yay_installed():
+				if not os.path.exists("/tmp/yay"):
+					subprocess.run(["git", "-C", "/tmp", "clone", "https://aur.archlinux.org/yay.git"], check=True)
 
-			subprocess.run(["makepkg", "-si"], cwd="/tmp/yay", check=True)
+				subprocess.run(["makepkg", "-si"], cwd="/tmp/yay", check=True)
 		except Exception:
 			logger.error(f"Error while installing yay: {traceback.format_exc()}")
 			exit(1)
