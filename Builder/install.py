@@ -45,7 +45,7 @@ class Builder:
 		AppsManager.configure_code()
 
 		self.daemons_setting()
-		self.patching()
+		self.post_conf()
 
 	def packages_installation(self) -> None:
 		logger.info("Starting the package installation process")
