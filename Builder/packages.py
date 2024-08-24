@@ -13,8 +13,8 @@ BASE = Packages(
 			"sshfs", "wget", "netctl", "libreoffice", "ttf-jetbrains-mono", "ttf-jetbrains-mono-nerd", "ttf-fira-code",
         	"ttf-iosevka-nerd", "playerctl", "starship", "upower", "udiskie", "zenity", "gvfs", "qt5ct", "qt6ct",
         	"timeshift", "sddm", "qt5-graphicaleffects", "qt5-svg",  "qt5-quickcontrols2", "clipnotify",
-			"xdg-desktop-portal-gtk", "code", "gnome-disk-utility", "evince", "neovim",
-			"youtube-dl", "tmux", "cowsay", "update-grub", "xdg-desktop-portal-gtk", "polkit-gnome"
+			"xdg-desktop-portal-gtk", "code", "gnome-disk-utility", "evince", "neovim", "tmux", "cowsay", "polkit-gnome",
+			"rofimoji"
 		],
 		bspwm_packages=["xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", "lxappearance", "polybar", "xorg-xrandr", "xsettingsd"],
 		hyprland_packages=["hyprland", "waybar", "swww", "cliphist", "wl-clipboard", "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland"]
@@ -23,10 +23,11 @@ BASE = Packages(
 		common=[
 			"gnome-calculator-gtk3", "flameshot-git", "rofi-lbonn-wayland-git", "bibata-cursor-theme", "tela-circle-icon-theme-dracula",
 			"themix-theme-oomox-git", "themix-plugin-base16-git", "themix-icons-papirus-git", "themix-gui-git", "themix-export-spotify-git",
-			"themix-theme-materia-git", "oomox-qt5-styleplugin-git", "oomox-qt6-styleplugin-git", "cava", "pokemon-colorscripts"
+			"themix-theme-materia-git", "oomox-qt5-styleplugin-git", "oomox-qt6-styleplugin-git", "cava", "pokemon-colorscripts",
+			"youtube-dl", "update-grub"
 		],
 		bspwm_packages=["i3lock-color", "picom-ftlabs-git"],
-		hyprland_packages=["hyprpicker", "swaylock-effects-git", "wlr-randr-git"]
+		hyprland_packages=["hyprpicker", "swaylock-effects-git", "wlr-randr-git", "hyprprop"]
 	)
 )
 
