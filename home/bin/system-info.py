@@ -69,9 +69,13 @@ def get_cpu_info(label_mode: str):
 			break
 
 	cpu_percent = int(psutil.cpu_percent(interval=1))
-	cpu_temp = int(psutil.sensors_temperatures()['coretemp'][0].current)
 
-	icons = get_icon(cpu_percent, cpu_temp)
+	try:
+		cpu_temp = int(psutil.sensors_temperatures()['coretemp'][0].current)
+	except:
+		cpu_temp = "N/A"
+
+	icons = get_icon(cpu_percent, 0 if cpu_temp == "N/A" else cpu_temp)
 	percent_icon = icons.percent_icon
 	percent_critical = icons.percent_critical
 	temp_icon = icons.temp_icon
