@@ -46,14 +46,14 @@ class AppsManager:
 		theme_name = "meowrch"
 		sddm_config_file = "/etc/sddm.conf"
 		temp_sddm_config_path = "/tmp/sddm.conf"
-		path_to_theme = f"/usr/share/sddm/themes{theme_name}"
+		path_to_theme = f"/usr/share/sddm/themes/{theme_name}"
 
 		with open(temp_sddm_config_path, 'w') as file:
 			file.writelines([f"Current={theme_name}", "FacesDir=/var/lib/AccountsService/icons/"])
 
 		try:
 			subprocess.run(["sudo", "mv", temp_sddm_config_path, sddm_config_file], check=True)
-			subprocess.run(["sudo", "mv", "./misc/sddm_theme", path_to_theme], check=True)
+			subprocess.run(["sudo", "cp", "-r", "./misc/sddm_theme", path_to_theme], check=True)
 			logger.success("The SDDM theme has been successfully installed!")
 		except Exception:
 			logger.error(f"The installation of the SDDM theme failed: {traceback.format_exc()}")	
@@ -79,7 +79,7 @@ class AppsManager:
 			file.writelines(grub_config)
 
 		try:
-			subprocess.run(["sudo", "mv", "./misc/grub_theme", path_to_theme], check=True)
+			subprocess.run(["sudo", "cp", "-r", "./misc/grub_theme", path_to_theme], check=True)
 			subprocess.run(["sudo", "mv", temp_grub_config_path, grub_config_file], check=True)
 			subprocess.run(["sudo", "update-grub"], check=True)
 			logger.success("The GRUB theme has been successfully installed!")
