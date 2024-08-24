@@ -22,7 +22,10 @@ class PackageManager:
 
 		try:
 			subprocess.run(["sudo", "pacman", "-S", "--needed", "git"], check=True)
-			subprocess.run(["git", "-C", "/tmp", "clone", "https://aur.archlinux.org/yay.git"], check=True)
+
+			if not os.path.exists("/tmp/yay"):
+				subprocess.run(["git", "-C", "/tmp", "clone", "https://aur.archlinux.org/yay.git"], check=True)
+				
 			subprocess.run(["makepkg", "-si"], cwd="/tmp/yay", check=True)
 		except Exception:
 			logger.error(f"Error while installing yay: {traceback.format_exc()}")
