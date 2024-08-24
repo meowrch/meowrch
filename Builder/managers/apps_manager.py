@@ -26,7 +26,8 @@ class AppsManager:
 		except Exception:
 			logger.error(f"Error installing Visual Studio Code extension: {traceback.format_exc()}")
 	
-	def configure_firefox(self) -> None:
+	@staticmethod
+	def configure_firefox() -> None:
 		logger.info("Start installing Firefox")
 
 		try:
@@ -39,7 +40,8 @@ class AppsManager:
 
 		logger.success("Firefox has been successfully installed!")
 		
-	def configure_sddm(self) -> None:
+	@staticmethod
+	def configure_sddm() -> None:
 		logger.info("Starting the SDDM installation process")
 		theme_name = "meowrch"
 		sddm_config_file = "/etc/sddm.conf"
@@ -70,7 +72,8 @@ class AppsManager:
 		else:
 			logger.warning("SDDM configuration skipped... (file not found)")
 
-	def configure_grub(self) -> None:
+	@staticmethod
+	def configure_grub() -> None:
 		logger.info("Starting the GRUB installation process")
 		grub_config_file = "/etc/default/grub"
 		temp_grub_config_path = "/tmp/grub"
