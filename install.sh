@@ -36,7 +36,7 @@ declare -a packages=(
 
 for package in "${packages[@]}"; do
     if ! pip show $package &> /dev/null; then
-        pip install $package
+        pip install $package --break-system-packages
     fi
 done
 #######################################################
