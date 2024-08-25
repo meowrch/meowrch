@@ -47,11 +47,14 @@ class AppsManager:
 		sddm_config_file = "/etc/sddm.conf"
 		temp_sddm_config_path = "/tmp/sddm.conf"
 		path_to_theme = f"/usr/share/sddm/themes/{theme_name}"
+		avatars_folder = "/var/lib/AccountsService/icons/"
 
 		with open(temp_sddm_config_path, 'w') as file:
-			file.write(f"[Theme]\nCurrent={theme_name}\nFacesDir=/var/lib/AccountsService/icons/")
+			file.write(f"[Theme]\nCurrent={theme_name}\nFacesDir={avatars_folder}")
 
 		try:
+			username = subprocess.check_output("whoami", text=True).strip()
+			subprocess.run(["sudo", "mv", "./misc/.face.icon", f"{avatars_folder}{username}.face.icon"], check=True, capture_output=True)
 			subprocess.run(["sudo", "mv", temp_sddm_config_path, sddm_config_file], check=True)
 			subprocess.run(["sudo", "cp", "-r", "./misc/sddm_theme", path_to_theme], check=True)
 			logger.success("The SDDM theme has been successfully installed!")
