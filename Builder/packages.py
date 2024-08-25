@@ -14,10 +14,12 @@ BASE = Packages(
         	"ttf-iosevka-nerd", "playerctl", "starship", "upower", "udiskie", "zenity", "gvfs", "qt5ct", "qt6ct",
         	"timeshift", "sddm", "qt5-graphicaleffects", "qt5-svg",  "qt5-quickcontrols2", "clipnotify",
 			"xdg-desktop-portal-gtk", "code", "gnome-disk-utility", "evince", "neovim", "tmux", "cowsay", "polkit-gnome",
-			"rofimoji", "wmname", "pyenv"
+			"rofimoji", "wmname", "pyenv", "xdg-desktop-portal"
 		],
 		bspwm_packages=["xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", "lxappearance", "polybar", "xorg-xrandr", "xsettingsd"],
-		hyprland_packages=["hyprland", "waybar", "swww", "cliphist", "wl-clipboard", "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland"]
+		hyprland_packages=[
+			"hyprland", "waybar", "swww", "cliphist", "wl-clipboard", "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
+			"xdg-desktop-portal-wlr"]
 	),
 	aur=DistributionPackages(
 		common=[
@@ -27,7 +29,7 @@ BASE = Packages(
 			"youtube-dl", "update-grub"
 		],
 		bspwm_packages=["i3lock-color", "picom-ftlabs-git"],
-		hyprland_packages=["hyprpicker", "swaylock-effects-git", "wlr-randr-git", "hyprprop"]
+		hyprland_packages=["hyprpicker", "swaylock-effects-git", "wlr-randr-git", "hyprprop", "grimblast-git"]
 	)
 )
 
