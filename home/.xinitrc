@@ -5,7 +5,7 @@ usermodmap=$HOME/.Xmodmap
 sysresources=/etc/X11/xinit/.Xresources
 sysmodmap=/etc/X11/xinit/.Xmodmap
 
-export GTK2_RC_FILES="$HOME/.config/gtk-2.0/.gtkrc-2.0"
+export XDG_SESSION_TYPE="x11"
 
 # merge in defaults and keymaps
 if [ -f $sysresources ]; then
