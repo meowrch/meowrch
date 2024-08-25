@@ -39,6 +39,10 @@ mouse_left_click = close_current
 mouse_middle_click = do_action
 mouse_right_click = close_all
 
+[ignore_flameshot_warning]
+body = "grim's screenshot component is implemented based on wlroots, it may not be used in GNOME or similar desktop environments"
+format = ""
+
 [urgency_low]
 background = "#1e1e2e"
 foreground = "#cdd6f4"
