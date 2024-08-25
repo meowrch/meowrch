@@ -108,7 +108,7 @@ class Builder:
 		if self.build_options.install_game_depends:
 			try:
 				username = os.getenv('USER') or os.getenv('LOGNAME')
-				subprocess.run(["sudo", "usermod", "-a", "-G", username], check=True)
+				subprocess.run(["sudo", "usermod", "-a", username, "-G", "gamemode"], check=True)
 			except Exception:
 				logger.error(f"Error adding user to group for gamemode: {traceback.format_exc()}")
 
