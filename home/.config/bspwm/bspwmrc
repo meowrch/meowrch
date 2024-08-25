@@ -74,14 +74,14 @@ bspc rule -a 'loupe' state=floating rectangle=1200x800+0+0 center=true
 ##==> Resources and Utilities
 #################################
 dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP
-xrdb merge ~/.Xresources
+xrdb merge $HOME/.Xresources
 xsettingsd &
 dunst &
 picom --config $HOME/.config/bspwm/picom.conf &
-sh ~/.config/polybar/launch.sh
-sh ~/bin/polkitkdeauth.sh 
-python ~/.config/meowrch/meowrch.py --action set-current-theme
-python ~/.config/meowrch/meowrch.py --action set-wallpaper
+sh $HOME/.config/polybar/launch.sh
+sh $HOME/bin/polkitkdeauth.sh 
+python $HOME/.config/meowrch/meowrch.py --action set-current-theme
+python $HOME/.config/meowrch/meowrch.py --action set-wallpaper
 
 ##==> Clipboard sync
 #################################
