@@ -159,7 +159,7 @@
         "exec": "sh ~/bin/brightness.sh --status --color \"#1e66f5\" | cat",
         "return-type": "raw",
         "format": "{}  ",
-        "interval": 0,
+        "interval": 1,
         "rotate": 0,
         "on-scroll-up": "sh ~/bin/brightness.sh --up",
         "on-scroll-down": "sh ~/bin/brightness.sh --down",
