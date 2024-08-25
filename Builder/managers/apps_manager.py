@@ -49,7 +49,7 @@ class AppsManager:
 		path_to_theme = f"/usr/share/sddm/themes/{theme_name}"
 
 		with open(temp_sddm_config_path, 'w') as file:
-			file.writelines([f"Current={theme_name}", "FacesDir=/var/lib/AccountsService/icons/"])
+			file.write(f"[Theme]\nCurrent={theme_name}\nFacesDir=/var/lib/AccountsService/icons/")
 
 		try:
 			subprocess.run(["sudo", "mv", temp_sddm_config_path, sddm_config_file], check=True)
@@ -63,10 +63,10 @@ class AppsManager:
 		logger.info("Starting the GRUB installation process")
 		grub_config_file = "/etc/default/grub"
 		temp_grub_config_path = "/tmp/grub"
-		path_to_theme = "/boot/default/grub/themes/meowrch"
+		path_to_theme = "/boot/grub/themes/meowrch"
 		grub_theme_setting = f"GRUB_THEME={path_to_theme}/theme.txt\n"
 
-		if os.path.exists(grub_config_file):
+		if not os.path.exists(grub_config_file):
 			logger.error("GRUB is not installed. Skipping theme installation.")
 			return 
 
