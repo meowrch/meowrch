@@ -30,16 +30,6 @@ class FileSystemManager:
 		logger.success("Starting the process of copying dotfiles")
 		home = Path.home()
 
-		def make_executable(directory):
-			for path in Path(directory).rglob('*.sh'):
-				try:
-					subprocess.run(["sudo", "chmod", "-R", "700", str(path)], check=True)
-				except Exception:
-					logger.error(f"[!] Error while making {path} executable: {traceback.format_exc()}")
-					continue
-	
-				logger.info(f"Made {path} executable")
-
 		##==> Копирование дотфайлов
 		##############################################
 		shutil.copytree(src=Path("./home/.config"), dst=home / ".config", dirs_exist_ok=True)
@@ -65,9 +55,10 @@ class FileSystemManager:
 			shutil.rmtree(home / ".config" / "swaylock", ignore_errors=True)
 			shutil.rmtree(home / ".config" / "waybar", ignore_errors=True)
 
-		##==> Делаем исполняемыми
+		##==> Выдаем права
 		##############################################
-		make_executable("./home/config")
-		make_executable("./home/bin")
-
-	
+		for path in [home/".config", home/"bin"]:
+			try:
+				subprocess.run(["sudo", "chmod", "-R", "700", str(path)], check=True)
+			except Exception:
+				logger.error(f"[!] Error while making {path} executable: {traceback.format_exc()}")
