@@ -90,6 +90,7 @@ class Builder:
 		try:
 			subprocess.run(["sudo", "systemctl", "enable", "NetworkManager"], check=True)
 			subprocess.run(["sudo", "systemctl", "enable", "bluetooth.service"], check=True)
+			subprocess.run(["sudo", "systemctl", "enable", "sddm.service"], check=True)
 			subprocess.run(["sudo", "systemctl", "start", "bluetooth.service"], check=True)
 			logger.success("The launch of the demons was successful!")
 		except Exception:
