@@ -102,7 +102,7 @@ class Builder:
 		logger.info("The post-installation configuration is starting...")
 		
 		try:
-			subprocess.run(["sudo", "chsh", "-s", "/usr/bin/fish"], check=True)
+			subprocess.run(["chsh", "-s", "/usr/bin/fish"], check=True)
 		except Exception:
 			logger.error(f"Error changing shell: {traceback.format_exc()}")
 
