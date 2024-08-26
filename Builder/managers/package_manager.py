@@ -1,8 +1,8 @@
 import os
 import traceback
 import subprocess
-from loguru import logger
 from typing import List
+from loguru import logger
 
 
 class PackageManager:
@@ -45,6 +45,22 @@ class PackageManager:
 		logger.success("Package \"yay\" has been successfully installed!")
 
 	@staticmethod
+	def install_i3lock_color() -> bool:
+		dir_name = "i3lock-color"
+
+		try:
+			subprocess.run(["sudo", "pacman", "-S", "--noconfirm", "--needed", "git"], check=True)
+
+			if os.path.exists(f"/tmp/{dir_name}"):
+				subprocess.run(["sudo", "rm", "-rf", f"/tmp/{dir_name}"], check=True)
+			
+			subprocess.run(["git", "-C", "/tmp", "clone", "https://github.com/Raymo111/i3lock-color.git"], check=True)
+			subprocess.run(["sh", "./install-i3lock-color.sh"], cwd=f"/tmp/{dir_name}", check=True)
+			return True
+		except Exception:
+			return False
+
+	@staticmethod
 	def install_packages(packages_list: List[str], aur: bool = False) -> None:
 		for package in packages_list:
 			try:
@@ -53,6 +69,13 @@ class PackageManager:
 				else:
 					subprocess.run(["sudo", "pacman", "-S", "--noconfirm", "--needed", package], check=True)
 			except Exception:
+
+				##==> Для проблемных пакетов
+				############################################
+				if package == "i3lock-color":
+					if PackageManager.install_i3lock_color():
+						continue
+				
 				logger.error(f"Error while installing package \"{package}\": {traceback.format_exc()}")
 				continue
 
