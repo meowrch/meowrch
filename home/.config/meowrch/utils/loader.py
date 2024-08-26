@@ -1,6 +1,7 @@
 import logging
 from typing import List
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 from utils.schemes import BaseOption
 from utils.options import (
@@ -46,13 +47,6 @@ theme_options: List[BaseOption] = [
 		path_to=HOME / ".config" / "qt6ct" / "colors" / "meowrch.conf",
 		template_name="qt6ct-colors.mustache"
 	),
-	CopyOrGenOption(
-		_id="vscode",
-		name="vscode.json",
-		path_to=HOME / ".vscode" / "extensions" / "dimflix-official.meowrch-theme-1.0.0" / "themes" / "meowrch-theme.json",
-		template_name="vscode.mustache"
-	),
-	
 
 	##==> Кастомные действия 
 	###############################################
@@ -102,6 +96,16 @@ theme_options: List[BaseOption] = [
 	)
 ]
 
+for vscode in [".vscode", ".vscode-oss"]:
+	if Path(HOME / vscode).exists():
+		theme_options.append(
+			CopyOrGenOption(
+				_id="vscode",
+				name="vscode.json",
+				path_to=HOME / vscode / "extensions" / "dimflix-official.meowrch-theme-1.0.0" / "themes" / "meowrch-theme.json",
+				template_name="vscode.mustache"
+			)
+		)
 
 ##==> Логирование
 ###############################################
