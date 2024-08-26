@@ -23,7 +23,7 @@ BASE = Packages(
 	),
 	aur=DistributionPackages(
 		common=[
-			"gnome-calculator-gtk3", "flameshot-git", "rofi-lbonn-wayland-git", "bibata-cursor-theme", "tela-circle-icon-theme-dracula",
+			"gnome-calculator-gtk3", "flameshot-git", "rofi-lbonn-wayland-git", "bibata-cursor-theme-bin", "tela-circle-icon-theme-dracula",
 			"themix-theme-oomox-git", "themix-plugin-base16-git", "themix-icons-papirus-git", "themix-gui-git", "themix-export-spotify-git",
 			"themix-theme-materia-git", "oomox-qt5-styleplugin-git", "oomox-qt6-styleplugin-git", "cava", "pokemon-colorscripts",
 			"youtube-dl", "update-grub", "ttf-meslo-nerd-font-powerlevel10k"
