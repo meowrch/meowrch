@@ -130,10 +130,6 @@ def get_gpu_info(label_mode: str):
 			gpu_name = "N/A"
 			gpu_percent = int(first_gpu.query_load())
 			gpu_temp = first_gpu.query_temperature()
-
-			print(gpu_percent)
-			print(gpu_temp)
-
 			icons = get_icon(gpu_percent, gpu_temp)
 			percent_icon = icons.percent_icon
 			percent_critical = icons.percent_critical
