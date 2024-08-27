@@ -45,6 +45,11 @@ class Builder:
 
 		self.daemons_setting()
 		self.post_conf()
+		logger.success("Meowch has been successfully installed! Restart your PC to apply the changes.")
+
+		is_reboot = inquirer.confirm("Do you want to reboot?")
+		if is_reboot:
+			subprocess.run("sudo reboot", shell=True)
 
 	def packages_installation(self) -> None:
 		logger.info("Starting the package installation process")
