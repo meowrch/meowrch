@@ -50,7 +50,7 @@ class AppsManager:
 		avatars_folder = "/var/lib/AccountsService/icons/"
 
 		with open(temp_sddm_config_path, 'w') as file:
-			file.write(f"[Theme]\nCurrent={theme_name}\nFacesDir={avatars_folder}")
+			file.write(f"[Theme]\nCurrent={theme_name}\nFacesDir={avatars_folder}\nCursorTheme=Bibata-Modern-Classic\n")
 
 		try:
 			username = subprocess.check_output("whoami", text=True).strip()
