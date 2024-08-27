@@ -233,7 +233,7 @@ sh install.sh
 	<tr>
 		<td>Вся конфигурация находится в: </td>
 		<td>~/.config/hypr/keybindings.conf</td>
-		<td>~/.config/sxhkd/sxhkdrc</td>
+		<td>~/.config/bspwm/sxhkdrc</td>
 	</tr>
 </table>
 
