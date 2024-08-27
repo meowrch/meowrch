@@ -122,8 +122,8 @@ sh install.sh
 
 
 > [!note]
-> Instructions for navigating the installer menu \ 
-> - Selecting an item in the menu: Press the Spacebar to select the desired item. \
+> Instructions for navigating the installer menu:
+> - Selecting an item in the menu: Press the Spacebar to select the desired item.
 > - Advance to next step: Press Enter to advance to the next step.
 
 <h2>💻 Help</h2>
