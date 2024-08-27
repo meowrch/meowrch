@@ -107,6 +107,7 @@ class Builder:
 		
 		try:
 			subprocess.run(["chsh", "-s", "/usr/bin/fish"], check=True)
+			logger.success("The shell is changed to fish!")
 		except Exception:
 			logger.error(f"Error changing shell: {traceback.format_exc()}")
 
@@ -114,8 +115,15 @@ class Builder:
 			try:
 				username = os.getenv('USER') or os.getenv('LOGNAME')
 				subprocess.run(["sudo", "usermod", "-a", username, "-G", "gamemode"], check=True)
+				logger.success("The user is added to the gamemode group!")
 			except Exception:
 				logger.error(f"Error adding user to group for gamemode: {traceback.format_exc()}")
+
+		try:
+			subprocess.run(["gsettings", "set", "org.cinnamon.desktop.default-applications.terminal", "exec", "kitty"], check=True)
+			logger.success("The default terminal is set to kitty!")
+		except Exception:
+			logger.error(f"Error setting default terminal: {traceback.format_exc()}")
 
 		logger.info("The post-installation configuration is complete!")
 
