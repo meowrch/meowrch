@@ -233,7 +233,7 @@ Your feedback will help us improve the project and make it even more convenient 
 	<tr>
 		<td>The entire configuration is in: </td>
 		<td>~/.config/hypr/keybindings.conf</td>
-		<td>~/.config/sxhkd/sxhkdrc</td>
+		<td>~/.config/bspwm/sxhkdrc</td>
 	</tr>
 </table>
 
