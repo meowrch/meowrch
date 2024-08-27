@@ -1,0 +1,72 @@
+current-wtheme: catppuccin-mocha
+current-wwallpaper: ~/.config/meowrch/wallpapers/42.png
+current-xtheme: catppuccin-mocha
+current-xwallpaper: ~/.config/meowrch/wallpapers/42.png
+custom-wallpapers:
+- ~/.config/meowrch/wallpapers/4.png
+- ~/.config/meowrch/wallpapers/5.png
+- ~/.config/meowrch/wallpapers/7.png
+- ~/.config/meowrch/wallpapers/8.png
+- ~/.config/meowrch/wallpapers/10.png
+- ~/.config/meowrch/wallpapers/11.png
+- ~/.config/meowrch/wallpapers/13.png
+- ~/.config/meowrch/wallpapers/18.png
+- ~/.config/meowrch/wallpapers/20.png
+- ~/.config/meowrch/wallpapers/46.png
+themes:
+  catppuccin-latte:
+    available_wallpapers:
+    - ~/.config/meowrch/wallpapers/1.png
+    - ~/.config/meowrch/wallpapers/2.png
+    - ~/.config/meowrch/wallpapers/3.png
+    - ~/.config/meowrch/wallpapers/16.png
+    - ~/.config/meowrch/wallpapers/17.png
+    - ~/.config/meowrch/wallpapers/19.png
+    - ~/.config/meowrch/wallpapers/21.png
+    - ~/.config/meowrch/wallpapers/27.png
+    - ~/.config/meowrch/wallpapers/28.png
+    - ~/.config/meowrch/wallpapers/29.png
+    - ~/.config/meowrch/wallpapers/30.png
+    - ~/.config/meowrch/wallpapers/31.png
+    - ~/.config/meowrch/wallpapers/32.png
+    - ~/.config/meowrch/wallpapers/33.png
+    - ~/.config/meowrch/wallpapers/34.png
+  catppuccin-mocha:
+    available_wallpapers:
+    - ~/.config/meowrch/wallpapers/6.png
+    - ~/.config/meowrch/wallpapers/9.png
+    - ~/.config/meowrch/wallpapers/12.png
+    - ~/.config/meowrch/wallpapers/14.png
+    - ~/.config/meowrch/wallpapers/15.png
+    - ~/.config/meowrch/wallpapers/22.png
+    - ~/.config/meowrch/wallpapers/23.png
+    - ~/.config/meowrch/wallpapers/24.png
+    - ~/.config/meowrch/wallpapers/25.png
+    - ~/.config/meowrch/wallpapers/26.png
+    - ~/.config/meowrch/wallpapers/35.png
+    - ~/.config/meowrch/wallpapers/36.png
+    - ~/.config/meowrch/wallpapers/37.png
+    - ~/.config/meowrch/wallpapers/38.png
+    - ~/.config/meowrch/wallpapers/39.png
+    - ~/.config/meowrch/wallpapers/40.png
+    - ~/.config/meowrch/wallpapers/41.png
+    - ~/.config/meowrch/wallpapers/42.png
+    - ~/.config/meowrch/wallpapers/43.png
+    - ~/.config/meowrch/wallpapers/44.png
+    - ~/.config/meowrch/wallpapers/45.png
+    - ~/.config/meowrch/wallpapers/47.png
+    - ~/.config/meowrch/wallpapers/48.png
+    - ~/.config/meowrch/wallpapers/49.png
+    - ~/.config/meowrch/wallpapers/50.png
+    - ~/.config/meowrch/wallpapers/51.png
+    - ~/.config/meowrch/wallpapers/52.png
+    - ~/.config/meowrch/wallpapers/53.png
+    - ~/.config/meowrch/wallpapers/54.png
+    - ~/.config/meowrch/wallpapers/55.png
+    - ~/.config/meowrch/wallpapers/56.png
+    - ~/.config/meowrch/wallpapers/57.png
+    - ~/.config/meowrch/wallpapers/58.png
+    - ~/.config/meowrch/wallpapers/59.png
+    - ~/.config/meowrch/wallpapers/60.png
+    - ~/.config/meowrch/wallpapers/61.png
+    - ~/.config/meowrch/wallpapers/62.png

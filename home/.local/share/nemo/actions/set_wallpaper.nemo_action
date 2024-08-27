@@ -1,0 +1,10 @@
+[Nemo Action]
+
+Active=true
+Name=Set as wallpaper
+Comment=Set current image as wallpaper
+Exec=sh -c "python ~/.config/meowrch/meowrch.py --action set-wallpaper --path %F"
+Icon-Name=image
+Selection=single;
+Mimetypes=image/*;
+Quote=double
