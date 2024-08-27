@@ -1,0 +1,11 @@
+[Nemo Action]
+
+Active=true
+Name=Open file in VS Code
+Comment=Open current file in VS Code
+Exec=code %F
+Icon-Name=com.visualstudio.code
+Selection=single;
+Extensions=nodirs;
+Quote=double
+Dependencies=code;

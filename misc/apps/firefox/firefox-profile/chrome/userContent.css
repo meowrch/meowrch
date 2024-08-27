@@ -1,0 +1,638 @@
+/* ----- Included functions ----- */
+@import url("spill-style-part2-file.css");
+@import url("thin_scrollbar_windows10.css");
+@import url("wallpaper-edition.css");
+@import url("remove_homepage_shortcut_title_text.css");
+@import url("circular_homepage_shortcuts.css");
+
+/*=====================================================================
+================= D A R K   T H E M E   C O L O R S ===================
+=====================================================================*/
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --firefoxcss-main-bg-color: hsl(240, 2%, 13%);
+    --firefoxcss-item-bg-color: hsl(240, 2%, 20%);
+    --firefoxcss-item-hover-bg-color: hsl(240, 2%, 25%);
+    --firefoxcss-text-color: hsl(0, 0%, 100%);
+    --firefoxcss-other-color: hsl(290, 21%, 20%);
+
+    /* ----- Private Page Colors ----- */
+    --firefoxcss-private-search-bg-color: hsla(275, 13%, 33%, 0.3);
+    --firefoxcss-private-search-top-border: hsla(275, 13%, 40%, 0.3);
+    --firefoxcss-private-search-fill: hsl(275, 13%, 53%);
+
+    --firefoxcss-private-search-hover: hsla(275, 13%, 43%, 0.3);
+    --firefoxcss-private-search-border-hover: hsla(275, 13%, 50%, 0.3);
+    --firefoxcss-private-search-hover-fill: hsl(275, 13%, 63%);
+
+    --firefoxcss-private-search-text: var(--firefoxcss-private-search-fill);
+    --firefoxcss-private-search-text-hover: var(--firefoxcss-private-search-hover-fill);
+    --firefoxcss-private-search-caret: hsl(290, 21%, 80%);
+
+    --firefoxcss-private-search-box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
+      0 2px 2px hsl(0deg 0% 0% / 0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075),
+      0 6px 6px hsl(0deg 0% 0% / 0.075), 0 12px 12px hsl(0deg 0% 0% / 0.095);
+
+    /* ----- Normal Page Colors ----- */
+    --firefoxcss-search-box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
+      0 2px 2px hsl(0deg 0% 0% / 0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075),
+      0 8px 8px hsl(0deg 0% 0% / 0.075), 0 16px 16px hsl(0deg 0% 0% / 0.095);
+
+    --firefoxcss-search-color: rgba(251, 251, 254, 1);
+    --firefoxcss-search-border-top-color: #ffffff26;
+    --firefoxcss-search-text-fill: #ffffff5e;
+    --firefoxcss-search-bar-text-color: rgba(251, 251, 254, 1);
+    --firefoxcss-search-bar-fill-icon-hover: rgba(251, 251, 254, 0.8);
+
+    --firefoxcss-shortcut-item-box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
+      0 2px 2px hsl(0deg 0% 0% / 0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075),
+      0 8px 8px hsl(0deg 0% 0% / 0.075), 0 16px 16px hsl(0deg 0% 0% / 0.075);
+    --firefoxcss-shortcut-item-top-border: #ffffff26;
+    --firefoxcss-shortcut-item-top-border-hover: #97979791;
+
+    --firefoxcss-customize-menu: #1e1e1e8c;
+    --firefoxcss-customize-menu-bg-image: url("ASSETS/other/noise-512x512.png");
+    --firefoxcss-customize-menu-dropdown: #1e1e1e80;
+    --firefoxcss-input-focus: white;
+    /*  no changes */
+    --firefoxcss-shortcut-item-active: hsla(0, 0%, 10%, 0.7);
+    --firefoxcss-shortcut-item-context-menu: #13131380;
+    --firefoxcss-shortcut-item-context-menu-border: hsla(0, 0%, 70%, 0.145);
+    --firefoxcss-shortcut-item-context-menu-separator: #ffffff29;
+    --firefoxcss-extra-search-bar-when-scroll: #1e1e1e8c;
+    --firefoxcss-context-menu-three-dots: hsla(240, 2%, 60%, 0.6);
+    --firefoxcss-settings-wheel-color: hsla(240, 20%, 90%, 0.6);
+    --firefoxcss-settings-wheel-color-hover: hsla(240, 20%, 90%, 0.9);
+    --firefoxcss-shortcut-search-icon-color: #7ae3f463;
+	  
+    /* ----- Firefox View color changes ----- */
+    --fxview-background-color: var(--firefoxcss-main-bg-color) !important;
+    --fxview-background-color-secondary: var(--firefoxcss-item-bg-color) !important;
+    --firefoxcss-firefoxview-sticky-color: hsla(240, 2%, 13%, 0.75) !important;
+    --firefoxcss-firefoxview-search-color: hsla(240, 2%, 35%, 0.5) !important;
+  }
+
+  * {
+    scrollbar-color: #afafaf #2c2c2c !important;
+  }
+}
+
+/*=====================================================================
+================= L I G H T   T H E M E   C O L O R S =================
+=====================================================================*/
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --firefoxcss-main-bg-color: hsl(240, 15%, 95%);
+    --firefoxcss-item-bg-color: hsl(240, 20%, 98%);
+    --firefoxcss-item-hover-bg-color:  color-mix(in srgb, currentColor 10%, transparent);
+    --firefoxcss-text-color: hsl(0, 0%, 0%);
+    --firefoxcss-other-color: hsl(290, 21%, 20%);
+
+    /* ----- Private Page Colors ----- */
+    --firefoxcss-private-search-bg-color: hsla(276, 20%, 88%, 0.55);
+    --firefoxcss-private-search-top-border: hsla(0, 0%, 100%, 0.45);
+    --firefoxcss-private-search-fill: hsl(275, 20%, 65%);
+
+    --firefoxcss-private-search-hover: hsla(276, 20%, 84%, 0.50);
+    --firefoxcss-private-search-border-hover: hsla(0, 0%, 100%, 0.55);
+    --firefoxcss-private-search-hover-fill: hsl(275, 20%, 55%);
+
+    --firefoxcss-private-search-text: var(--firefoxcss-private-search-fill);
+    --firefoxcss-private-search-text-hover: var(--firefoxcss-private-search-hover-fill);
+    --firefoxcss-private-search-caret: hsl(276, 20%, 40%);
+
+    --firefoxcss-private-search-box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.015),
+      0 2px 2px hsl(0deg 0% 0% / 0.015), 0 4px 4px hsl(0deg 0% 0% / 0.015),
+      0 6px 6px hsl(0deg 0% 0% / 0.015), 0 12px 12px hsl(0deg 0% 0% / 0.035);
+
+    /* ----- Normal Page Colors ----- */
+    --firefoxcss-search-box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.015),
+      0 2px 2px hsl(0deg 0% 0% / 0.015), 0 4px 4px hsl(0deg 0% 0% / 0.015),
+      0 8px 8px hsl(0deg 0% 0% / 0.015), 0 16px 16px hsl(0deg 0% 0% / 0.035);
+
+    --firefoxcss-search-color: rgb(87, 87, 87, 1);
+    --firefoxcss-search-border-top-color: hsla(0, 0%, 100%, 0.9);
+    --firefoxcss-search-text-fill: rgba(10, 10, 10, 0.25);
+    --firefoxcss-search-bar-text-color: rgba(10, 10, 10, 0.65);
+    --firefoxcss-search-bar-fill-icon-hover: rgba(0, 0, 0, 0.5);
+
+    --firefoxcss-shortcut-item-box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.025),
+      0 2px 2px hsl(0deg 0% 0% / 0.025), 0 4px 4px hsl(0deg 0% 0% / 0.025),
+      0 8px 8px hsl(0deg 0% 0% / 0.025), 0 16px 16px hsl(0deg 0% 0% / 0.025);
+    --firefoxcss-shortcut-item-top-border: hsla(0, 0%, 100%, 0.9);
+    --firefoxcss-shortcut-item-top-border-hover: hsla(0, 0%, 100%, 0.6);
+
+    --firefoxcss-customize-menu: hsla(240, 10%, 90%, 0.25);
+    --firefoxcss-customize-menu-bg-image: none;
+    --firefoxcss-customize-menu-dropdown: #fdfdfd80;
+    --firefoxcss-input-focus: black;  /*  no changes */
+    --firefoxcss-shortcut-item-active: hsla(240, 15%, 85%, 0.4);
+    --firefoxcss-shortcut-item-context-menu: hsla(0, 0%, 95%, 0.4);
+    --firefoxcss-shortcut-item-context-menu-border: hsla(0, 0%, 100%, 0.5);
+    --firefoxcss-shortcut-item-context-menu-separator: hsla(0, 0%, 50%, 0.2);
+    --firefoxcss-extra-search-bar-when-scroll: hsla(0, 0%, 10%, 0.3);
+    --firefoxcss-context-menu-three-dots: hsla(240, 10%, 50%, 0.6);
+    --firefoxcss-settings-wheel-color: hsla(240, 20%, 10%, 0.6);
+    --firefoxcss-settings-wheel-color-hover: hsla(240, 20%, 10%, 0.9);
+    --firefoxcss-shortcut-search-icon-color: #2896a870;
+	  
+    /* ----- Firefox View color changes ----- */
+    --fxview-background-color: var(--firefoxcss-main-bg-color) !important;
+    --fxview-background-color-secondary: var(--firefoxcss-item-bg-color) !important;
+    --firefoxcss-firefoxview-sticky-color: hsla(240, 15%, 95%, 0.5) !important;
+    --firefoxcss-firefoxview-search-color: hsla(240, 8%, 100%, 0.95) !important;  
+  }
+}
+
+body {
+  --newtab-search-icon: url("chrome://global/skin/icons/search-glass.svg") !important;
+}
+
+@-moz-document url("about:privatebrowsing") {
+  body {
+    background-color: var(--firefoxcss-main-bg-color) !important;
+    background-size: auto;
+    background-size: cover !important;
+  }
+
+  /* html.private {
+		background-color: #1e1e1e80 !important;
+		background-image: url(ASSETS/icons/.jpg) !important ;
+		background-size: cover  !important;
+	} */
+
+  #search-handoff-button {
+    appearance: none !important;
+    background-color: var(--firefoxcss-private-search-bg-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-top: 1px solid var(--firefoxcss-private-search-top-border) !important;
+    border-radius: 10px 10px 10px 10px !important;
+    fill: var(--firefoxcss-private-search-fill) !important;
+    box-shadow: var(--firefoxcss-private-search-box-shadow) !important;
+    transition: background-color 100ms ease-in, border-color 100ms ease-in,
+      fill 100ms ease-in !important;
+    backdrop-filter: blur(24px) !important;
+  }
+
+  #search-handoff-button:hover,
+  #search-handoff-button:focus,
+  #search-handoff-button:active {
+    background-color: var(--firefoxcss-private-search-hover) !important;
+    border-top: 1px solid var(--firefoxcss-private-search-border-hover) !important;
+    fill: var(--firefoxcss-private-search-hover-fill) !important;
+  }
+
+  #search-handoff-button .fake-textbox {
+    color: var(--firefoxcss-private-search-text) !important;
+    opacity: 0.8 !important;
+    transition: color 100ms ease-in, opacity 100ms ease-in !important;
+  }
+
+  #search-handoff-button:active>.fake-textbox,
+  #search-handoff-button:hover>.fake-textbox,
+  #search-handoff-button:focus>.fake-textbox {
+    color: var(--firefoxcss-private-search-text-hover) !important;
+  }
+
+  #search-handoff-button .fake-caret {
+    background: var(--firefoxcss-private-search-caret) !important;
+  }
+
+  .logo-and-wordmark .wordmark {
+    fill: #8f25d1 !important;
+    opacity: 0.9 !important;
+  }
+
+  .showPrivate.showSearch.container .info {
+    display: none !important;
+  }
+
+  .private .search-inner-wrapper {
+    height: 42px !important;
+    /* 48px default */
+  }
+
+  .private .search-inner-wrapper .fake-caret {
+    top: 13px !important;
+    /* 16px default */
+  }
+
+  .private .search-inner-wrapper #search-handoff-button {
+    background-size: 20px !important;
+  }
+}
+
+@-moz-document url("about:home"),
+url("about:newtab") {
+
+  body {
+    --newtab-background-color: var(--firefoxcss-main-bg-color) !important;
+    background-size: cover !important;
+  }
+
+  /* For background blur */
+  /* .outer-wrapper {
+    background-color: #1e1e1e88 !important;
+    backdrop-filter: blur(24px) !important;
+  } */
+
+  .search-wrapper .search-handoff-button {
+    appearance: none !important;
+    background-color: var(--firefoxcss-item-bg-color) !important;
+    color: var(--firefoxcss-search-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-top: 1px solid var(--firefoxcss-search-border-top-color) !important;
+    border-radius: 10px !important;
+    backdrop-filter: blur(24px) !important;
+    box-shadow: var(--firefoxcss-search-box-shadow) !important;
+    fill: var(--firefoxcss-search-text-fill) !important;
+    transition: background-color 250ms ease, border-color 250ms ease,
+      fill 250ms ease !important;
+    padding-inline-start: 48px !important;
+  }
+
+  .icon.icon-settings.personalize-button {
+    color: var(--firefoxcss-settings-wheel-color) !important;
+  }
+
+  .icon.icon-settings.personalize-button:hover {
+    color: var(--firefoxcss-settings-wheel-color-hover) !important;
+  }
+
+  .body-wrapper .tile {
+    background-color: var(--firefoxcss-item-bg-color) !important;
+    border-top: 1px solid var(--firefoxcss-shortcut-item-top-border) !important;
+    box-shadow: var(--firefoxcss-shortcut-item-box-shadow) !important;
+    transition: background-color 250ms ease, border-color 250ms ease !important;
+    border-radius: 10px !important;
+  }
+
+  .body-wrapper .top-site-button:hover .tile {
+    /* background-color: rgba(230, 230, 230, 0.15) !important; */
+    background-color: var(--firefoxcss-item-hover-bg-color) !important;
+    border-top: 1px solid var(--firefoxcss-shortcut-item-top-border-hover) !important;
+  }
+
+  .body-wrapper .top-site-button:focus-visible .tile {
+    /* background-color: rgba(230, 230, 230, 0.15) !important; */
+    background-color: var(--firefoxcss-item-hover-bg-color) !important;
+    border-top: 1px solid var(--firefoxcss-shortcut-item-top-border-hover) !important;
+    outline: 1px solid #e3b686a3 !important;
+  }
+
+  #root .customize-menu {
+    background-image: var(--firefoxcss-customize-menu-bg-image) !important;
+    background-color: var(--firefoxcss-customize-menu) !important;
+    backdrop-filter: blur(24px) !important;
+  }
+
+  .home-section .section .selector {
+    background-color: var(--firefoxcss-customize-menu-dropdown) !important;
+  }
+
+  .top-sites-list:not(.dnd-active) .top-site-outer:hover:not(.active),
+  .top-site-outer .top-site-icon {
+    background-color: transparent !important;
+  }
+  .top-site-outer .search-topsite {
+    backdrop-filter: blur(8px) !important;
+    background-color: var(--firefoxcss-shortcut-search-icon-color) !important;
+  }
+
+  .search-wrapper input:focus {
+    color: var(--firefoxcss-input-focus) !important;
+  }
+
+  .top-site-outer .top-site-button .title {
+    opacity: 0.6 !important;
+    transition: opacity 0.4s !important;
+  }
+
+  .top-site-outer .top-site-button:hover .title {
+    opacity: 1 !important;
+  }
+
+  .top-site-outer .context-menu-button.icon:is(:active, :focus, :hover) {
+    fill: #f79743 !important;
+    background-color: transparent !important;
+    border: 0 !important;
+  }
+
+  .top-site-outer .context-menu-button {
+    fill: var(--firefoxcss-context-menu-three-dots) !important;
+    inset-inline-end: 18px !important;
+    top: -2px !important;
+    background-color: transparent !important;  
+  }
+
+  .card-outer .context-menu-button.icon:is(:active, :focus) {
+    fill: #f79743 !important;
+    background-color: var(--firefoxcss-item-bg-color) !important;
+    border: 0 !important;
+  }
+
+  .card-outer .context-menu-button.icon {
+    background-color: var(--firefoxcss-item-bg-color) !important;
+    border: 0 !important;
+  }
+
+  .top-site-button .title.has-icon.pinned span .icon {
+    opacity: 0.6 !important;
+    display: none !important;
+  }
+
+  .top-site-button .title.has-icon.pinned span:hover .icon {
+    display: inline-block !important;
+  }
+
+  .top-sites-list:not(.dnd-active) .top-site-outer:is(.active, :focus) {
+    background-color: var(--firefoxcss-shortcut-item-active) !important;
+  }
+
+  .top-site-outer .context-menu,
+  .card-outer .context-menu {
+    background-image: var(--firefoxcss-customize-menu-bg-image) !important;
+    background-color: var(--firefoxcss-shortcut-item-context-menu) !important;
+    backdrop-filter: blur(32px) !important;
+    border: 1px solid var(--firefoxcss-shortcut-item-context-menu-border);
+    border-radius: 8px !important;
+  }
+
+  .top-site-outer .context-menu>ul>li.separator,
+  .card-outer .context-menu>ul>li.separator {
+    border-bottom: 1px solid var(--firefoxcss-shortcut-item-context-menu-separator) !important;
+  }
+
+  .search-wrapper .search-handoff-button input {
+    border-radius: 10px 10px 10px 10px !important;
+  }
+
+  .search-wrapper .search-handoff-button .fake-caret {
+    top: 13px !important;
+    /*18 default. calculate=18-((52px - min-height)/2) */
+    inset-inline-start: 48px !important;
+  }
+
+  .search-wrapper .logo-and-wordmark {
+    opacity: 0.9 !important;
+    order: 1 !important;
+    margin-bottom: 0 !important;
+    flex: 1 !important;
+    flex-basis: 20% !important;
+  }
+
+  .search-wrapper .logo-and-wordmark .logo {
+    background-size: 60px !important;
+    height: 60px !important;
+    width: 60px !important;
+  }
+
+  .search-wrapper .logo-and-wordmark .wordmark {
+    background-size: 132px !important;
+    height: 42px !important;
+    margin-inline-start: 12px !important;
+    width: 144px !important;
+  }
+
+  .outer-wrapper .search-wrapper {
+    padding: 0px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    align-content: space-around !important;
+    gap: 20px 10px !important;
+  }
+
+  .outer-wrapper .non-collapsible-section {
+    padding: 0 35px !important;
+  }
+
+  .body-wrapper .collapsible-section {
+    padding: 20px 25px !important;
+  }
+
+  .search-wrapper .search-handoff-button,
+  .search-wrapper input {
+    background-size: 20px !important;
+  }
+
+  .search-wrapper .search-inner-wrapper {
+    min-height: 42px !important;
+    /* 52px default */
+    order: 2 !important;
+    flex: 3 !important;
+    flex-basis: 60% !important;
+    top: 4px !important;
+  }
+
+  /* When there is overflow because of the height, search bar gets fixed position */
+  .outer-wrapper.fixed-search .search-wrapper {
+    backdrop-filter: blur(18px) !important;
+    gap: 0px 0px !important;
+    min-height: 60px !important;
+  }
+
+/*   body:not(.inline-onboarding) .fixed-search.visible-logo main {
+    padding-top: 0px !important;
+  } */
+
+  .outer-wrapper.fixed-search .search-wrapper .search-inner-wrapper {
+    top: 0 !important;
+  }
+
+  .outer-wrapper.fixed-search .search-wrapper .search-inner-wrapper button.search-handoff-button {
+    backdrop-filter: blur(22px) !important;
+    background-color: var(--firefoxcss-extra-search-bar-when-scroll) !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0px 50px !important;
+  }
+
+  .search-wrapper .search-handoff-button .fake-textbox {
+    opacity: 0.5 !important;
+    color: var(--firefoxcss-search-bar-text-color) !important;
+    transition: opacity 0.4s !important;
+  }
+
+  .search-wrapper .search-handoff-button:active>.fake-textbox,
+  .search-wrapper .search-handoff-button:hover>.fake-textbox,
+  .search-wrapper .search-handoff-button:focus>.fake-textbox {
+    opacity: 0.8 !important;
+  }
+
+  .search-inner-wrapper:hover .search-handoff-button {
+    background-color: var(--firefoxcss-item-hover-bg-color) !important;
+    border-top: 1px solid var(--firefoxcss-shortcut-item-top-border-hover) !important;
+    fill: var(--firefoxcss-search-bar-fill-icon-hover) !important;
+  }
+
+  .collapsible-section .card-outer {
+    background-color: var(--firefoxcss-item-bg-color) !important;
+  }
+
+  .collapsible-section .card-outer .card-preview-image-outer {
+    background-color: var(--firefoxcss-item-hover-bg-color) !important;
+  }
+
+  .compact-cards .card-outer .card-context {
+    background-color: var(--firefoxcss-item-bg-color) !important;
+  }
+
+  @media only screen and (max-width: 609px) {
+    .ds-outer-wrapper-breakpoint-override main {
+      width: 386px !important;
+    }
+  }
+
+  @media only screen and (max-width: 385px) {
+    .search-wrapper .search-inner-wrapper .search-handoff-button {
+      padding-top: 4px !important;
+      padding-bottom: 6px !important;
+    }
+
+    .ds-outer-wrapper-breakpoint-override main {
+      width: 266px !important;
+    }
+  }
+
+  /* Remove static color from close button wrapper in customization menu */
+  .customize-menu .close-button-wrapper {
+    background-color: transparent !important;
+  }
+
+  /*.outer-wrapper .search-wrapper .search-handoff-button {
+     background-image: url("ASSETS/icons/search-glass.svg") !important;
+     background-size: 16px !important;  
+  }*/
+
+/* When Dark Wallpaper set */
+.activity-stream.darkWallpaper {
+    & .body-wrapper .tile {
+      background-color: hsla(0, 0%, 12%, 0.6) !important;
+      backdrop-filter: blur(24px) !important;
+      border-top: 1px solid hsla(0, 0%, 100%, 0.145) !important;
+    }
+    
+    & .body-wrapper .top-site-button:hover .tile {
+       filter: brightness(115%);
+       background-color: hsla(0, 0%, 15%, 0.5) !important;
+       border-top: 1px solid hsla(0, 0%, 58%, 0.3) !important;
+    }
+    
+    & .ds-card-grid .ds-card:not(.placeholder) {
+       backdrop-filter: blur(20px); 
+    }
+	
+	/*  Pocket cards background blur - new tab */
+    & .ds-card-grid .ds-card:not(.placeholder) {
+       backdrop-filter: blur(20px); 
+    }
+    
+  }
+
+/* When Light Wallpaper set */
+  .activity-stream.lightWallpaper {
+	  
+   /*  Pocket cards background blur - new tab */
+    & .ds-card-grid .ds-card:not(.placeholder) {
+       backdrop-filter: blur(20px); 
+    }
+	  
+  }
+
+/* Pocket extra modification by request */
+@media (-moz-bool-pref: "firefoxcss.pocket.oneline.enable") {
+  /* Pocket new tab - Learn More text disable  */
+  .collapsible-section .section-title-container .learn-more-link-wrapper {
+    display: none !important;
+  }
+
+  @media (-moz-bool-pref: "firefoxcss.pocket.hide.populartopics.links") {
+    /* Pocket new tab - Popular Topics bottom links text disable  */
+    .discovery-stream.ds-layout .ds-navigation.ds-navigation-left-align {
+      display: none !important;
+    }
+  }
+
+  /* Pocket new tab - Privacy Notice text disable  */
+  .ds-navigation .ds-navigation-privacy {
+    display: none !important;
+  }
+
+  /* pocket new tab context menu  */
+  .context-menu {
+    background-image: var(--firefoxcss-customize-menu-bg-image) !important;
+    background-color: var(--firefoxcss-shortcut-item-context-menu) !important;
+    backdrop-filter: blur(32px) !important;
+    border: 1px solid var(--firefoxcss-shortcut-item-context-menu-border);
+    border-radius: 8px !important;
+  }
+
+  .discovery-stream.ds-layout .ds-card-grid {
+    grid-template-rows: 1fr !important;
+    grid-auto-rows: 0 !important;
+    padding-bottom: 0 !important;
+    row-gap: 0 !important;
+    overflow: hidden !important;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+	@media (-moz-bool-pref: "firefoxcss.pocket.4.cards.enable") {
+           	grid-template-columns: repeat(auto-fill,minmax(200px,1fr)) !important;
+           	column-gap: 16px !important;
+      	}
+	@media  (-moz-bool-pref: "firefoxcss.pocket.5.cards.enable") {
+        	grid-template-columns: repeat(auto-fill,minmax(150px,1fr)) !important;
+        	column-gap: 12px !important;
+      	}
+  }
+}
+	
+}
+
+@-moz-document url-prefix(about:firefoxview) {
+
+  .search-container {
+    border: none !important;
+  }
+  
+  .search-container input {
+    background-color: var(--firefoxcss-firefoxview-search-color) !important;
+  }
+  
+  div.sticky-container.bottom-fade {
+    background: none !important;
+    background-color: var(--firefoxcss-firefoxview-sticky-color) !important;
+    backdrop-filter: blur(7px) !important;
+    flex-direction: row !important;
+    padding-block: 30px 20px !important;
+  }
+ 
+  @media (max-width: 52rem) {
+  div.sticky-container.bottom-fade {
+    flex-direction: column !important;
+    }
+  }
+
+}
+
+@-moz-document url-prefix("about:") {
+  :root {
+     --in-content-box-background: var(--firefoxcss-item-bg-color) !important;
+     --in-content-table-background: var(--firefoxcss-item-bg-color) !important; 
+     --in-content-page-background: var(--firefoxcss-main-bg-color) !important; 
+  }
+}
+
+@-moz-document url("about:blank") {
+
+/*   html:not(#ublock0-epicker),
+  html:not(#ublock0-epicker) body, */
+  #newtab-customize-overlay {
+    background-color: var(--firefoxcss-main-bg-color) !important;
+  }
+}

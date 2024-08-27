@@ -1,0 +1,94 @@
+#! /bin/sh
+
+##==> Initial Setup
+#################################
+# Start sxhkd if it's not already running
+pgrep -x sxhkd > /dev/null || sxhkd -c ~/.config/bspwm/sxhkdrc &  
+# Set window manager name to LG3D to fix some Java applications display issues
+wmname LG3D
+
+##==> Vars
+#################################
+export XDG_CURRENT_DESKTOP="bspwm"
+if [ -f "$HOME/.env" ]; then
+    source "$HOME/.env"
+fi
+
+##==> Workspaces Configuration
+#################################
+# Define workspaces on the primary monitor
+bspc monitor -d 1 2 3 4 5 6 7 8 9 10
+# Uncomment to define workspaces on YOUR_MONITOR (for multiple monitors setup)
+#bspc monitor YOUR_MONITOR -d 6 7 8 9
+
+# Enable window focus follow mouse pointer
+bspc config focus_follows_pointer true
+
+# Auto set monitor
+monitor=$(xrandr --query | grep " connected" | awk '{ print $1 }' | head -n 1)
+resolution=$(xrandr --query | grep -A1 "^$monitor" | grep -Eo '[0-9]+x[0-9]+' | sort -V | tail -n 1)
+refresh_rate=$(xrandr --query | grep -A1 "^$monitor" | grep -Eo '[0-9]+\.[0-9]+' | sort -V | tail -n 1)
+
+if [[ -n $monitor && -n $resolution && -n $refresh_rate ]]; then
+    xrandr --output "$monitor" --mode "$resolution" --rate "$refresh_rate"
+fi
+
+##==> Window Appearance
+#################################
+# Set the border colors for focused and normal windows
+bspc config focused_border_color "#b4befe"
+bspc config border_width 3
+bspc config borderless_monocle true
+
+# Set mouse cursor to left pointer
+xsetroot -cursor_name left_ptr
+
+##==> Gaps and Window Management
+#################################
+# Configure gaps and window gap size
+bspc config gapless_monocle false
+bspc config window_gap 10
+
+# Configure actions for moving and resizing floating windows with the mouse (mod4 = Super/Windows key)
+bspc config pointer_modifier mod4
+bspc config pointer_action1 move
+bspc config pointer_action2 resize_side
+bspc config pointer_action3 resize_corner
+
+##==> Rules
+#################################
+bspc rule -a feh state=floating
+bspc rule -a '*:sun-awt-X11-XWindowPeer' manage=off
+bspc rule -a 'vlc' state=floating center=true
+bspc rule -a 'Blueman-manager' state=floating center=true
+bspc rule -a 'qt5ct' state=floating rectangle=900x600+0+0 center=true
+bspc rule -a 'qt6ct' state=floating rectangle=900x600+0+0 center=true
+bspc rule -a 'ark' state=floating center=true
+bspc rule -a 'Xarchiver' state=floating center=true
+bspc rule -a 'pavucontrol' state=floating center=true
+bspc rule -a 'Yad' state=floating center=true
+bspc rule -a 'Blueman-manager' state=floating center=true
+bspc rule -a 'Gnome-calculator' state=floating rectangle=360x500+0+0 center=true
+bspc rule -a 'loupe' state=floating rectangle=1200x800+0+0 center=true
+
+##==> Resources and Utilities
+#################################
+dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP
+xrdb merge $HOME/.Xresources
+xsettingsd &
+dunst &
+picom --config $HOME/.config/bspwm/picom.conf &
+sh $HOME/.config/polybar/launch.sh
+sh $HOME/bin/polkitkdeauth.sh 
+python $HOME/.config/meowrch/meowrch.py --action set-current-theme
+python $HOME/.config/meowrch/meowrch.py --action set-wallpaper
+
+##==> Clipboard sync
+#################################
+if command -v clipnotify >/dev/null 2>&1 && command -v xclip >/dev/null 2>&1 && command -v cliphist >/dev/null 2>&1; then
+    (
+        while clipnotify; do 
+            xclip -o -selection c | cliphist store
+        done
+    ) &
+fi

@@ -1,0 +1,55 @@
+!-- Xft settings -- !
+Xft.antialias:	1
+Xft.hinting:	1
+Xft.autohint:	0
+Xft.hintstyle:	hintslight
+Xft.rgba:	rgb
+Xft.lcdfilter:	lcddefault
+Xft.dpi:   100
+
+Xcursor.theme: Bibata-Modern-Classic
+Xcursor.size: 20
+
+st.font:         JetBrainsMono Nerd Font:style:medium:pixelsize=20
+
+! window border inner
+st.opacity: 255
+st.borderpx: 10
+
+! Catppuccin Mocha
+! Special
+*.foreground:   #cdd6f4
+*.background:   #1e1e2e
+*.cursorColor:  #f5e0dc
+
+! Black
+*.color0:       #11111b
+*.color8:       #6c7086
+
+! Red
+*.color1:       #f38ba8
+*.color9:       #eba0ac
+
+! Green
+*.color2:       #a6e3a1
+*.color10:      #94e2d5
+
+! Yellow
+*.color3:       #f9e2af
+*.color11:      #fab387
+
+! Blue
+*.color4:       #89b4fa
+*.color12:      #74c7ec
+
+! Magenta
+*.color5:       #cba6f7
+*.color13:      #b4befe
+
+! Cyan
+*.color6:       #89dceb
+*.color14:      #f5c2e7
+
+! White
+*.color7:       #a6adc8
+*.color15:      #f5e0dc

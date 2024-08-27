@@ -1,0 +1,11 @@
+[Nemo Action]
+
+Active=true
+Name=Open file in Micro
+Comment=Open current file in Micro
+Exec=kitty -e micro %F
+Icon-Name=micro
+Selection=single;
+Extensions=nodirs;
+Quote=double
+Dependencies=micro;
