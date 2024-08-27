@@ -4,7 +4,6 @@ import traceback
 import subprocess
 from loguru import logger
 from typing import Dict, List, Union
-from inquirer.themes import GreenPassion
 from inquirer import Checkbox as QuestionCheckbox, List as QuestionList
 
 from packages import BASE, CUSTOM
@@ -149,7 +148,7 @@ class Builder:
 		for question in quests:
 			subprocess.run("clear", shell=True)
 			print(banner)
-			answer = inquirer.prompt([question], theme=GreenPassion())
+			answer = inquirer.prompt([question])
 			answers.update(answer)
 
 		return BuildOptions(
