@@ -13,7 +13,7 @@ echo "≽ܫ≼ Starting pre-install..." && sleep 2
 
 ##==> Installing basic dependencies for pacman
 #######################################################
-dependencies=(python)
+dependencies=(python python-pip)
 for package in "${dependencies[@]}"; do
     if ! pacman -Q $package &> /dev/null; then
         sudo pacman -S --needed $package
