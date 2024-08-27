@@ -2,21 +2,28 @@
 <div align="center">
 	<img src=".meta/logo.png" width="300px">
 	<h1> Meowrch ≽ܫ≼</h1>
-	<a href="https://github.com/meowrch/meowrch/stargazers">
-		<img src="https://img.shields.io/github/stars/meowrch/meowrch?color=C9CBFF&labelColor=1C2325&style=for-the-badge">
-	</a>
 	<a href="https://github.com/meowrch/meowrch/issues">
 		<img src="https://img.shields.io/github/issues/meowrch/meowrch?color=ffb29b&labelColor=1C2325&style=for-the-badge">
+	</a>
+	<a href="https://github.com/meowrch/meowrch/stargazers">
+		<img src="https://img.shields.io/github/stars/meowrch/meowrch?color=fab387&labelColor=1C2325&style=for-the-badge">
 	</a>
 	<a href="./LICENSE">
 		<img src="https://img.shields.io/github/license/meowrch/meowrch?color=FCA2AA&labelColor=1C2325&style=for-the-badge">
 	</a>
 	<br>
+	<br>
+	<a href="./README.ru.md">
+		<img src="https://img.shields.io/badge/README-RU-blue?color=cba6f7&labelColor=1C2325&style=for-the-badge">
+	</a>
+	<a href="./README.md">
+		<img src="https://img.shields.io/badge/README-ENG-blue?color=C9CBFF&labelColor=C9CBFF&style=for-the-badge">
+	</a>
 </div>
 
-<br>
-<br>
+***
 
+<br>
 <a href="https://youtu.be/KdGPDF4p5CA"><img src=".meta/assets/video-preview-youtube.png"></a>
 
 <!-- INFORMATION -->
@@ -62,29 +69,29 @@
 	</tr>
 </table>
 <div align="left">
-	<h3> 📝 О проекте</h2> 
+	<h3> 📝 About the project</h2> 
 	<p>
-	Meowrch - сборка, основанная на Arch, заточенная под максимальную производительность, эргономичность и красоту.
+	Meowrch is an Arch-based build sharpened to maximize performance, ergonomics, and beauty.
 	</p>
-	<h3>🚀 Особенности</h2>
+	<h3>🚀 Features</h2>
 	<p>
-	• Система полностью настроена для повседневного комфортного использования.<br>
-	• Широкие возможности кастомизации и <a href="https://github.com/meowrch/meowrch-themes">пользовательский магазин тем</a><br>
-	• Горячие клавиши заточены под обеспечение максимальной производительности.<br>
-	• Автоматическая установка и настройка системы. <br>
-	• Современный дизайн. <br>
-	• Обеспечение непрерывной и надежной поддержки для успешного функционирования проекта<br>
+	• The system is fully configured for everyday comfortable use.<br>
+	• Wide customization options and <a href="https://github.com/meowrch/meowrch-themes">custom theme store</a><br>
+	• Hot keys are designed to ensure maximum productivity.<br>
+	• Automatic installation and configuration of the system.<br>
+	• Modern design.<br>
+	• Providing continuous and reliable support for the successful operation of the project<br>
 	</p>
 </div>
 
 > [!WARNING]
-> ДАННАЯ КОНФИГУРАЦИЯ ПРЕДНАЗНАЧЕНА ДЛЯ МОНИТОРОВ С РАЗРЕШЕНИЕМ 1920X1080,
-> НЕКОТОРЫЕ ФУНКЦИИ ОБОЛОЧКИ МОГУТ РАБОТАТЬ НЕПРАВИЛЬНО.
-> В ЭТОМ СЛУЧАЕ ВАМ НЕОБХОДИМО ВНЕСТИ ИЗМЕНЕНИЯ ВРУЧНУЮ.
-> ЕСЛИ ВЫ ОБНАРУЖИТЕ ОШИБКИ В ОБОЛОЧКЕ, ПОЖАЛУЙСТА, СООБЩИТЕ О ПРОБЛЕМЕ.
+> THIS CONFIGURATION IS INTENDED FOR MONITORS WITH A RESOLUTION OF 1920X1080,
+> SOME SHELL FUNCTIONS MAY NOT WORK PROPERLY.
+> IN THIS CASE YOU NEED TO MAKE MANUAL CHANGES.
+> IF YOU FIND ERRORS IN THE SHELL, PLEASE REPORT THE PROBLEM.
 
 <!-- IMAGES -->
-<details close> <summary><h3>🖼️ Обзор</h3></summary>
+<details close> <summary><h3>🖼️ Review</h3></summary>
 	<img src=".meta/assets/1.png">
 	<img src=".meta/assets/2.png">
 	<img src=".meta/assets/3.png">
@@ -95,136 +102,136 @@
 </details>
 
 <!-- INSTALLATION -->
-## 🛠 Установка
-Если у вас уже установлен Linux Arch, то выполняем следующие действия:
-### 1. Клонируем репозиторий
+## 🛠 Installation
+If you already have Linux Arch installed, then follow the steps below:
+### 1. Clone the repository
 ```
 git clone https://github.com/meowrch/meowrch.git
 ```
-### 2. Переходим в каталог с проектом
+### 2. Go to the catalog with the project
 ```
 cd meowrch
 ```
-### 3. Запускаем автоматическую установку
+### 3. Start the automatic installation
 ```
 sh install.sh
 ```
 
 > [!important]
-> После установки вам нужно **обязательно** перезагрузиться для применения изменений.
+> After installation, you **must** reboot to apply the changes.
 
 
 > [!note]
-> Инструкции по навигации в меню установщика \
-> • Выбор элемента в меню: Для выбора нужного элемента нажмите Пробел. \
-> • Переход к следующему шагу: Чтобы перейти к следующему шагу, нажмите Enter.
+> Instructions for navigating the installer menu \ 
+> - Selecting an item in the menu: Press the Spacebar to select the desired item. \
+> - Advance to next step: Press Enter to advance to the next step.
 
-<h2>💻 Помощь</h2>
-Если у вас возникли вопросы или вам нужна помощь с проектом, пожалуйста, посетите нашу <a href="https://github.com/meowrch/meowrch/wiki">Wiki</a>. Здесь вы найдете полезные руководства и информацию, которая поможет вам лучше понять, как использовать наш продукт.<br><br>
-Если вы столкнулись с ошибками или проблемами, которых нет на нашей <a href="https://github.com/meowrch/meowrch/wiki">Wiki</a>, не стесняйтесь сообщить об этом в разделе <a href="https://github.com/meowrch/meowrch/issues">Issues</a>. 
+<h2>💻 Help</h2>
+If you have any questions or need help with the project, please visit our <a href="https://github.com/meowrch/meowrch/wiki">Wiki</a>. Here you will find useful guides and information to help you better understand how to use our product.<br><br>
+If you encounter bugs or issues that are not on our <a href="https://github.com/meowrch/meowrch/wiki">Wiki</a>, feel free to report them in the <a href="https://github.com/meowrch/meowrch/issues">Issues</a> section.
 <br><br>
-Так-же предлагаем посетить наш <a href="https://t.me/meowrch">Telegram</a>, в котором вы найдёте <a href="https://t.me/meowrch/9">новости</a>, <a href="https://t.me/meowrch/22">отзывы</a> и <a href="https://t.me/meowrch/7">быструю поддержку</a>.
+We also suggest visiting our <a href="https://t.me/meowrch">Telegram</a>, where you will find <a href="https://t.me/meowrch/9">news</a>, <a href="https://t.me/meowrch/22">reviews</a> and <a href="https://t.me/meowrch/7">quick support</a>.
 <br><br>
-Ваши отзывы помогут нам улучшить проект и сделать его еще более удобным для пользователей.
+Your feedback will help us improve the project and make it even more convenient for users.
 
 
-<h2>💻 Горячие клавиши</h2>
+<h2>💻 Hotkeys</h2>
 <table align="center">
 	<tr>
-		<td colspan="3" align="center">Сочетания клавиш</td>
+		<td colspan="3" align="center">Key combinations</td>
 	</tr>
     <tr>
-        <th>Название действия</th>
+        <th>Name of action</th>
         <th>Hyprland</th>
 		<th>Bspwm</th>
     </tr>
 	<tr>
-        <td>Открыть терминал</td>
+        <td>Open terminal</td>
 		<td colspan="2" align="center">super + enter</td>
     </tr>
     <tr>
-        <td>Открыть меню приложений</td>
+        <td>Open the application menu</td>
 		<td colspan="2" align="center">super + d</td>
     </tr>
 	<tr>
-        <td>Открыть файловый менеджер</td>
+        <td>Open the file manager</td>
 		<td colspan="2" align="center">super + e</td>
     </tr>
 	<tr>
-        <td>Открыть Firefox</td>
+        <td>Open the Firefox</td>
 		<td colspan="2" align="center">super + shift + f</td>
     </tr>
 	<tr>
-        <td>Открыть VSCode</td>
+        <td>Open the VSCode</td>
 		<td colspan="2" align="center">super + shift + c</td>
     </tr>
 	<tr>
-        <td>Открыть диспетчер задач (btop)</td>
+        <td>Open Task Manager (btop)</td>
 		<td colspan="2" align="center">ctrl + shift + esc</td>
     </tr>
 	<tr>
-        <td>Открыть выбор емоджи</td>
+        <td>Open a selection of emoji</td>
 		<td colspan="2" align="center">super + .</td>
     </tr>
     <tr>
-        <td>Открыть меню включения / выключения компьютера</td>
+        <td>Open the power on/off menu of the computer</td>
 		<td colspan="2" align="center">super + x</td>
     </tr>
 	<tr>
-        <td>Сделать скриншот</td>
+        <td>Take a screenshot</td>
 		<td colspan="2" align="center">PrintScreen</td>
     </tr>
 	<tr>
-        <td>Сменить обои</td>
+        <td>Change the wallpaper</td>
 		<td colspan="2" align="center">super + w</td>
     </tr>
 	<tr>
-        <td>Сменить тему</td>
+        <td>Change the theme</td>
 		<td colspan="2" align="center">super + t</td>
     </tr>
 	<tr>
-        <td>Сменить раскладку</td>
+        <td>Change the layout</td>
 		<td colspan="2" align="center">shift + alt</td>
     </tr>
     <tr>
-        <td>Распознать цвет на экране</td>
+        <td>Recognize the color on the screen</td>
 		<td colspan="2" align="center">super + c</td>
     </tr>
     <tr>
-        <td>Заблокировать экран</td>
+        <td>Lock the screen</td>
         <td colspan="2" align="center">super + l</td>
     </tr>
 	<tr>
-        <td>Переключиться на другую рабочую область</td>
+        <td>Switch to another workspace</td>
 		<td colspan="2" align="center">super + 1-10</td>
     </tr>
 	<tr>
-        <td>Переключиться на скрытую рабочую область</td>
+        <td>Switch to the hidden workspace</td>
 		<td>super + s</td>
 		<td>N/A</td>
     </tr>
     <tr>
-        <td>Перенести активное окно на другую рабочую область</td>
+        <td>Move the active window to another workspace</td>
 		<td colspan="2" align="center">super + shift + 1-10</td>
     </tr>
     <tr>
-        <td>Перевести активное окно в плавающий режим</td>
+        <td>Switch the active window to floating mode</td>
 		<td colspan="2" align="center">super + space</td>
     </tr>
 	<tr>
-        <td>Перевести активное окно в полноразмерный режим</td>
+        <td>Switch the active window to full-size mode</td>
 		<td colspan="2" align="center">alt + enter</td>
     </tr>
     <tr>
-        <td>Закрыть активное окно</td>
+        <td>Close the active window</td>
 		<td colspan="2" align="center">super + q</td>
     </tr>
     <tr>
-        <td>Перезапустить оконный менеджер</td>
+        <td>Restart the window manager</td>
 		<td colspan="2" align="center">ctrl + shift + r</td>
     </tr>
 	<tr>
-		<td>Вся конфигурация находится в: </td>
+		<td>The entire configuration is in: </td>
 		<td>~/.config/hypr/keybindings.conf</td>
 		<td>~/.config/sxhkd/sxhkdrc</td>
 	</tr>
@@ -232,5 +239,5 @@ sh install.sh
 
 ***
 
-Проект активно <a href="https://github.com/meowrch/meowrch/projects">развивается</a>, поэтому вы можете предложить свои идеи по улучшению. 
-Если остались вопросы, - добро пожаловать в <a href="https://t.me/meowrch">Telegram</a>
+The project is actively <a href="https://github.com/meowrch/meowrch/projects">developing</a>, so you can offer your ideas for improvement.
+If you have any questions, welcome to <a href="https://t.me/meowrch">Telegram</a>
