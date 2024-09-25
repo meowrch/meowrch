@@ -49,8 +49,8 @@ XF86Audio{Play,Pause,Next,Prev,Stop}
 	playerctl stop}
 #--------------------------------------------------------------------------------------------## BRIGHTNESS	
 XF86MonBrightness{Up,Down}
-	{sh $HOME/bin/brightnessctl.sh --up, \
-	sh $HOME/bin/brightnessctl.sh --down}				  
+	{sh $HOME/bin/brightness.sh --up, \
+	sh $HOME/bin/brightness.sh --down}				  
 ##############################################################################################
 
 
