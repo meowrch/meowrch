@@ -40,6 +40,9 @@ super + shift + {c,f,t,o}
 #--------------------------------------------------------------------------------------------## VOLUME
 XF86Audio{RaiseVolume,LowerVolume,Mute}
     sh $HOME/bin/volume.sh --device output --action {increase,decrease,toggle}
+
+XF86AudioMicMute
+	sh $HOME/bin/volume.sh --device input --action toggle
 #--------------------------------------------------------------------------------------------## PLAYER
 XF86Audio{Play,Pause,Next,Prev,Stop}
 	{playerctl play-pause, \
