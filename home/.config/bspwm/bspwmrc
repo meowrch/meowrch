@@ -70,6 +70,7 @@ bspc rule -a 'Yad' state=floating center=true
 bspc rule -a 'Blueman-manager' state=floating center=true
 bspc rule -a 'Gnome-calculator' state=floating rectangle=360x500+0+0 center=true
 bspc rule -a 'loupe' state=floating rectangle=1200x800+0+0 center=true
+bspc rule -a 'pavucontrol' state=floating rectangle=920x450+0+0 center=true
 
 ##==> Resources and Utilities
 #################################
