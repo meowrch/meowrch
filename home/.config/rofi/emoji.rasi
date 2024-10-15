@@ -1,0 +1,101 @@
+@import "theme"
+
+configuration {
+    show-icons:                  true;
+    drun-display-format:         "{name}";
+    window-format:               "{w}{t}";
+    font:                        "JetBrainsMono Nerd Font 10";
+    icon-theme:                  "Tela-circle-dracula";
+    show-icons: true;
+} 
+
+window {
+    height:                      33em;
+    width:                       63em;
+    transparency:                "real";
+    fullscreen:                  false;
+    enabled:                     true;
+    cursor:                      "default";
+    spacing:                     0em;
+    padding:                     0em;
+    border:						 3px solid;
+    border-radius: 				 15px;
+    border-color:                @main-br;
+    background-color:            @main-bg;
+}
+
+mainbox {
+    spacing: 0;
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    enabled:                     true;
+    children:                    [ prompt, entry ];
+    spacing:                     0em;
+    padding:                     0em;
+    cursor:                      pointer;
+    background-color:            @main-bg;
+    text-color:                  @main-fg;
+    border:  0px 0px 2px 0px solid;
+    border-color:                @main-br;
+}
+
+prompt {
+	enabled:                     true;
+	padding:                     0.5em 1em 0.5em 1em;
+    text-align: 				 center;
+    cursor:                      default;
+    background-color:            transparent;
+    text-color:                  @select-fg;
+    background-color:            @main-br;
+}
+
+entry {
+    enabled:                     true;
+    padding:                     0.5em 0.5em 0.5em 0.5em;
+    cursor:                      text;
+    background-color:            transparent;
+    text-color:                  @main-fg;
+    background-color:            transparent;
+}
+
+listview {
+	columns:       13;
+	lines:         7;
+	spacing:                     0em;
+	padding:                     0.3em 0 0 0.3em;
+	cycle:         true;
+	dynamic:       true;
+	layout:        vertical;
+	flow:          horizontal;
+	reverse:       false;
+	fixed-height:  true;
+	fixed-columns: true;
+	cursor:                      "default";
+	background-color:            @main-bg;
+	text-color:                  @main-fg;
+}
+
+element {
+	background-color:            transparent;
+	border-radius: 10px;
+}
+
+element selected.normal {
+	background-color:            @select-bg;
+}
+
+element-icon {
+	size: 0;
+    background-color:            transparent;
+}
+
+element-text {
+	cursor:                      pointer;
+	vertical-align:   0.5;
+	horizontal-align: 0.5;
+	font:            "FiraCode Nerd Font 24";
+	background-color:            transparent;
+	color: @main-bg;
+}
