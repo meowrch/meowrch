@@ -17,7 +17,7 @@ super + {Return,e,w,t,p,v,d,x,l,c,b,period}
     sh $HOME/bin/screen-lock.sh, \
     sh $HOME/bin/color-picker.sh, \
     sh $HOME/bin/toggle-bar.sh, \
-    rofimoji --action copy}
+    sh $HOME/bin/rofi-menus/rofimoji.sh}
 
 ctrl + shift + Escape 
 	alacritty -e btop

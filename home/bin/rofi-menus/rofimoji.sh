@@ -1,0 +1,1 @@
+rofimoji --selector-args="-theme ~/.config/rofi/emoji.rasi -kb-row-left Left -kb-row-right Right -kb-move-char-back Control+b -kb-move-char-forward Control+f" --hidden-descriptions --action copy --max-recent 0
