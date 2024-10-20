@@ -5,7 +5,7 @@ choice=$(printf "  Lock\n󰍃  Logout\n󰒲  Suspend\n  Reboot\n  Shutd
 case "$choice" in
   "  Lock") sh $HOME/bin/screen-lock.sh ;;
   "󰍃  Logout") pkill -KILL -u "$USER" ;;
-  "󰒲  Suspend") systemctl suspend && sh $HOME/bin/screen-lock.sh ;;
+  "󰒲  Suspend") sh $HOME/bin/screen-lock.sh --suspend ;;
   "  Reboot") systemctl reboot ;;
   "  Shutdown") systemctl poweroff ;;
 esac
