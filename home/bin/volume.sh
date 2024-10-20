@@ -36,7 +36,7 @@ print_status() {
     
     if [[ "${device}" == "output" ]]; then
         if [[ $(pamixer --get-mute) == "true" ]]; then
-            local icon="婢 $vol%"
+            local icon="  $vol%"
 			local color=$DISABLED_COLOR
         elif [[ "$vol" -le 30 ]]; then
             local icon=" $vol%"
