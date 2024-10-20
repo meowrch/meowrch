@@ -19,7 +19,7 @@ BASE = Packages(
 		bspwm_packages=["xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", "lxappearance", "polybar", "xorg-xrandr", "xsettingsd"],
 		hyprland_packages=[
 			"hyprland", "waybar", "swww", "cliphist", "wl-clipboard", "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
-			"xdg-desktop-portal-wlr"]
+			"xdg-desktop-portal-wlr", "hypridle"]
 	),
 	aur=DistributionPackages(
 		common=[
