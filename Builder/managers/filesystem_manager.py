@@ -1,62 +1,80 @@
 import shutil
-import traceback
 import subprocess
+import traceback
 from pathlib import Path
+
 from loguru import logger
 
 
 class FileSystemManager:
-	@staticmethod
-	def create_default_folders() -> None:
-		logger.success("Starting the process of creating default directories")
-		
-		default_folders = [
-			".config", "Desktop", "Downloads", "Templates", "Public",
-			"Documents", "Music", "Pictures", "Videos"
-		]
+    @staticmethod
+    def create_default_folders() -> None:
+        logger.success("Starting the process of creating default directories")
 
-		expanded_folders = [str(Path.home() / folder) for folder in default_folders]
+        default_folders = [
+            ".config",
+            "Desktop",
+            "Downloads",
+            "Templates",
+            "Public",
+            "Documents",
+            "Music",
+            "Pictures",
+            "Videos",
+        ]
 
-		try:
-			subprocess.run(["mkdir", "-p", *expanded_folders], check=True)
-		except Exception:
-			logger.error(f"Error creating default directories: {traceback.format_exc()}")
+        expanded_folders = [str(Path.home() / folder) for folder in default_folders]
 
-		logger.success("The process of creating default directories is complete!")
+        try:
+            subprocess.run(["mkdir", "-p", *expanded_folders], check=True)
+        except Exception:
+            logger.error(
+                f"Error creating default directories: {traceback.format_exc()}"
+            )
 
-	@staticmethod
-	def copy_dotfiles(remove_bspwm: bool, remove_hyprland: bool) -> None:
-		logger.success("Starting the process of copying dotfiles")
-		home = Path.home()
+        logger.success("The process of creating default directories is complete!")
 
-		##==> Копирование дотфайлов
-		##############################################
-		shutil.copytree(src=Path("./home/.config"), dst=home / ".config", dirs_exist_ok=True)
-		shutil.copytree(src=Path("./home/bin"), dst=home / "bin", dirs_exist_ok=True)
-		shutil.copytree(src=Path("./home/.local/share/nemo"), dst=home / ".local" / "share" / "nemo", dirs_exist_ok=True)
-		shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
-		shutil.copy(src=Path("./home/.env"), dst=home / ".env")
-		shutil.copy(src=Path("./home/.Xresources"), dst=home / ".Xresources")
-		shutil.copy(src=Path("./home/.xinitrc"), dst=home / ".xinitrc")
+    @staticmethod
+    def copy_dotfiles(remove_bspwm: bool, remove_hyprland: bool) -> None:
+        logger.success("Starting the process of copying dotfiles")
+        home = Path.home()
 
-		destination = home / ".icons" / "default" / "index.theme"
-		destination.parent.mkdir(parents=True, exist_ok=True)
-		shutil.copy(src=Path("./home/.icons/default/index.theme"), dst=destination)
+        ##==> Копирование дотфайлов
+        ##############################################
+        shutil.copytree(
+            src=Path("./home/.config"), dst=home / ".config", dirs_exist_ok=True
+        )
+        shutil.copytree(src=Path("./home/bin"), dst=home / "bin", dirs_exist_ok=True)
+        shutil.copytree(
+            src=Path("./home/.local/share/nemo"),
+            dst=home / ".local" / "share" / "nemo",
+            dirs_exist_ok=True,
+        )
+        shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
+        shutil.copy(src=Path("./home/.env"), dst=home / ".env")
+        shutil.copy(src=Path("./home/.Xresources"), dst=home / ".Xresources")
+        shutil.copy(src=Path("./home/.xinitrc"), dst=home / ".xinitrc")
 
-		##==> Удаляем лишнее
-		##############################################
-		if remove_bspwm:
-			shutil.rmtree(home / ".config" / "bspwm", ignore_errors=True)
-			shutil.rmtree(home / ".config" / "polybar", ignore_errors=True)
-		if remove_hyprland:
-			shutil.rmtree(home / ".config" / "hypr", ignore_errors=True)
-			shutil.rmtree(home / ".config" / "swaylock", ignore_errors=True)
-			shutil.rmtree(home / ".config" / "waybar", ignore_errors=True)
+        destination = home / ".icons" / "default" / "index.theme"
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(src=Path("./home/.icons/default/index.theme"), dst=destination)
 
-		##==> Выдаем права
-		##############################################
-		for path in [home/".config", home/"bin"]:
-			try:
-				subprocess.run(["sudo", "chmod", "-R", "700", str(path)], check=True)
-			except Exception:
-				logger.error(f"[!] Error while making {path} executable: {traceback.format_exc()}")
+        ##==> Удаляем лишнее
+        ##############################################
+        if remove_bspwm:
+            shutil.rmtree(home / ".config" / "bspwm", ignore_errors=True)
+            shutil.rmtree(home / ".config" / "polybar", ignore_errors=True)
+        if remove_hyprland:
+            shutil.rmtree(home / ".config" / "hypr", ignore_errors=True)
+            shutil.rmtree(home / ".config" / "swaylock", ignore_errors=True)
+            shutil.rmtree(home / ".config" / "waybar", ignore_errors=True)
+
+        ##==> Выдаем права
+        ##############################################
+        for path in [home / ".config", home / "bin"]:
+            try:
+                subprocess.run(["sudo", "chmod", "-R", "700", str(path)], check=True)
+            except Exception:
+                logger.error(
+                    f"[!] Error while making {path} executable: {traceback.format_exc()}"
+                )

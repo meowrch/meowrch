@@ -1,0 +1,125 @@
+from typing import Dict, List, Union
+
+import inquirer
+from colorama import Fore
+from inquirer import Checkbox as QuestionCheckbox
+from inquirer import List as QuestionList
+from managers.drivers_manager import DriversManager
+from packages import CUSTOM
+from utils.banner import clear_and_banner
+from utils.schemes import BuildOptions
+
+
+class Question:
+    answers_type = Dict[str, Union[str, List[str]]]
+
+    @staticmethod
+    def _choose_custom_packages() -> None:
+        selected_packages = {}
+        complete_btn_text = Fore.RED + "Complete the survey"
+
+        while True:
+            clear_and_banner()
+
+            category_question = inquirer.List(
+                "category",
+                message="Choose the category of packages:",
+                choices=list(CUSTOM.keys()) + [complete_btn_text],
+                carousel=True,
+            )
+
+            category_answer = inquirer.prompt([category_question])
+            selected_category = category_answer["category"]
+
+            if selected_category == complete_btn_text:
+                break
+
+            package_choices = sorted(
+                [(name, info) for name, info in CUSTOM[selected_category].items()],
+                key=lambda item: not item[1].recommended,
+            )
+
+            package_choices = [
+                f"{name} | {Fore.YELLOW + 'Recommended' + Fore.RESET + ' |' if info.recommended else ''} {info.description}"
+                for name, info in package_choices
+            ]
+            previous_selection = [
+                f"{name}: {info.description}"
+                for name, info in CUSTOM[selected_category].items()
+                if info.selected
+            ]
+
+            clear_and_banner()
+
+            package_question = inquirer.Checkbox(
+                "packages",
+                message=f'Choose the packages from category "{selected_category}":',
+                choices=package_choices,
+                default=previous_selection,
+                carousel=True,
+            )
+
+            package_answer = inquirer.prompt([package_question])
+            selected_packages = [
+                pkg.split(" | ")[0] for pkg in package_answer["packages"]
+            ]
+            print(selected_packages)
+            for name, info in CUSTOM[selected_category].items():
+                if name in selected_packages:
+                    info.selected = True
+                else:
+                    info.selected = False
+
+    @staticmethod
+    def get_answers():
+        drivers = DriversManager.auto_detection()
+        answers: Question.answers_type = {}
+
+        quests: List[Union[QuestionCheckbox, QuestionList]] = [
+            QuestionCheckbox(
+                name="install_wm",
+                message="1) Which window manager do you want to install?",
+                choices=["hyprland", "bspwm"],
+                default=["bspwm", "hyprland"],
+                carousel=True,
+            ),
+            QuestionList(
+                name="enable_multilib",
+                message="2) Should I enable the multilib repository?",
+                choices=["Yes", "No"],
+                default="Yes",
+                carousel=True,
+            ),
+            QuestionList(
+                name="update_arch_database",
+                message="3) Update Arch DataBase?",
+                choices=["Yes", "No"],
+                default="Yes",
+                carousel=True,
+            ),
+            QuestionCheckbox(
+                name="install_drivers",
+                message="4) What drivers do you want to install?",
+                choices=["Nvidia", "Intel", "AMD"],
+                default=drivers,
+                carousel=True,
+            ),
+        ]
+
+        for question in quests:
+            clear_and_banner()
+            answer = inquirer.prompt([question])
+            answers.update(answer)
+
+        Question._choose_custom_packages()
+
+        return BuildOptions(
+            install_bspwm="bspwm" in answers["install_wm"],
+            install_hyprland="hyprland" in answers["install_wm"],
+            enable_multilib=answers["enable_multilib"] == "Yes",
+            update_arch_database=answers["update_arch_database"] == "Yes",
+            install_drivers=len(answers["install_drivers"]) > 0,
+            intel_driver="Intel" in answers["install_drivers"],
+            nvidia_driver="Nvidia" in answers["install_drivers"],
+            amd_driver="AMD" in answers["install_drivers"],
+        )

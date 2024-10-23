@@ -35,6 +35,7 @@ declare -a packages=(
 	"pyamdgpuinfo"
 	"pyyaml"
 	"pillow"
+	"colorama"
 )
 
 for package in "${packages[@]}"; do
