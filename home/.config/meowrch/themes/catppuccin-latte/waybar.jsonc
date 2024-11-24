@@ -194,6 +194,7 @@
 	"hyprland/language": {
         "format": "{short} {variant}",
         "rotate": 0,
+        "min-length": 2,
         "tooltip": false
     },
     "custom/system-update": {
