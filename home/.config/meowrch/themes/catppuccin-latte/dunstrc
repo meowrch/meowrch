@@ -6,7 +6,7 @@ padding = 20
 horizontal_padding = 20
 
 width = 400
-height = 300
+height = (0, 300)
 offset = 16x60
 origin = top-right
 
@@ -49,6 +49,7 @@ foreground = "#4c4f69"
 timeout = 5
 
 [urgency_normal]
+default_icon = dialog-information
 background = "#eff1f5"
 foreground = "#4c4f69"
 timeout = 5
