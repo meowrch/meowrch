@@ -177,3 +177,4 @@ user_pref("toolkit.telemetry.pioneer-new-studies-available", true);
 user_pref("toolkit.telemetry.previousBuildID", "20240806001732");
 user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
 user_pref("trailhead.firstrun.didSeeAboutWelcome", true);
+user_pref("svg.context-properties.content.enabled", true);
