@@ -2,6 +2,7 @@ import os
 import subprocess
 import traceback
 from typing import List
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from loguru import logger
 
@@ -91,31 +92,47 @@ class PackageManager:
             return False
 
     @staticmethod
-    def install_packages(packages_list: List[str], aur: bool = False) -> None:
-        for package in packages_list:
-            try:
-                if aur:
-                    subprocess.run(
-                        ["yay", "-S", "--noconfirm", "--needed", package], check=True
-                    )
-                else:
-                    subprocess.run(
-                        ["sudo", "pacman", "-S", "--noconfirm", "--needed", package],
-                        check=True,
-                    )
-            except Exception:
-                ##==> Для проблемных пакетов
-                ############################################
-                if package == "i3lock-color":
-                    if PackageManager.install_i3lock_color():
-                        continue
-
-                logger.error(
-                    f'Error while installing package "{package}": {traceback.format_exc()}'
+    def install_package(package: str, aur: bool) -> None:
+        try:
+            if aur:
+                subprocess.run(
+                    ["yay", "-S", "--noconfirm", "--needed", package], check=True
                 )
-                continue
-
+            else:
+                subprocess.run(
+                    ["sudo", "pacman", "-S", "--noconfirm", "--needed", package],
+                    check=True,
+                )
             logger.success(f'Package "{package}" has been successfully installed!')
+        except Exception:
+            # Для проблемных пакетов
+            if package == "i3lock-color":
+                if PackageManager.install_i3lock_color():
+                    return  # Установка прошла успешно, выходим из функции
+
+            logger.error(
+                f'Error while installing package "{package}": {traceback.format_exc()}'
+            )
+
+    @staticmethod
+    def install_packages(packages_list: List[str], aur: bool = False) -> None:
+        max_workers = 5  # Количество параллельных установок
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = {
+                executor.submit(
+                    PackageManager.install_package, 
+                    package, 
+                    aur
+                ): package 
+                for package in packages_list
+            }
+
+            for future in as_completed(futures):
+                package = futures[future]
+                try:
+                    future.result()
+                except Exception as e:
+                    logger.error(f'Failed to install package "{package}": {e}')
 
     @staticmethod
     def update_pacman_conf(*, enable_multilib: bool = False):
