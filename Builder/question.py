@@ -30,7 +30,7 @@ class Question:
 
             category_question = inquirer.List(
                 "category",
-                message="Select a category of packages and choose the ones you want",
+                message="6) Select a category of packages and choose the ones you want",
                 choices=list(
                     category
                     + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
@@ -95,22 +95,29 @@ class Question:
                 carousel=True,
             ),
             QuestionList(
+                name="make_backup",
+                message="2) Want to backup your configurations?",
+                choices=["Yes", "No"],
+                default="Yes",
+                carousel=True,
+            ),
+            QuestionList(
                 name="enable_multilib",
-                message="2) Should I enable the multilib repository?",
+                message="3) Should I enable the multilib repository?",
                 choices=["Yes", "No"],
                 default="Yes",
                 carousel=True,
             ),
             QuestionList(
                 name="update_arch_database",
-                message="3) Update Arch DataBase?",
+                message="4) Update Arch DataBase?",
                 choices=["Yes", "No"],
                 default="Yes",
                 carousel=True,
             ),
             QuestionCheckbox(
                 name="install_drivers",
-                message="4) What drivers do you want to install?",
+                message="5) What drivers do you want to install?",
                 choices=["Nvidia", "Intel", "AMD"],
                 default=drivers,
                 carousel=True,
@@ -127,6 +134,7 @@ class Question:
         return BuildOptions(
             install_bspwm="bspwm" in answers["install_wm"],
             install_hyprland="hyprland" in answers["install_wm"],
+            make_backup=answers["make_backup"] == "Yes",
             enable_multilib=answers["enable_multilib"] == "Yes",
             update_arch_database=answers["update_arch_database"] == "Yes",
             install_drivers=len(answers["install_drivers"]) > 0,

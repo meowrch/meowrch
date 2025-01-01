@@ -20,6 +20,18 @@ class Builder:
         )
         self.build_options: BuildOptions = Question.get_answers()
 
+        if self.build_options.make_backup:
+            logger.info(
+                "The process of creating a backup of configurations is started!"
+            )
+            FileSystemManager.make_backup()
+            logger.warning(
+                "A backup of all your configuration files is located "
+                "in the root of the meowrch at the path \"./backup/\""
+            )
+            logger.warning("Check the backup before you start the installation")
+            input("Press Enter to continue with the installation: ")
+
         FileSystemManager.create_default_folders()
         FileSystemManager.copy_dotfiles(
             exclude_bspwm=not self.build_options.install_bspwm,
