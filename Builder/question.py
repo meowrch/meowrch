@@ -16,20 +16,32 @@ class Question:
     @staticmethod
     def _choose_custom_packages() -> None:
         selected_packages = {}
-        complete_btn_text = Fore.RED + "Complete the survey"
+        complete_btn_text = Fore.GREEN + "Complete the survey"
 
         while True:
             clear_and_banner()
 
+            selected_counts = {
+                category: sum(
+                    1 for pkg in packages.values() if getattr(pkg, "selected", False)
+                )
+                for category, packages in CUSTOM.items()
+            }
+
             category_question = inquirer.List(
                 "category",
-                message="Choose the category of packages:",
-                choices=list(CUSTOM.keys()) + [complete_btn_text],
+                message="Select a category of packages and choose the ones you want",
+                choices=list(
+                    category
+                    + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
+                    for category in CUSTOM.keys()
+                )
+                + [complete_btn_text],
                 carousel=True,
             )
 
             category_answer = inquirer.prompt([category_question])
-            selected_category = category_answer["category"]
+            selected_category = category_answer["category"].split(" | ")[0]
 
             if selected_category == complete_btn_text:
                 break
@@ -40,11 +52,11 @@ class Question:
             )
 
             package_choices = [
-                f"{name} | {Fore.YELLOW + 'Recommended' + Fore.RESET + ' |' if info.recommended else ''} {info.description}"
+                f"{name} | {Fore.YELLOW + 'Recommended' + Fore.RESET + ' | ' if info.recommended else ''}{info.description}"
                 for name, info in package_choices
             ]
             previous_selection = [
-                f"{name}: {info.description}"
+                f"{name} | {Fore.YELLOW + 'Recommended' + Fore.RESET + ' | ' if info.recommended else ''}{info.description}"
                 for name, info in CUSTOM[selected_category].items()
                 if info.selected
             ]
@@ -53,7 +65,7 @@ class Question:
 
             package_question = inquirer.Checkbox(
                 "packages",
-                message=f'Choose the packages from category "{selected_category}":',
+                message=f'Choose the packages from category "{selected_category}"',
                 choices=package_choices,
                 default=previous_selection,
                 carousel=True,
@@ -63,7 +75,6 @@ class Question:
             selected_packages = [
                 pkg.split(" | ")[0] for pkg in package_answer["packages"]
             ]
-            print(selected_packages)
             for name, info in CUSTOM[selected_category].items():
                 if name in selected_packages:
                     info.selected = True
