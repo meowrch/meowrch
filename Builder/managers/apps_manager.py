@@ -39,7 +39,7 @@ class AppsManager:
             )
 
     @staticmethod
-    def configure_firefox() -> None:
+    def configure_firefox(darkreader: bool, ublock: bool, twp: bool, unpaywall: bool, tampermonkey: bool) -> None:
         logger.info("Start installing Firefox")
 
         try:
@@ -53,6 +53,21 @@ class AppsManager:
             )
         except Exception:
             logger.error(f"Error installing firefox: {traceback.format_exc()}")
+
+        plugins = [
+            (darkreader, "addon@darkreader.org.xpi"),
+            (ublock, "uBlock0@raymondhill.net.xpi"),
+            (twp, "{036a55b4-5e72-4d05-a06c-cba2dfcc134a}.xpi"),
+            (unpaywall, "{f209234a-76f0-4735-9920-eb62507a54cd}.xpi"),
+            (tampermonkey, "firefox@tampermonkey.net.xpi")
+        ]
+
+        for p in plugins:
+            if not p[0]:
+                try:
+                    os.remove(path_profile + f"/extensions/{p[1]}")
+                except Exception:
+                    ...
 
         logger.success("Firefox has been successfully installed!")
 

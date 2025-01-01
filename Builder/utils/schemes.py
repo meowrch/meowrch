@@ -34,3 +34,8 @@ class BuildOptions:
     intel_driver: bool
     nvidia_driver: bool
     amd_driver: bool
+    ff_darkreader: bool
+    ff_ublock: bool
+    ff_twp: bool
+    ff_unpaywall: bool
+    ff_tampermonkey: bool

@@ -19,7 +19,7 @@ class Builder:
             "The program has been launched successfully. We are starting the survey."
         )
         self.build_options: BuildOptions = Question.get_answers()
-
+        
         if self.build_options.make_backup:
             logger.info(
                 "The process of creating a backup of configurations is started!"
@@ -51,7 +51,13 @@ class Builder:
 
         AppsManager.configure_grub()
         AppsManager.configure_sddm()
-        AppsManager.configure_firefox()
+        AppsManager.configure_firefox(
+            darkreader=self.build_options.ff_darkreader,
+            ublock=self.build_options.ff_ublock,
+            twp=self.build_options.ff_twp,
+            unpaywall=self.build_options.ff_unpaywall,
+            tampermonkey=self.build_options.ff_tampermonkey
+        )
         AppsManager.configure_code()
 
         self.daemons_setting()
