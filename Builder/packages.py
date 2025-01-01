@@ -64,21 +64,18 @@ DRIVERS = {
 CUSTOM = {
     "development": {
         "obsidian": PackageInfo("A powerful knowledge base that works on top of a local folder of plain text Markdown files", recommended=True),
-		"pycharm-professional": PackageInfo("Python IDE for Professional Developers", recommended=True, aur=True),
-        "android-studio": PackageInfo("The official Android IDE (Stable branch)", aur=True, recommended=True),
         "postgresql": PackageInfo("Sophisticated object-relational DBMS", recommended=True),
-        "pgadmin4-desktop": PackageInfo("The desktop user interface for pgAdmin", aur=True),
-		"pycharm-community-edition": PackageInfo("Python IDE for Professional Developers"),
+        "pgadmin4-desktop": PackageInfo("The desktop user interface for pgAdmin", aur=True, recommended=True),
         "redis": PackageInfo("An in-memory database that persists on disk")
 	},
     "social_media": {
-		"telegram-desktop": PackageInfo("Popular messenger", recommended=True),
-        "discrod": PackageInfo("Popular social platform", recommended=True),
+		"telegram-desktop": PackageInfo("Popular messenger", recommended=True, selected=True),
+        "discord": PackageInfo("Popular social platform", recommended=True),
 		"vesktop": PackageInfo("Custom Discord client", recommended=True, aur=True)
 	},
 	"games": {
-		"steam": PackageInfo("The best launcher for games", recommended=True), 
-		"gamemode": PackageInfo("Game optimization tool", recommended=True), 
+		"steam": PackageInfo("The best launcher for games", recommended=True, selected=True), 
+		"gamemode": PackageInfo("Game optimization tool", recommended=True, selected=True), 
 		"mangohud": PackageInfo("Displays metrics in running games"),
         "portproton": PackageInfo("Launcher for Windows games with good optimization", recommended=True, aur=True)
 	},
