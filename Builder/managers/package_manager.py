@@ -1,8 +1,8 @@
 import os
 import subprocess
 import traceback
-from typing import List
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import List
 
 from loguru import logger
 
@@ -34,8 +34,23 @@ class PackageManager:
             return False
 
     @staticmethod
+    def clone_repository(repo_url: str, target_path: str) -> bool:
+        try:
+            os.makedirs(os.path.dirname(target_path), exist_ok=True)
+
+            subprocess.run(
+                ["git", "clone", repo_url, target_path],
+                check=True,
+            )
+            return True
+        except Exception as e:
+            logger.error(f'Error while cloning repository "{repo_url}": {e}')
+            return False
+
+    @staticmethod
     def install_aur_manager() -> None:
         logger.info("Starting the yay package manager installation process.")
+        target_path = "/tmp/yay"
 
         try:
             subprocess.run(
@@ -43,19 +58,16 @@ class PackageManager:
             )
 
             if not PackageManager.check_yay_installed():
-                if not os.path.exists("/tmp/yay"):
-                    subprocess.run(
-                        [
-                            "git",
-                            "-C",
-                            "/tmp",
-                            "clone",
-                            "https://aur.archlinux.org/yay.git",
-                        ],
-                        check=True,
+                if not os.path.exists(target_path):
+                    cloned = PackageManager.clone_repository(
+                        repo_url="https://aur.archlinux.org/yay.git",
+                        target_path=target_path,
                     )
 
-                subprocess.run(["makepkg", "-si"], cwd="/tmp/yay", check=True)
+                    if not cloned:
+                        return
+
+                subprocess.run(["makepkg", "-si"], cwd=target_path, check=True)
         except Exception:
             logger.error(f"Error while installing yay: {traceback.format_exc()}")
             exit(1)
@@ -65,27 +77,25 @@ class PackageManager:
     @staticmethod
     def install_i3lock_color() -> bool:
         dir_name = "i3lock-color"
+        target_path = f"/tmp/{dir_name}"
 
         try:
             subprocess.run(
                 ["sudo", "pacman", "-S", "--noconfirm", "--needed", "git"], check=True
             )
 
-            if os.path.exists(f"/tmp/{dir_name}"):
-                subprocess.run(["sudo", "rm", "-rf", f"/tmp/{dir_name}"], check=True)
+            if os.path.exists(target_path):
+                subprocess.run(["sudo", "rm", "-rf", target_path], check=True)
+
+            cloned = PackageManager.clone_repository(
+                "https://github.com/Raymo111/i3lock-color.git", target_path
+            )
+
+            if not cloned:
+                return False
 
             subprocess.run(
-                [
-                    "git",
-                    "-C",
-                    "/tmp",
-                    "clone",
-                    "https://github.com/Raymo111/i3lock-color.git",
-                ],
-                check=True,
-            )
-            subprocess.run(
-                ["sh", "./install-i3lock-color.sh"], cwd=f"/tmp/{dir_name}", check=True
+                ["sh", "./install-i3lock-color.sh"], cwd=target_path, check=True
             )
             return True
         except Exception:
@@ -116,14 +126,10 @@ class PackageManager:
 
     @staticmethod
     def install_packages(packages_list: List[str], aur: bool = False) -> None:
-        max_workers = 5  # Количество параллельных установок
+        max_workers = 5
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = {
-                executor.submit(
-                    PackageManager.install_package, 
-                    package, 
-                    aur
-                ): package 
+                executor.submit(PackageManager.install_package, package, aur): package
                 for package in packages_list
             }
 
