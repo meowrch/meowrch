@@ -27,6 +27,7 @@ class PackageInfo:
 class BuildOptions:
     install_bspwm: bool
     install_hyprland: bool
+    make_backup: bool
     enable_multilib: bool
     update_arch_database: bool
     install_drivers: bool
