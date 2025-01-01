@@ -22,8 +22,8 @@ class Builder:
 
         FileSystemManager.create_default_folders()
         FileSystemManager.copy_dotfiles(
-            remove_bspwm=not self.build_options.install_bspwm,
-            remove_hyprland=not self.build_options.install_hyprland,
+            exclude_bspwm=not self.build_options.install_bspwm,
+            exclude_hyprland=not self.build_options.install_hyprland,
         )
 
         PackageManager.update_pacman_conf(
