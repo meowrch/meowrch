@@ -126,19 +126,8 @@ class PackageManager:
 
     @staticmethod
     def install_packages(packages_list: List[str], aur: bool = False) -> None:
-        max_workers = 5
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = {
-                executor.submit(PackageManager.install_package, package, aur): package
-                for package in packages_list
-            }
-
-            for future in as_completed(futures):
-                package = futures[future]
-                try:
-                    future.result()
-                except Exception as e:
-                    logger.error(f'Failed to install package "{package}": {e}')
+        for package in packages_list:
+            PackageManager.install_package(package=package, aur=aur)
 
     @staticmethod
     def update_pacman_conf(*, enable_multilib: bool = False):
