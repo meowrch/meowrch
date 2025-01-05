@@ -121,7 +121,7 @@ class FileSystemManager:
             except Exception:
                 logger.error(f"An error occurred during copying: {traceback.format_exc()}")
 
-        if xinitrc_path:
+        if xinitrc_path.exists():
             logger.info("Starting to back up the \".xinitrc\" file.")
             try:
                 shutil.copy(src=xinitrc_path, dst=dst / ".xinitrc")
