@@ -1,7 +1,6 @@
 import os
 import subprocess
 import traceback
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List
 
 from loguru import logger
@@ -102,32 +101,48 @@ class PackageManager:
             return False
 
     @staticmethod
-    def install_package(package: str, aur: bool) -> None:
-        try:
-            if aur:
-                subprocess.run(
-                    ["yay", "-S", "--noconfirm", "--needed", package], check=True
-                )
-            else:
-                subprocess.run(
-                    ["sudo", "pacman", "-S", "--noconfirm", "--needed", package],
-                    check=True,
-                )
-            logger.success(f'Package "{package}" has been successfully installed!')
-        except Exception:
-            # Для проблемных пакетов
-            if package == "i3lock-color":
-                if PackageManager.install_i3lock_color():
-                    return  # Установка прошла успешно, выходим из функции
+    def install_package(package: str, aur: bool, error_retries: int = 3) -> bool:
+        for _ in range(error_retries):
+            try:
+                if aur:
+                    subprocess.run(
+                        ["yay", "-S", "--noconfirm", "--needed", package], check=True
+                    )
+                else:
+                    subprocess.run(
+                        ["sudo", "pacman", "-S", "--noconfirm", "--needed", package],
+                        check=True,
+                    )
+                logger.success(f'Package "{package}" has been successfully installed!')
+                return True
+            except Exception:
+                # Для проблемных пакетов
+                if package == "i3lock-color":
+                    if PackageManager.install_i3lock_color():
+                        return True
 
-            logger.error(
-                f'Error while installing package "{package}": {traceback.format_exc()}'
+                logger.error(
+                    f'Error while installing package "{package}": {traceback.format_exc()}'
+                )
+            
+            continue
+        
+        return False
+    
+    @staticmethod
+    def install_packages(packages_list: List[str], aur: bool = False) -> List[str]:
+        not_installed_packages = []
+
+        for package in packages_list:
+            installed = PackageManager.install_package(
+                package=package, 
+                aur=aur
             )
 
-    @staticmethod
-    def install_packages(packages_list: List[str], aur: bool = False) -> None:
-        for package in packages_list:
-            PackageManager.install_package(package=package, aur=aur)
+            if not installed:
+                not_installed_packages.append(package)
+
+        return not_installed_packages
 
     @staticmethod
     def update_pacman_conf(*, enable_multilib: bool = False):

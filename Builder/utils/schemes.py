@@ -16,6 +16,12 @@ class Packages:
 
 
 @dataclass
+class NotInstalledPackages:
+    pacman: List[str] = field(default_factory=list)
+    aur: List[str] = field(default_factory=list)
+
+
+@dataclass
 class PackageInfo:
     description: str
     aur: bool = field(default=False, kw_only=True)

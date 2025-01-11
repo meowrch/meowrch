@@ -10,10 +10,12 @@ from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from packages import BASE, CUSTOM
 from question import Question
-from utils.schemes import BuildOptions
+from utils.schemes import BuildOptions, NotInstalledPackages
 
 
 class Builder:
+    not_installed_packages = NotInstalledPackages()
+
     def run(self) -> None:
         logger.success(
             "The program has been launched successfully. We are starting the survey."
@@ -63,6 +65,12 @@ class Builder:
 
         self.daemons_setting()
         self.post_conf()
+        logger.warning(
+            "The script was unable to automatically install these packages." 
+            "Try installing them manually."
+        )
+        logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
+        logger.warning("Aur: " + ", ".join(self.not_installed_packages.aur))
         logger.success(
             "Meowch has been successfully installed! Restart your PC to apply the changes."
         )
@@ -92,8 +100,16 @@ class Builder:
                 pacman.extend(getattr(BASE.pacman, f"{wm}_packages"))
                 aur.extend(getattr(BASE.aur, f"{wm}_packages"))
 
-        PackageManager.install_packages(pacman)
-        PackageManager.install_packages(aur, aur=True)
+        # Устанавливаем pacman пакеты
+        self.not_installed_packages.pacman.extend(
+            PackageManager.install_packages(pacman)
+        )
+        
+        # Устанавливаем aur пакеты
+        self.not_installed_packages.aur.extend(
+            PackageManager.install_packages(aur, aur=True)
+        )
+    
         logger.success("The installation process of all packages is complete!")
 
     def drivers_installation(self) -> None:
