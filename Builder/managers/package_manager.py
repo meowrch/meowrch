@@ -80,7 +80,7 @@ class PackageManager:
         try:
             PackageManager.install_packages(["git", "base-devel"])
 
-            if not PackageManager.check_yay_installed():
+            if not PackageManager.check_package_installed("paru"):
                 if not os.path.exists(target_path):
                     cloned = PackageManager.clone_repository(
                         repo_url="https://aur.archlinux.org/paru.git",
