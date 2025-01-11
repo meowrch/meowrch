@@ -68,7 +68,7 @@ class FileSystemManager:
         index_theme_path = home / ".icons" / "default" / "index.theme"
 
         if config_path.exists():
-            logger.info("Starting to back up the “.config” folder.")
+            logger.info("Starting to back up the \".config\" folder.")
             try:
                 shutil.copytree(src=config_path, dst=dst / ".config", dirs_exist_ok=True)
                 logger.success("Successfully backed up the \".config\" folder")
@@ -76,7 +76,7 @@ class FileSystemManager:
                 logger.error(f"An error occurred during copying: {traceback.format_exc()}")
 
         if bin_path.exists():
-            logger.info("Starting to back up the “bin folder.")
+            logger.info("Starting to back up the \"bin\" folder.")
             try:
                 shutil.copytree(src=bin_path, dst=dst / "bin", dirs_exist_ok=True)
                 logger.success("Successfully backed up the \"bin\" folder")
