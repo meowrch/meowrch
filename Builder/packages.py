@@ -1,5 +1,4 @@
-from utils.schemes import Packages, DistributionPackages
-
+from utils.schemes import DistributionPackages, PackageInfo, Packages
 
 BASE = Packages(
 	pacman=DistributionPackages(
@@ -24,7 +23,7 @@ BASE = Packages(
 	aur=DistributionPackages(
 		common=[
 			"gnome-calculator-gtk3", "flameshot-git", "rofi-lbonn-wayland-git", "bibata-cursor-theme-bin", "tela-circle-icon-theme-dracula",
-			"themix-theme-oomox-git", "themix-plugin-base16-git", "themix-icons-papirus-git", "themix-gui-git", "themix-export-spotify-git",
+			"themix-theme-oomox-git", "themix-plugin-base16-git", "themix-gui-git", "themix-export-spotify-git",
 			"themix-theme-materia-git", "oomox-qt5-styleplugin-git", "oomox-qt6-styleplugin-git", "cava", "pokemon-colorscripts",
 			"youtube-dl", "update-grub", "ttf-meslo-nerd-font-powerlevel10k", "visual-studio-code-bin"
 		],
@@ -32,25 +31,6 @@ BASE = Packages(
 		hyprland_packages=["hyprpicker", "swaylock-effects-git", "wlr-randr-git", "hyprprop", "grimblast-git"]
 	)
 )
-
-CUSTOM = {
-	"games": Packages(
-		pacman=DistributionPackages(
-			common=["steam", "gamemode", "mangohud"]
-		),
-		aur=DistributionPackages(
-			common=["portproton"]
-		)
-	),
-	"social_media": Packages(
-		pacman=DistributionPackages(
-			common=["telegram-desktop"]
-		),
-		aur=DistributionPackages(
-			common=["vesktop"]
-		)
-	)
-}
 
 DRIVERS = {
 	"intel": Packages(
@@ -79,4 +59,32 @@ DRIVERS = {
 			]
 		)
 	)
+}
+
+CUSTOM = {
+    "development": {
+        "obsidian": PackageInfo("A powerful knowledge base that works on top of a local folder of plain text Markdown files", recommended=True),
+        "postgresql": PackageInfo("Sophisticated object-relational DBMS", recommended=True),
+        "pgadmin4-desktop": PackageInfo("The desktop user interface for pgAdmin", aur=True, recommended=True),
+        "redis": PackageInfo("An in-memory database that persists on disk")
+	},
+    "social_media": {
+		"telegram-desktop": PackageInfo("Popular messenger", recommended=True, selected=True),
+        "discord": PackageInfo("Popular social platform", recommended=True),
+		"vesktop": PackageInfo("Custom Discord client", recommended=True, aur=True)
+	},
+	"games": {
+		"steam": PackageInfo("The best launcher for games", recommended=True, selected=True), 
+		"gamemode": PackageInfo("Game optimization tool", recommended=True, selected=True), 
+		"mangohud": PackageInfo("Displays metrics in running games"),
+        "portproton": PackageInfo("Launcher for Windows games with good optimization", recommended=True, aur=True)
+	},
+    "entertainment": {
+        "yandex-music": PackageInfo("Personal recommendations, selections for any occasion and new music", aur=True, recommended=True),
+        "spotify": PackageInfo("A proprietary music streaming service", aur=True, recommended=True)
+	},
+    "office": {
+        "libreoffice-fresh": PackageInfo("Comprehensive office suite for word processing, spreadsheets, and presentations"),
+        "onlyoffice-bin": PackageInfo("Office suite that allows collaborative editing of documents", aur=True, recommended=True)
+    }
 }
