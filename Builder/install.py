@@ -1,190 +1,212 @@
 import os
-import inquirer
-import traceback
 import subprocess
-from loguru import logger
-from typing import Dict, List, Union
-from inquirer import Checkbox as QuestionCheckbox, List as QuestionList
+import traceback
 
-from packages import BASE, CUSTOM
+import inquirer
+from loguru import logger
+from managers.apps_manager import AppsManager
 from managers.drivers_manager import DriversManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
-from managers.apps_manager import AppsManager
-from utils.schemes import BuildOptions
-from utils.banner import banner
-
-
-answers_type = Dict[str, Union[str, List[str]]]
+from packages import BASE, CUSTOM
+from question import Question
+from utils.schemes import BuildOptions, NotInstalledPackages, AurHelper
 
 
 class Builder:
-	def run(self) -> None:
-		logger.success("The program has been launched successfully. We are starting the survey.")
-		self.build_options: BuildOptions = self._questionaire()
-		
-		FileSystemManager.create_default_folders()
-		FileSystemManager.copy_dotfiles(
-			remove_bspwm=not self.build_options.install_bspwm,
-			remove_hyprland=not self.build_options.install_hyprland
-		)
+    not_installed_packages = NotInstalledPackages()
 
-		PackageManager.update_pacman_conf(enable_multilib=self.build_options.enable_multilib)
-		PackageManager.install_aur_manager()
+    def run(self) -> None:
+        logger.success(
+            "The program has been launched successfully. We are starting the survey."
+        )
+        self.build_options: BuildOptions = Question.get_answers()
+        logger.info(f"User Responses to Questions: {self.build_options}")
+        
+        if self.build_options.make_backup:
+            logger.info(
+                "The process of creating a backup of configurations is started!"
+            )
+            FileSystemManager.make_backup()
+            logger.warning(
+                "A backup of all your configuration files is located "
+                "in the root of the meowrch at the path \"./backup/\""
+            )
+            logger.warning("Check the backup before you start the installation")
+            input("Press Enter to continue with the installation: ")
 
-		if self.build_options.update_arch_database:
-			PackageManager.update_database()
+        FileSystemManager.create_default_folders()
+        FileSystemManager.copy_dotfiles(
+            exclude_bspwm=not self.build_options.install_bspwm,
+            exclude_hyprland=not self.build_options.install_hyprland,
+        )
 
-		self.packages_installation()
-		self.drivers_installation()
+        PackageManager.update_pacman_conf(
+            enable_multilib=self.build_options.enable_multilib
+        )
 
-		AppsManager.configure_grub()
-		AppsManager.configure_sddm()
-		AppsManager.configure_firefox()
-		AppsManager.configure_code()
+        if self.build_options.aur_helper == AurHelper.PARU:
+            PackageManager.install_paru_manager()
+        elif self.build_options.aur_helper == AurHelper.YAY:
+            PackageManager.install_aur_manager()
+        else:
+            logger.error("Unsupported AUR helper!")
+            exit(1)
 
-		self.daemons_setting()
-		self.post_conf()
-		logger.success("Meowch has been successfully installed! Restart your PC to apply the changes.")
+        if self.build_options.update_arch_database:
+            PackageManager.update_database()
 
-		is_reboot = inquirer.confirm("Do you want to reboot?")
-		if is_reboot:
-			subprocess.run("sudo reboot", shell=True)
+        self.packages_installation()
+        self.drivers_installation()
 
-	def packages_installation(self) -> None:
-		logger.info("Starting the package installation process")
-		pacman, aur = [], []
+        AppsManager.configure_grub()
+        AppsManager.configure_sddm()
+        AppsManager.configure_firefox(
+            darkreader=self.build_options.ff_darkreader,
+            ublock=self.build_options.ff_ublock,
+            twp=self.build_options.ff_twp,
+            unpaywall=self.build_options.ff_unpaywall,
+            tampermonkey=self.build_options.ff_tampermonkey
+        )
+        AppsManager.configure_code()
 
-		for source in [BASE, CUSTOM["games"], CUSTOM["social_media"]]:
-			pacman.extend(source.pacman.common)
-			aur.extend(source.aur.common)
+        self.daemons_setting()
+        self.post_conf()
+        logger.warning(
+            "The script was unable to automatically install these packages." 
+            "Try installing them manually."
+        )
+        logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
+        logger.warning("Aur: " + ", ".join(self.not_installed_packages.aur))
+        logger.success(
+            "Meowch has been successfully installed! Restart your PC to apply the changes."
+        )
 
-		for wm in ['bspwm', 'hyprland']:
-			if getattr(self.build_options, f'install_{wm}'):
-				pacman.extend(getattr(BASE.pacman, f'{wm}_packages'))
-				aur.extend(getattr(BASE.aur, f'{wm}_packages'))
+        is_reboot = inquirer.confirm("Do you want to reboot?")
+        if is_reboot:
+            subprocess.run("sudo reboot", shell=True)
 
-				if self.build_options.install_game_depends:
-					pacman.extend(getattr(CUSTOM["games"].pacman, f"{wm}_packages"))
-					aur.extend(getattr(CUSTOM["games"].aur, f"{wm}_packages"))
+    def packages_installation(self) -> None:
+        logger.info("Starting the package installation process")
+        pacman, aur = [], []
 
-				if self.build_options.install_social_media_depends:
-					pacman.extend(getattr(CUSTOM["social_media"].pacman, f"{wm}_packages"))
-					aur.extend(getattr(CUSTOM["social_media"].aur, f"{wm}_packages"))
+        pacman.extend(BASE.pacman.common)
+        aur.extend(BASE.aur.common)
 
-		PackageManager.install_packages(pacman)
-		PackageManager.install_packages(aur, aur=True)
-		logger.success("The installation process of all packages is complete!")
+        for category in CUSTOM.keys():
+            for package, info in CUSTOM[category].items():
+                if not info.selected:
+                    continue
+                if info.aur:
+                    aur.append(package)
+                else:
+                    pacman.append(package)
 
-	def drivers_installation(self) -> None:
-		logger.info("Starting the driver installation process")
+        for wm in ["bspwm", "hyprland"]:
+            if getattr(self.build_options, f"install_{wm}"):
+                pacman.extend(getattr(BASE.pacman, f"{wm}_packages"))
+                aur.extend(getattr(BASE.aur, f"{wm}_packages"))
 
-		if self.build_options.intel_driver:
-			DriversManager.install_intel_drivers()
-		if self.build_options.nvidia_driver:
-			DriversManager.install_nvidia_drivers()
-		if self.build_options.amd_driver:
-			DriversManager.install_amd_drivers()
+        # Устанавливаем pacman пакеты
+        self.not_installed_packages.pacman.extend(
+            PackageManager.install_packages(pacman)
+        )
+        
+        # Устанавливаем aur пакеты
+        self.not_installed_packages.aur.extend(
+            PackageManager.install_packages(aur, aur=self.build_options.aur_helper)
+        )
+    
+        logger.success("The installation process of all packages is complete!")
 
-		logger.success("The installation process of all drivers is complete!")
+    def drivers_installation(self) -> None:
+        logger.info("Starting the driver installation process")
 
-	def daemons_setting(self) -> None:
-		logger.info("The daemons are starting to run...")
-	
-		try:
-			subprocess.run(["sudo", "systemctl", "enable", "NetworkManager"], check=True)
-			subprocess.run(["sudo", "systemctl", "enable", "bluetooth.service"], check=True)
-			subprocess.run(["sudo", "systemctl", "enable", "sddm.service"], check=True)
-			subprocess.run(["sudo", "systemctl", "start", "bluetooth.service"], check=True)
-			logger.success("The launch of the demons was successful!")
-		except Exception:
-			logger.error(f"Error starting the demons: {traceback.format_exc()}")
+        if self.build_options.intel_driver:
+            DriversManager.install_intel_drivers()
+        if self.build_options.nvidia_driver:
+            DriversManager.install_nvidia_drivers()
+        if self.build_options.amd_driver:
+            DriversManager.install_amd_drivers()
 
-		logger.success("The setting of the daemons is complete!")
+        logger.success("The installation process of all drivers is complete!")
 
-	def post_conf(self) -> None:
-		logger.info("The post-installation configuration is starting...")
-		
-		try:
-			subprocess.run(["chsh", "-s", "/usr/bin/fish"], check=True)
-			logger.success("The shell is changed to fish!")
-		except Exception:
-			logger.error(f"Error changing shell: {traceback.format_exc()}")
+    def daemons_setting(self) -> None:
+        logger.info("The daemons are starting to run...")
 
-		if self.build_options.install_game_depends:
-			try:
-				username = os.getenv('USER') or os.getenv('LOGNAME')
-				subprocess.run(["sudo", "usermod", "-a", username, "-G", "gamemode"], check=True)
-				logger.success("The user is added to the gamemode group!")
-			except Exception:
-				logger.error(f"Error adding user to group for gamemode: {traceback.format_exc()}")
+        daemons = {
+            "enable": ["NetworkManager", "bluetooth.service", "sddm.service"],
+            "start": ["bluetooth.service"],
+        }
 
-		try:
-			subprocess.run(["gsettings", "set", "org.cinnamon.desktop.default-applications.terminal", "exec", "kitty"], check=True)
-			logger.success("The default terminal is set to kitty!")
-		except Exception:
-			logger.error(f"Error setting default terminal: {traceback.format_exc()}")
+        for d in daemons["enable"]:
+            try:
+                subprocess.run(["sudo", "systemctl", "enable", d], check=True)
+            except Exception:
+                logger.error(
+                    f'Error starting the "{d}" daemon: {traceback.format_exc()}'
+                )
 
-		logger.info("The post-installation configuration is complete!")
+        for d in daemons["start"]:
+            try:
+                subprocess.run(["sudo", "systemctl", "start", d], check=True)
+            except Exception:
+                logger.error(
+                    f'Error starting the "{d}" daemon: {traceback.format_exc()}'
+                )
 
-	def _questionaire(self) -> BuildOptions:
-		drivers = DriversManager.auto_detection()
-		answers: answers_type = {}
+        logger.success("The setting of the daemons is complete!")
 
-		quests: List[Union[QuestionCheckbox, QuestionList]] = [
-			QuestionCheckbox(
-				name='install_wm', message="1) Which window manager do you want to install?",
-				choices=["hyprland", "bspwm"], default=["bspwm", "hyprland"], carousel=True
-			),
-			QuestionList(
-				name='enable_multilib', message="2) Should I enable the multilib repository?",
-				choices=["Yes", "No"], default="Yes", carousel=True
-			),
-			QuestionList(
-				name='update_arch_database', message="3) Update Arch DataBase?",
-				choices=["Yes", "No"], default="Yes", carousel=True
-			),
-			QuestionList(
-				name='install_game_depends', message="4) Install game dependencies?",
-				choices=["Yes", "No"], default="Yes", carousel=True
-			),
-			QuestionList(
-				name='install_social_media_depends', message="5) Install social-media dependencies?",
-				choices=["Yes", "No"], default="Yes", carousel=True
-			),
-			QuestionCheckbox(
-				name='install_drivers', message="6) What drivers do you want to install?",
-				choices=["Nvidia", "Intel", "AMD"], default=drivers, carousel=True
-			),
-		]
+    def post_conf(self) -> None:
+        logger.info("The post-installation configuration is starting...")
 
-		for question in quests:
-			subprocess.run("clear", shell=True)
-			print(banner)
-			answer = inquirer.prompt([question])
-			answers.update(answer)
+        try:
+            subprocess.run(["chsh", "-s", "/usr/bin/fish"], check=True)
+            logger.success("The shell is changed to fish!")
+        except Exception:
+            logger.error(f"Error changing shell: {traceback.format_exc()}")
 
-		return BuildOptions(
-			install_bspwm='bspwm' in answers['install_wm'],
-			install_hyprland='hyprland' in answers['install_wm'],
-			enable_multilib=answers['enable_multilib'] == 'Yes',
-			update_arch_database=answers['update_arch_database'] == 'Yes',
-			install_game_depends=answers['install_game_depends'] == 'Yes',
-			install_social_media_depends=answers['install_social_media_depends'] == 'Yes',
-			install_drivers=len(answers['install_drivers']) > 0,
-			intel_driver='Intel' in answers['install_drivers'],
-			nvidia_driver='Nvidia' in answers['install_drivers'],
-			amd_driver='AMD' in answers['install_drivers'],
-		)
+        if (
+            "games" in CUSTOM
+            and "gamemode" in CUSTOM["games"]
+            and CUSTOM["games"]["gamemode"].selected
+        ):
+            try:
+                username = os.getenv("USER") or os.getenv("LOGNAME")
+                subprocess.run(
+                    ["sudo", "usermod", "-a", username, "-G", "gamemode"], check=True
+                )
+                logger.success("The user is added to the gamemode group!")
+            except Exception:
+                logger.error(
+                    f"Error adding user to group for gamemode: {traceback.format_exc()}"
+                )
+
+        try:
+            subprocess.run(
+                [
+                    "gsettings",
+                    "set",
+                    "org.cinnamon.desktop.default-applications.terminal",
+                    "exec",
+                    "kitty",
+                ],
+                check=True,
+            )
+            logger.success("The default terminal is set to kitty!")
+        except Exception:
+            logger.error(f"Error setting default terminal: {traceback.format_exc()}")
+
+        logger.info("The post-installation configuration is complete!")
 
 
 if __name__ == "__main__":
-	logger.add(
-		sink="build_debug.log",
-		format="{time} | {level} | {message}",
-		level="DEBUG",
-		encoding="utf-8"
-	)
+    logger.add(
+        sink="build_debug.log",
+        format="{time} | {level} | {message}",
+        level="DEBUG",
+        encoding="utf-8",
+    )
 
-	builder = Builder()
-	builder.run()
+    builder = Builder()
+    builder.run()
