@@ -4,6 +4,7 @@ import traceback
 from typing import List
 
 from loguru import logger
+from utils.schemes import AurHelper
 
 
 class PackageManager:
@@ -18,10 +19,10 @@ class PackageManager:
             logger.error(f"Error updating package database: {traceback.format_exc()}")
 
     @staticmethod
-    def check_yay_installed() -> bool:
+    def check_package_installed(package: str) -> bool:
         try:
             subprocess.run(
-                ["yay", "--version"],
+                ["pacman", "-Q", package],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -48,15 +49,13 @@ class PackageManager:
 
     @staticmethod
     def install_aur_manager() -> None:
-        logger.info("Starting the yay package manager installation process.")
+        logger.info("Starting the \"yay\" package manager installation process.")
         target_path = "/tmp/yay"
 
         try:
-            subprocess.run(
-                ["sudo", "pacman", "-S", "--noconfirm", "--needed", "git"], check=True
-            )
+            PackageManager.install_packages(["git", "base-devel"])
 
-            if not PackageManager.check_yay_installed():
+            if not PackageManager.check_package_installed("yay"):
                 if not os.path.exists(target_path):
                     cloned = PackageManager.clone_repository(
                         repo_url="https://aur.archlinux.org/yay.git",
@@ -68,10 +67,35 @@ class PackageManager:
 
                 subprocess.run(["makepkg", "-si"], cwd=target_path, check=True)
         except Exception:
-            logger.error(f"Error while installing yay: {traceback.format_exc()}")
+            logger.error(f"Error while installing \"yay\": {traceback.format_exc()}")
             exit(1)
 
-        logger.success('Package "yay" has been successfully installed!')
+        logger.success("Package \"yay\" has been successfully installed!")
+
+    @staticmethod
+    def install_paru_manager() -> None:
+        logger.info("Starting the \"paru\" package manager installation process.")
+        target_path = "/tmp/paru"
+
+        try:
+            PackageManager.install_packages(["git", "base-devel"])
+
+            if not PackageManager.check_yay_installed():
+                if not os.path.exists(target_path):
+                    cloned = PackageManager.clone_repository(
+                        repo_url="https://aur.archlinux.org/paru.git",
+                        target_path=target_path,
+                    )
+
+                    if not cloned:
+                        return
+
+                subprocess.run(["makepkg", "-si"], cwd=target_path, check=True)
+        except Exception:
+            logger.error(f"Error while installing \"paru\": {traceback.format_exc()}")
+            exit(1)
+
+        logger.success("Package \"paru\" has been successfully installed!")
 
     @staticmethod
     def install_i3lock_color() -> bool:
@@ -79,9 +103,7 @@ class PackageManager:
         target_path = f"/tmp/{dir_name}"
 
         try:
-            subprocess.run(
-                ["sudo", "pacman", "-S", "--noconfirm", "--needed", "git"], check=True
-            )
+            PackageManager.install_packages(["git", "base-devel"])
 
             if os.path.exists(target_path):
                 subprocess.run(["sudo", "rm", "-rf", target_path], check=True)
@@ -101,12 +123,23 @@ class PackageManager:
             return False
 
     @staticmethod
-    def install_package(package: str, aur: bool, error_retries: int = 3) -> bool:
+    def install_package(package: str, aur: AurHelper = None, error_retries: int = 3) -> bool:
+        """Installs the package with pacman or some aur helper
+
+        Args:
+            package (str): Name of the package to be installed
+            aur (AurHelper, optional): If you need to install via the AUR helper, you need to specify it here. Defaults to None.
+            error_retries (int, optional): How many times will the function attempt to install the package. Defaults to 3.
+
+        Returns:
+            bool: Status, whether the package is installed or not
+        """
+
         for _ in range(error_retries):
             try:
-                if aur:
+                if aur is not None:
                     subprocess.run(
-                        ["yay", "-S", "--noconfirm", "--needed", package], check=True
+                        [aur.value, "-S", "--noconfirm", "--needed", package], check=True
                     )
                 else:
                     subprocess.run(
@@ -130,7 +163,16 @@ class PackageManager:
         return False
     
     @staticmethod
-    def install_packages(packages_list: List[str], aur: bool = False) -> List[str]:
+    def install_packages(packages_list: List[str], aur: AurHelper = None) -> List[str]:
+        """Installs a lot of packages via pacman or some aur helper
+
+        Args:
+            packages_list (List[str]): List of package names
+            aur (AurHelper, optional): If you need to install via the AUR helper, you need to specify it here. Defaults to None.
+
+        Returns:
+            List[str]: List of packages that could not be installed
+        """
         not_installed_packages = []
 
         for package in packages_list:
