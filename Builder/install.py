@@ -10,7 +10,7 @@ from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from packages import BASE, CUSTOM
 from question import Question
-from utils.schemes import BuildOptions, NotInstalledPackages
+from utils.schemes import BuildOptions, NotInstalledPackages, AurHelper
 
 
 class Builder:
@@ -44,7 +44,14 @@ class Builder:
         PackageManager.update_pacman_conf(
             enable_multilib=self.build_options.enable_multilib
         )
-        PackageManager.install_aur_manager()
+
+        if self.build_options.aur_helper == AurHelper.PARU:
+            PackageManager.install_paru_manager()
+        elif self.build_options.aur_helper == AurHelper.YAY:
+            PackageManager.install_aur_manager()
+        else:
+            logger.error("Unsupported AUR helper!")
+            exit(1)
 
         if self.build_options.update_arch_database:
             PackageManager.update_database()
@@ -107,7 +114,7 @@ class Builder:
         
         # Устанавливаем aur пакеты
         self.not_installed_packages.aur.extend(
-            PackageManager.install_packages(aur, aur=True)
+            PackageManager.install_packages(aur, aur=self.build_options.aur_helper)
         )
     
         logger.success("The installation process of all packages is complete!")

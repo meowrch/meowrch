@@ -7,7 +7,7 @@ from inquirer import List as QuestionList
 from managers.drivers_manager import DriversManager
 from packages import CUSTOM
 from utils.banner import clear_and_banner
-from utils.schemes import BuildOptions
+from utils.schemes import BuildOptions, AurHelper
 
 
 class Question:
@@ -30,7 +30,7 @@ class Question:
 
             category_question = inquirer.List(
                 "category",
-                message="7) Select a category of packages and choose the ones you want",
+                message="8) Select a category of packages and choose the ones you want",
                 choices=list(
                     category
                     + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
@@ -95,44 +95,51 @@ class Question:
         ]
 
         quests: List[Union[QuestionCheckbox, QuestionList]] = [
+            QuestionList(
+                name="make_backup",
+                message="1) Want to backup your configurations?",
+                choices=["Yes", "No"],
+                default="Yes",
+                carousel=True,
+            ),
             QuestionCheckbox(
                 name="install_wm",
-                message="1) Which window manager do you want to install?",
+                message="2) Which window manager do you want to install?",
                 choices=["hyprland", "bspwm"],
                 default=["bspwm", "hyprland"],
                 carousel=True,
             ),
             QuestionList(
-                name="make_backup",
-                message="2) Want to backup your configurations?",
-                choices=["Yes", "No"],
-                default="Yes",
+                name="aur_helper",
+                message="3) What kind of AUR helper do you want to have?",
+                choices=["yay", "paru"],
+                default="paru",
                 carousel=True,
             ),
             QuestionList(
                 name="enable_multilib",
-                message="3) Should I enable the multilib repository?",
+                message="4) Should I enable the multilib repository?",
                 choices=["Yes", "No"],
                 default="Yes",
                 carousel=True,
             ),
             QuestionList(
                 name="update_arch_database",
-                message="4) Update Arch DataBase?",
+                message="5) Update Arch DataBase?",
                 choices=["Yes", "No"],
                 default="Yes",
                 carousel=True,
             ),
             QuestionCheckbox(
                 name="install_drivers",
-                message="5) What drivers do you want to install?",
+                message="6) What drivers do you want to install?",
                 choices=["Nvidia", "Intel", "AMD"],
                 default=drivers,
                 carousel=True,
             ),
             QuestionCheckbox(
                 name="ff_plugins",
-                message="6) Would you like to add useful plugins for firefox?",
+                message="7) Would you like to add useful plugins for firefox?",
                 choices=firefox_choices,
                 default=firefox_choices,
                 carousel=True,
@@ -149,10 +156,16 @@ class Question:
             i.split(" | ")[0] for i in answers["ff_plugins"]
         ]
 
+        if answers["aur_helper"] == "paru":
+            aur_helper = AurHelper.PARU
+        else:
+            aur_helper = AurHelper.YAY
+
         return BuildOptions(
+            make_backup=answers["make_backup"] == "Yes",
             install_bspwm="bspwm" in answers["install_wm"],
             install_hyprland="hyprland" in answers["install_wm"],
-            make_backup=answers["make_backup"] == "Yes",
+            aur_helper=aur_helper,
             enable_multilib=answers["enable_multilib"] == "Yes",
             update_arch_database=answers["update_arch_database"] == "Yes",
             install_drivers=len(answers["install_drivers"]) > 0,
