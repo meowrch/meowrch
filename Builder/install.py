@@ -19,6 +19,7 @@ class Builder:
             "The program has been launched successfully. We are starting the survey."
         )
         self.build_options: BuildOptions = Question.get_answers()
+        logger.info(f"User Responses to Questions: {self.build_options}")
         
         if self.build_options.make_backup:
             logger.info(
