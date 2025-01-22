@@ -90,9 +90,10 @@
 > IN THIS CASE YOU NEED TO MAKE MANUAL CHANGES.
 > IF YOU FIND ERRORS IN THE SHELL, PLEASE REPORT THE PROBLEM.
 
+<img src=".meta/assets/1.png">
+
 <!-- IMAGES -->
-<details close> <summary><h3>🖼️ Review</h3></summary>
-	<img src=".meta/assets/1.png">
+<details close> <summary><h3>🖼️ Other screenshots</h3></summary>
 	<img src=".meta/assets/2.png">
 	<img src=".meta/assets/3.png">
 	<img src=".meta/assets/4.png">
@@ -237,7 +238,33 @@ Your feedback will help us improve the project and make it even more convenient 
 	</tr>
 </table>
 
-***
+## Support
 
-The project is actively <a href="https://github.com/meowrch/meowrch/projects">developing</a>, so you can offer your ideas for improvement.
-If you have any questions, welcome to <a href="https://t.me/meowrch">Telegram</a>
+If you would like to support my work, you can send a donation to the following cryptocurrency wallets:
+
+### Tonkeeper
+- **Ton Address:**  
+  `UQB9qNTcAazAbFoeobeDPMML9MG73DUCAFTpVanQnLk3BHg3`  
+  Supports Toncoin (TON) and other tokens of the TON network.
+
+### Trust Wallet
+- **Ethereum (ETH, USDT, USDC and other ERC-20 tokens):**  
+  `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13`
+  
+- **Bitcoin (BTC):**  
+  `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn`
+
+- **Tron (TRX, USDT-TRC20):**  
+  `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs`
+
+Thank you for your support! ❤️
+
+## Star History
+
+<a href="https://star-history.com/#meowrch/meowrch&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
+ </picture>
+</a>
