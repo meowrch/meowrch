@@ -90,17 +90,23 @@
 > IN THIS CASE YOU NEED TO MAKE MANUAL CHANGES.
 > IF YOU FIND ERRORS IN THE SHELL, PLEASE REPORT THE PROBLEM.
 
-<img src=".meta/assets/1.png">
 
 <!-- IMAGES -->
-<details close> <summary><h3>🖼️ Other screenshots</h3></summary>
-	<img src=".meta/assets/2.png">
-	<img src=".meta/assets/3.png">
-	<img src=".meta/assets/4.png">
-	<img src=".meta/assets/5.png">
-	<img src=".meta/assets/6.png">
-	<img src=".meta/assets/7.png">
-</details>
+<table align="center">
+  <tr>
+    <td colspan="4"><img src=".meta/assets/1.png"></td>
+  </tr>
+  <tr>
+    <td colspan="1"><img src=".meta/assets/2.png"></td>
+    <td colspan="1"><img src=".meta/assets/3.png"></td>
+    <td colspan="1"><img src=".meta/assets/4.png"></td>
+  </tr>
+  <tr>
+	<td colspan="1"><img src=".meta/assets/5.png"></td>
+	<td colspan="1"><img src=".meta/assets/6.png"></td>
+	<td colspan="1"><img src=".meta/assets/7.png"></td>
+  </tr>
+</table>
 
 <!-- INSTALLATION -->
 ## 🛠 Installation
@@ -238,29 +244,17 @@ Your feedback will help us improve the project and make it even more convenient 
 	</tr>
 </table>
 
-## Support
-
+## ☕ Support project
 If you would like to support my work, you can send a donation to the following cryptocurrency wallets:
 
-### Tonkeeper
-- **Ton Address:**  
-  `UQCsIhKtqCnh0Mp76X_5qfh66TPBoBsYx_FihgInw-Auk5BA`  
-  Supports Toncoin (TON) and other tokens of the TON network.
+| CryptoCurrencies | Address                                        |
+| ------------ | -------------------------------------------------- |
+| **TON**      | `UQCsIhKtqCnh0Mp76X_5qfh66TPBoBsYx_FihgInw-Auk5BA` |
+| **Ethereum** | `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13`       |
+| **Bitcoin**  | `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn`       |
+| **Tron**     | `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs`               |
 
-### Trust Wallet
-- **Ethereum (ETH, USDT, USDC and other ERC-20 tokens):**  
-  `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13`
-  
-- **Bitcoin (BTC):**  
-  `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn`
-
-- **Tron (TRX, USDT-TRC20):**  
-  `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs`
-
-Thank you for your support! ❤️
-
-## Star History
-
+## 📊 Star History
 <a href="https://star-history.com/#meowrch/meowrch&Date">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />

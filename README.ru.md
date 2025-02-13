@@ -90,17 +90,24 @@
 > В ЭТОМ СЛУЧАЕ ВАМ НЕОБХОДИМО ВНЕСТИ ИЗМЕНЕНИЯ ВРУЧНУЮ.
 > ЕСЛИ ВЫ ОБНАРУЖИТЕ ОШИБКИ В ОБОЛОЧКЕ, ПОЖАЛУЙСТА, СООБЩИТЕ О ПРОБЛЕМЕ.
 
-<img src=".meta/assets/1.png">
 
 <!-- IMAGES -->
-<details close> <summary><h3>🖼️ Другие скриншоты</h3></summary>
-	<img src=".meta/assets/2.png">
-	<img src=".meta/assets/3.png">
-	<img src=".meta/assets/4.png">
-	<img src=".meta/assets/5.png">
-	<img src=".meta/assets/6.png">
-	<img src=".meta/assets/7.png">
-</details>
+<table align="center">
+  <tr>
+    <td colspan="4"><img src=".meta/assets/1.png"></td>
+  </tr>
+  <tr>
+    <td colspan="1"><img src=".meta/assets/2.png"></td>
+    <td colspan="1"><img src=".meta/assets/3.png"></td>
+    <td colspan="1"><img src=".meta/assets/4.png"></td>
+  </tr>
+  <tr>
+	<td colspan="1"><img src=".meta/assets/5.png"></td>
+	<td colspan="1"><img src=".meta/assets/6.png"></td>
+	<td colspan="1"><img src=".meta/assets/7.png"></td>
+  </tr>
+</table>
+
 
 <!-- INSTALLATION -->
 ## 🛠 Установка
@@ -238,29 +245,17 @@ sh install.sh
 	</tr>
 </table>
 
-## Поддержка
-
+## ☕ Поддержать проект
 Если вы хотите поддержать мою работу, вы можете отправить пожертвование на следующие криптовалютные кошельки:
 
-### Tonkeeper
-- **Ton Address:**  
-  `UQCsIhKtqCnh0Mp76X_5qfh66TPBoBsYx_FihgInw-Auk5BA`  
-  Поддерживает Toncoin (TON) и другие токены сети TON.
+| Криптовалюта | Адрес                                        		|
+| ------------ | -------------------------------------------------- |
+| **TON**      | `UQCsIhKtqCnh0Mp76X_5qfh66TPBoBsYx_FihgInw-Auk5BA` |
+| **Ethereum** | `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13`       |
+| **Bitcoin**  | `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn`       |
+| **Tron**     | `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs`               |
 
-### Trust Wallet
-- **Ethereum (ETH, USDT, USDC и другие ERC-20 токены):**  
-  `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13`
-  
-- **Bitcoin (BTC):**  
-  `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn`
-
-- **Tron (TRX, USDT-TRC20):**  
-  `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs`
-
-Спасибо за поддержку! ❤️
-
-##  История звезд
-
+## 📊 История звезд
 <a href="https://star-history.com/#meowrch/meowrch&Date">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
