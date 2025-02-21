@@ -114,7 +114,7 @@
 Если у вас уже установлен Linux Arch, то выполняем следующие действия:
 ### 1. Клонируем репозиторий
 ```
-git clone https://github.com/meowrch/meowrch.git
+git clone --recurse-submodules --depth 1 https://github.com/meowrch/meowrch
 ```
 ### 2. Переходим в каталог с проектом
 ```

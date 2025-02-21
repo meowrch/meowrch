@@ -113,7 +113,7 @@
 If you already have Linux Arch installed, then follow the steps below:
 ### 1. Clone the repository
 ```
-git clone https://github.com/meowrch/meowrch.git
+git clone --recurse-submodules --depth 1 https://github.com/meowrch/meowrch
 ```
 ### 2. Go to the catalog with the project
 ```
