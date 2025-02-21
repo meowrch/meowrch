@@ -1,0 +1,6 @@
+[submodule "misc/grub_theme"]
+	path = misc/grub_theme
+	url = https://github.com/meowrch/grub-theme
+[submodule "misc/sddm_theme"]
+	path = misc/sddm_theme
+	url = https://github.com/meowrch/sddm-theme
