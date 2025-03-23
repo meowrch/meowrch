@@ -36,10 +36,6 @@ BASE = Packages(
 			"noto-fonts-emoji", "noto-fonts-extra", "ttf-iosevka-nerd", 
 			"ttf-jetbrains-mono", "ttf-jetbrains-mono-nerd", 
 			"ttf-fira-code",
-	
-			##==> Сеть/VPN
-            ###########################################
-			"openvpn", "networkmanager-openvpn", 
 		],
 		bspwm_packages=[
 			"xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
