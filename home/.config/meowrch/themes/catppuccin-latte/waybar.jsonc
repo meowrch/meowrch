@@ -44,7 +44,6 @@
 		"modules": [
 			"custom/system-update",
 			"custom/do-not-disturb",
-			"custom/vpn",
 			"custom/bluetooth",
 			"custom/networkmanager",
 			"custom/power"
@@ -213,15 +212,6 @@
         "interval": 1,
         "rotate": 0,
         "on-click": "sh ~/bin/do-not-disturb.sh",
-        "tooltip": false
-    },
-    "custom/vpn": {
-        "exec": "sh ~/bin/rofi-menus/vpn-manager.sh --status --disabled-color \"#e64553\" --enabled-color \"#40a02b\" | cat",
-        "return-type": "raw",
-        "format": "{} ",
-        "interval": 3,
-        "rotate": 0,
-        "on-click": "sh ~/bin/rofi-menus/vpn-manager.sh",
         "tooltip": false
     },
     "custom/bluetooth": {
