@@ -11,6 +11,9 @@ alias cls="clear"
 alias g="git"
 alias n="nvim"
 alias m="micro"
+alias cat="bat"
+alias ls="lsd"
+alias tree="lsd --tree"
 
 #####################################
 ##==> Custom Functions
@@ -29,7 +32,6 @@ end
 #####################################
 starship init fish | source
 set fish_greeting
-
 
 #####################################
 ##==> Fun Stuff
