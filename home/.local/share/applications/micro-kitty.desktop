@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Micro in Kitty
+Exec=kitty -e micro %f
+Type=Application
+MimeType=text/plain;
+Terminal=false
