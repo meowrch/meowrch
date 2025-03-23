@@ -160,8 +160,8 @@ class FileSystemManager:
 
         shutil.copytree(src=Path("./home/bin"), dst=home / "bin", dirs_exist_ok=True)
         shutil.copytree(
-            src=Path("./home/.local/share/nemo"),
-            dst=home / ".local" / "share" / "nemo",
+            src=Path("./home/.local"),
+            dst=home / ".local",
             dirs_exist_ok=True,
         )
         shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
