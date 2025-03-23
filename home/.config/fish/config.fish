@@ -25,23 +25,11 @@ function nvidia-settings
 end
 
 #####################################
-##==> Interactive Session Settings
-#####################################
-if status is-interactive
-
-end
-
-#####################################
 ##==> Shell Customization
 #####################################
 starship init fish | source
 set fish_greeting
 
-#####################################
-##==> Development Tools
-#####################################
-##==> Pyenv
-pyenv init - | source
 
 #####################################
 ##==> Fun Stuff
