@@ -63,7 +63,7 @@ BASE = Packages(
             
             ##==> CLI-Tools
             ###########################################
-            "update-grub", "cava", "youtube-dl", "pokemon-colorscripts",
+            "update-grub", "cava", "pokemon-colorscripts",
             
             ##==> Шрифты
             ###########################################
