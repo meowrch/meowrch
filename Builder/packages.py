@@ -20,7 +20,7 @@ BASE = Packages(
             "jq", "fastfetch", "lsd", "bat", "micro", "sudo",
             "fish", "fisher", "btop", "ranger", "starship",
             "openssh", "sshfs", "wget", "neovim", "tmux",
-			"ffmpeg", "clipnotify", "udiskie", "tree",
+			"ffmpeg", "cliphist", "udiskie", "tree",
 
 			##==> GUI 
 			###########################################
@@ -43,11 +43,13 @@ BASE = Packages(
 		],
 		bspwm_packages=[
 			"xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
-			"wmname", "polybar", "xorg-xrandr", "xsettingsd"
+			"wmname", "polybar", "xorg-xrandr", "xsettingsd", "clipnotify",
 		],
 		hyprland_packages=[
-			"hyprland", "waybar", "swww", "cliphist", "wl-clipboard", "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
-			"xdg-desktop-portal-wlr", "hypridle"]
+			"hyprland", "waybar", "swww", "wl-clipboard", 
+            "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
+			"xdg-desktop-portal-wlr", "hypridle"
+        ]
 	),
 	aur=DistributionPackages(
 		common=[
