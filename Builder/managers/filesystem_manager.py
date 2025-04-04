@@ -46,9 +46,7 @@ class FileSystemManager:
 
             if os.path.isdir(item_path):
                 FileSystemManager.copy_with_exclusions(
-                    src=item_path, 
-                    dst=os.path.join(dst, item), 
-                    exclusions=exclusions
+                    src=item_path, dst=os.path.join(dst, item), exclusions=exclusions
                 )
             else:
                 shutil.copy2(item_path, dst)
@@ -68,23 +66,29 @@ class FileSystemManager:
         index_theme_path = home / ".icons" / "default" / "index.theme"
 
         if config_path.exists():
-            logger.info("Starting to back up the \".config\" folder.")
+            logger.info('Starting to back up the ".config" folder.')
             try:
-                shutil.copytree(src=config_path, dst=dst / ".config", dirs_exist_ok=True)
-                logger.success("Successfully backed up the \".config\" folder")
+                shutil.copytree(
+                    src=config_path, dst=dst / ".config", dirs_exist_ok=True
+                )
+                logger.success('Successfully backed up the ".config" folder')
             except Exception:
-                logger.error(f"An error occurred during copying: {traceback.format_exc()}")
+                logger.error(
+                    f"An error occurred during copying: {traceback.format_exc()}"
+                )
 
         if bin_path.exists():
-            logger.info("Starting to back up the \"bin\" folder.")
+            logger.info('Starting to back up the "bin" folder.')
             try:
                 shutil.copytree(src=bin_path, dst=dst / "bin", dirs_exist_ok=True)
-                logger.success("Successfully backed up the \"bin\" folder")
+                logger.success('Successfully backed up the "bin" folder')
             except Exception:
-                logger.error(f"An error occurred during copying: {traceback.format_exc()}")
+                logger.error(
+                    f"An error occurred during copying: {traceback.format_exc()}"
+                )
 
         if nemo_path.exists():
-            logger.info("Starting to back up the \".local/share/nemo\" folder.")
+            logger.info('Starting to back up the ".local/share/nemo" folder.')
             try:
                 nemo_dest = dst / ".local" / "share" / "nemo"
                 nemo_dest.mkdir(parents=True, exist_ok=True)
@@ -93,51 +97,65 @@ class FileSystemManager:
                     dst=dst / ".local" / "share" / "nemo",
                     dirs_exist_ok=True,
                 )
-                logger.success("Successfully backed up the \".local/share/nemo\" folder")
+                logger.success('Successfully backed up the ".local/share/nemo" folder')
             except Exception:
-                logger.error(f"An error occurred during copying: {traceback.format_exc()}")
+                logger.error(
+                    f"An error occurred during copying: {traceback.format_exc()}"
+                )
 
         if bashrc_path.exists():
-            logger.info("Starting to back up the \".bashrc\" file.")
+            logger.info('Starting to back up the ".bashrc" file.')
             try:
                 shutil.copy(src=bashrc_path, dst=dst / ".bashrc")
-                logger.success("Successfully backed up the \".bashrc\" file")
+                logger.success('Successfully backed up the ".bashrc" file')
             except Exception:
-                logger.error(f"An error occurred during copying: {traceback.format_exc()}")
+                logger.error(
+                    f"An error occurred during copying: {traceback.format_exc()}"
+                )
 
         if env_path.exists():
-            logger.info("Starting to back up the \".env\" file.")
+            logger.info('Starting to back up the ".env" file.')
             try:
                 shutil.copy(src=env_path, dst=dst / ".env")
-                logger.success("Successfully backed up the \".env\" file")
+                logger.success('Successfully backed up the ".env" file')
             except Exception:
-                logger.error(f"An error occurred during copying: {traceback.format_exc()}")
+                logger.error(
+                    f"An error occurred during copying: {traceback.format_exc()}"
+                )
 
         if xresources_path.exists():
-            logger.info("Starting to back up the \".Xresources\" file.")
+            logger.info('Starting to back up the ".Xresources" file.')
             try:
                 shutil.copy(src=xresources_path, dst=dst / ".Xresources")
-                logger.success("Successfully backed up the \".Xresources\" file")
+                logger.success('Successfully backed up the ".Xresources" file')
             except Exception:
-                logger.error(f"An error occurred during copying: {traceback.format_exc()}")
+                logger.error(
+                    f"An error occurred during copying: {traceback.format_exc()}"
+                )
 
         if xinitrc_path.exists():
-            logger.info("Starting to back up the \".xinitrc\" file.")
+            logger.info('Starting to back up the ".xinitrc" file.')
             try:
                 shutil.copy(src=xinitrc_path, dst=dst / ".xinitrc")
-                logger.success("Successfully backed up the \".xinitrc\" file")
+                logger.success('Successfully backed up the ".xinitrc" file')
             except Exception:
-                logger.error(f"An error occurred during copying: {traceback.format_exc()}")
+                logger.error(
+                    f"An error occurred during copying: {traceback.format_exc()}"
+                )
 
         if index_theme_path.exists():
-            logger.info("Starting to back up the \".icons/default/index.theme\" file.")
+            logger.info('Starting to back up the ".icons/default/index.theme" file.')
             try:
                 dest = dst / ".icons" / "default" / "index.theme"
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy(src=index_theme_path, dst=dest)
-                logger.success("Successfully backed up the \".icons/default/index.theme\" file")
+                logger.success(
+                    'Successfully backed up the ".icons/default/index.theme" file'
+                )
             except Exception:
-                logger.error(f"An error occurred during copying: {traceback.format_exc()}")
+                logger.error(
+                    f"An error occurred during copying: {traceback.format_exc()}"
+                )
 
     @staticmethod
     def copy_dotfiles(exclude_bspwm: bool, exclude_hyprland: bool) -> None:
@@ -166,6 +184,7 @@ class FileSystemManager:
         )
         shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
         shutil.copy(src=Path("./home/.env"), dst=home / ".env")
+        shutil.copy(src=Path("./home/.face.icon", dst=home / ".face.icon"))
 
         if not exclude_bspwm:
             shutil.copy(src=Path("./home/.Xresources"), dst=home / ".Xresources")
@@ -175,7 +194,7 @@ class FileSystemManager:
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src=Path("./home/.icons/default/index.theme"), dst=destination)
 
-        ##==> Выдаем права
+        ##==> Выдаем права файлам в bin
         ##############################################
         for path in [home / ".config", home / "bin"]:
             try:
@@ -184,3 +203,21 @@ class FileSystemManager:
                 logger.error(
                     f"[!] Error while making {path} executable: {traceback.format_exc()}"
                 )
+
+        ##==> Выдаем права sddm
+        ##############################################
+        try:
+            subprocess.run(
+                ["setfacl", "-m", "u:sddm:x", "~/"],
+                check=True,
+                capture_output=True,
+            )
+            subprocess.run(
+                ["setfacl", "-m", "u:sddm:r", "~/.face.icon"],
+                check=True,
+                capture_output=True,
+            )
+        except Exception:
+            logger.error(
+                f"[!] An error occurred when granting permissions for sddm: {traceback.format_exc()}"
+            )
