@@ -1,4 +1,3 @@
-import os
 import subprocess
 import traceback
 
@@ -8,9 +7,10 @@ from managers.apps_manager import AppsManager
 from managers.drivers_manager import DriversManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
+from managers.post_install_manager import PostInstallation
 from packages import BASE, CUSTOM
 from question import Question
-from utils.schemes import BuildOptions, NotInstalledPackages, AurHelper
+from utils.schemes import AurHelper, BuildOptions, NotInstalledPackages
 
 
 class Builder:
@@ -22,7 +22,7 @@ class Builder:
         )
         self.build_options: BuildOptions = Question.get_answers()
         logger.info(f"User Responses to Questions: {self.build_options}")
-        
+
         if self.build_options.make_backup:
             logger.info(
                 "The process of creating a backup of configurations is started!"
@@ -30,7 +30,7 @@ class Builder:
             FileSystemManager.make_backup()
             logger.warning(
                 "A backup of all your configuration files is located "
-                "in the root of the meowrch at the path \"./backup/\""
+                'in the root of the meowrch at the path "./backup/"'
             )
             logger.warning("Check the backup before you start the installation")
             input("Press Enter to continue with the installation: ")
@@ -66,14 +66,14 @@ class Builder:
             ublock=self.build_options.ff_ublock,
             twp=self.build_options.ff_twp,
             unpaywall=self.build_options.ff_unpaywall,
-            tampermonkey=self.build_options.ff_tampermonkey
+            tampermonkey=self.build_options.ff_tampermonkey,
         )
         AppsManager.configure_code()
 
         self.daemons_setting()
-        self.post_conf()
+        PostInstallation.apply()
         logger.warning(
-            "The script was unable to automatically install these packages." 
+            "The script was unable to automatically install these packages."
             "Try installing them manually."
         )
         logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
@@ -111,12 +111,12 @@ class Builder:
         self.not_installed_packages.pacman.extend(
             PackageManager.install_packages(pacman)
         )
-        
+
         # Устанавливаем aur пакеты
         self.not_installed_packages.aur.extend(
             PackageManager.install_packages(aur, aur=self.build_options.aur_helper)
         )
-    
+
         logger.success("The installation process of all packages is complete!")
 
     def drivers_installation(self) -> None:
@@ -156,48 +156,6 @@ class Builder:
                 )
 
         logger.success("The setting of the daemons is complete!")
-
-    def post_conf(self) -> None:
-        logger.info("The post-installation configuration is starting...")
-
-        try:
-            subprocess.run(["chsh", "-s", "/usr/bin/fish"], check=True)
-            logger.success("The shell is changed to fish!")
-        except Exception:
-            logger.error(f"Error changing shell: {traceback.format_exc()}")
-
-        if (
-            "games" in CUSTOM
-            and "gamemode" in CUSTOM["games"]
-            and CUSTOM["games"]["gamemode"].selected
-        ):
-            try:
-                username = os.getenv("USER") or os.getenv("LOGNAME")
-                subprocess.run(
-                    ["sudo", "usermod", "-a", username, "-G", "gamemode"], check=True
-                )
-                logger.success("The user is added to the gamemode group!")
-            except Exception:
-                logger.error(
-                    f"Error adding user to group for gamemode: {traceback.format_exc()}"
-                )
-
-        try:
-            subprocess.run(
-                [
-                    "gsettings",
-                    "set",
-                    "org.cinnamon.desktop.default-applications.terminal",
-                    "exec",
-                    "kitty",
-                ],
-                check=True,
-            )
-            logger.success("The default terminal is set to kitty!")
-        except Exception:
-            logger.error(f"Error setting default terminal: {traceback.format_exc()}")
-
-        logger.info("The post-installation configuration is complete!")
 
 
 if __name__ == "__main__":
