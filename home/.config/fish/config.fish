@@ -11,7 +11,6 @@ alias cls="clear"
 alias g="git"
 alias n="nvim"
 alias m="micro"
-alias cat="bat"
 alias ls="lsd"
 alias tree="lsd --tree"
 
