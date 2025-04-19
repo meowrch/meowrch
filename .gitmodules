@@ -4,3 +4,6 @@
 [submodule "misc/sddm_theme"]
 	path = misc/sddm_theme
 	url = https://github.com/meowrch/sddm-theme
+[submodule "misc/plymouth_theme"]
+	path = misc/plymouth_theme
+	url = https://github.com/meowrch/plymouth-theme
