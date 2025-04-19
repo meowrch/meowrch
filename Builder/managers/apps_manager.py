@@ -7,10 +7,15 @@ import traceback
 
 from loguru import logger
 
+from .custom_apps.plymouth import PlymouthConfigurer
 from .package_manager import PackageManager
 
 
 class AppsManager:
+    @staticmethod
+    def configure_plymouth() -> None:
+        PlymouthConfigurer().setup()
+
     @staticmethod
     def configure_code() -> str:
         try:

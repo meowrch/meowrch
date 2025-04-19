@@ -24,8 +24,8 @@ BASE = Packages(
 
 			##==> GUI 
 			###########################################
-			"sddm", "firefox", "kitty", "blueman", "ark", "nemo", "gvfs", 
-			"ffmpegthumbnailer", "imagemagick", "vlc", "loupe", "dunst", 
+			"sddm", "plymouth", "firefox", "kitty", "blueman", "ark", "nemo", 
+            "gvfs", "ffmpegthumbnailer", "imagemagick", "vlc", "loupe", "dunst", 
 			"qt5ct", "qt6ct", "qt5-graphicaleffects", "qt5-svg", 
 			"qt5-quickcontrols2", "redshift", "zenity", "polkit-gnome",
 			"gnome-disk-utility","rofimoji", 
