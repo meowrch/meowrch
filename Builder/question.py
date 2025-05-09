@@ -7,7 +7,7 @@ from inquirer import List as QuestionList
 from managers.drivers_manager import DriversManager
 from packages import CUSTOM
 from utils.banner import clear_and_banner
-from utils.schemes import BuildOptions, AurHelper
+from utils.schemes import BuildOptions, AurHelper, TerminalShell
 
 
 class Question:
@@ -30,7 +30,7 @@ class Question:
 
             category_question = inquirer.List(
                 "category",
-                message="8) Select a category of packages and choose the ones you want",
+                message="9) Select a category of packages and choose the ones you want",
                 choices=list(
                     category
                     + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
@@ -144,6 +144,13 @@ class Question:
                 default=firefox_choices,
                 carousel=True,
             ),
+            QuestionList(
+                name="install_shell",
+                message="8) Which terminal shell do you prefer?",
+                choices=["fish", "zsh"],
+                default="fish",
+                carousel=True,
+            ),
         ]
 
         for question in quests:
@@ -161,6 +168,11 @@ class Question:
         else:
             aur_helper = AurHelper.YAY
 
+        if answers["install_shell"] == "zsh":
+            terminal_shell = TerminalShell.ZSH
+        else:
+            terminal_shell = TerminalShell.FISH
+
         return BuildOptions(
             make_backup=answers["make_backup"] == "Yes",
             install_bspwm="bspwm" in answers["install_wm"],
@@ -176,5 +188,6 @@ class Question:
             ff_ublock="uBlock Origin" in answers["ff_plugins"],
             ff_twp="TWP" in answers["ff_plugins"],
             ff_unpaywall="Unpaywall" in answers["ff_plugins"],
-            ff_tampermonkey="Tamper Monkey" in answers["ff_plugins"]
+            ff_tampermonkey="Tamper Monkey" in answers["ff_plugins"],
+            terminal_shell=terminal_shell
         )
