@@ -80,7 +80,7 @@ xsettingsd &
 dunst &
 picom --config $HOME/.config/bspwm/picom.conf &
 sh $HOME/.config/polybar/launch.sh
-sh $HOME/bin/polkitkdeauth.sh 
+sh ${XDG_BIN_HOME:-$HOME/.local/bin}/polkitkdeauth.sh 
 python $HOME/.config/meowrch/meowrch.py --action set-current-theme
 python $HOME/.config/meowrch/meowrch.py --action set-wallpaper
 
