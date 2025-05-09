@@ -5,13 +5,14 @@ import traceback
 
 from loguru import logger
 from packages import CUSTOM
+from utils.schemes import TerminalShell
 
 
 class PostInstallation:
     @staticmethod
-    def apply():
+    def apply(terminal_shell: TerminalShell = TerminalShell.FISH):
         logger.info("The post-installation configuration is starting...")
-        PostInstallation._set_fish_shell()
+        PostInstallation._set_terminal_shell(terminal_shell)
         PostInstallation._add_to_gamemode_group()
         PostInstallation._set_default_term()
         PostInstallation._ensure_en_us_locale()
@@ -74,10 +75,10 @@ class PostInstallation:
             return True
 
     @staticmethod
-    def _set_fish_shell() -> None:
+    def _set_terminal_shell(terminal_shell: TerminalShell) -> None:
         try:
-            subprocess.run(["chsh", "-s", "/usr/bin/fish"], check=True)
-            logger.success("The shell is changed to fish!")
+            subprocess.run(["chsh", "-s", f"/usr/bin/{terminal_shell.value}"], check=True)
+            logger.success(f"The shell is changed to {terminal_shell.value}!")
         except Exception:
             logger.error(f"Error changing shell: {traceback.format_exc()}")
 

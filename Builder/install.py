@@ -10,7 +10,7 @@ from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
 from packages import BASE, CUSTOM
 from question import Question
-from utils.schemes import AurHelper, BuildOptions, NotInstalledPackages
+from utils.schemes import AurHelper, BuildOptions, NotInstalledPackages, TerminalShell
 
 
 class Builder:
@@ -71,7 +71,7 @@ class Builder:
         AppsManager.configure_code()
 
         self.daemons_setting()
-        PostInstallation.apply()
+        PostInstallation.apply(self.build_options.terminal_shell)
         logger.warning(
             "The script was unable to automatically install these packages."
             "Try installing them manually."
@@ -106,6 +106,11 @@ class Builder:
             if getattr(self.build_options, f"install_{wm}"):
                 pacman.extend(getattr(BASE.pacman, f"{wm}_packages"))
                 aur.extend(getattr(BASE.aur, f"{wm}_packages"))
+
+        if self.build_options.terminal_shell == TerminalShell.ZSH:
+            pacman.extend(["zsh", "zsh-syntax-highlighting", "zsh-autosuggestions", "zsh-history-substring-search"])
+        else:
+            pacman.append("fish")
 
         # Устанавливаем pacman пакеты
         self.not_installed_packages.pacman.extend(

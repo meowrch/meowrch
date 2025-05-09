@@ -1,11 +1,16 @@
 from dataclasses import dataclass, field
-from typing import List
 from enum import Enum
+from typing import List
 
 
 class AurHelper(Enum):
     YAY = "yay"
     PARU = "paru"
+
+
+class TerminalShell(Enum):
+    FISH = "fish"
+    ZSH = "zsh"
 
 
 @dataclass
@@ -52,3 +57,4 @@ class BuildOptions:
     ff_twp: bool
     ff_unpaywall: bool
     ff_tampermonkey: bool
+    terminal_shell: TerminalShell
