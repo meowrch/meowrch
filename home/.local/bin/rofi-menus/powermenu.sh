@@ -3,9 +3,9 @@
 choice=$(printf "  Lock\n󰍃  Logout\n󰒲  Suspend\n  Reboot\n  Shutdown" | rofi -dmenu)
 
 case "$choice" in
-  "  Lock") sh $HOME/bin/screen-lock.sh ;;
+  "  Lock") sh ${XDG_BIN_HOME:-$HOME/.local/bin}/screen-lock.sh ;;
   "󰍃  Logout") pkill -KILL -u "$USER" ;;
-  "󰒲  Suspend") sh $HOME/bin/screen-lock.sh --suspend ;;
+  "󰒲  Suspend") sh ${XDG_BIN_HOME:-$HOME/.local/bin}/screen-lock.sh --suspend ;;
   "  Reboot") systemctl reboot ;;
   "  Shutdown") systemctl poweroff ;;
 esac

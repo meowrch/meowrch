@@ -57,7 +57,7 @@ class FileSystemManager:
         home = Path.home()
 
         config_path = home / ".config"
-        bin_path = home / "bin"
+        bin_path = home / ".local" / "bin"
         nemo_path = home / ".local" / "share" / "nemo"
         bashrc_path = home / ".bashrc"
         env_path = home / ".env"
@@ -78,10 +78,10 @@ class FileSystemManager:
                 )
 
         if bin_path.exists():
-            logger.info('Starting to back up the "bin" folder.')
+            logger.info('Starting to back up the ".local/bin" folder.')
             try:
-                shutil.copytree(src=bin_path, dst=dst / "bin", dirs_exist_ok=True)
-                logger.success('Successfully backed up the "bin" folder')
+                shutil.copytree(src=bin_path, dst=dst / ".local" / "bin", dirs_exist_ok=True)
+                logger.success('Successfully backed up the ".local/bin" folder')
             except Exception:
                 logger.error(
                     f"An error occurred during copying: {traceback.format_exc()}"
@@ -176,7 +176,6 @@ class FileSystemManager:
             exclusions=config_folders_exclusions,
         )
 
-        shutil.copytree(src=Path("./home/bin"), dst=home / "bin", dirs_exist_ok=True)
         shutil.copytree(
             src=Path("./home/.local"),
             dst=home / ".local",
@@ -196,7 +195,7 @@ class FileSystemManager:
 
         ##==> Выдаем права файлам в bin
         ##############################################
-        for path in [home / ".config", home / "bin"]:
+        for path in [home / ".config", home / ".local" / "bin"]:
             try:
                 subprocess.run(["sudo", "chmod", "-R", "700", str(path)], check=True)
             except Exception:

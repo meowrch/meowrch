@@ -11,13 +11,13 @@ super + {Return,e,w,t,p,v,d,x,l,c,b,period}
     python ~/.config/meowrch/meowrch.py --action select-wallpaper, \
     python ~/.config/meowrch/meowrch.py --action select-theme, \
     pavucontrol, \
-    sh $HOME/bin/rofi-menus/clipboard-manager.sh, \
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/clipboard-manager.sh, \
     rofi -show drun, \
-    sh $HOME/bin/rofi-menus/powermenu.sh, \
-    sh $HOME/bin/screen-lock.sh, \
-    sh $HOME/bin/color-picker.sh, \
-    sh $HOME/bin/toggle-bar.sh, \
-    sh $HOME/bin/rofi-menus/rofimoji.sh}
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/powermenu.sh, \
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/screen-lock.sh, \
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/color-picker.sh, \
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/toggle-bar.sh, \
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/rofimoji.sh}
 
 ctrl + shift + Escape 
 	alacritty -e btop
@@ -39,10 +39,10 @@ super + shift + {c,f,t,o}
 ##############################################################################################
 #--------------------------------------------------------------------------------------------## VOLUME
 XF86Audio{RaiseVolume,LowerVolume,Mute}
-    sh $HOME/bin/volume.sh --device output --action {increase,decrease,toggle}
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device output --action {increase,decrease,toggle}
 
 XF86AudioMicMute
-	sh $HOME/bin/volume.sh --device input --action toggle
+	sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device input --action toggle
 #--------------------------------------------------------------------------------------------## PLAYER
 XF86Audio{Play,Pause,Next,Prev,Stop}
 	{playerctl play-pause, \
@@ -52,8 +52,8 @@ XF86Audio{Play,Pause,Next,Prev,Stop}
 	playerctl stop}
 #--------------------------------------------------------------------------------------------## BRIGHTNESS	
 XF86MonBrightness{Up,Down}
-	{sh $HOME/bin/brightness.sh --up, \
-	sh $HOME/bin/brightness.sh --down}				  
+	{sh ${XDG_BIN_HOME:-$HOME/.local/bin}/brightness.sh --up, \
+	sh ${XDG_BIN_HOME:-$HOME/.local/bin}/brightness.sh --down}				  
 ##############################################################################################
 
 
