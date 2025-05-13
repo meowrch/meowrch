@@ -7,14 +7,14 @@
 # ┏┛┗┛┣┫┣┫┃┃┃┃┃┃╋╋┃┗━┛┣┫┣┳┛┏┓┗┓
 # ┗━━━┻━━┻┛┗┛┗┻┛╋╋┗━━━┻━━┻━┛┗━┛
 # The program was created by DIMFLIX
-# Github: https://github.com/DIMFLIX-OFFICIAL
+# Github: https://github.com/DIMFLIX
 
 FLAG_FILE="/tmp/battery_low.flag"
 LOW_BATTERY_THRESHOLD=15
 CHARGING_ICONS=("󰢟 " "󰢜 " "󰂆 " "󰂇 " "󰂈 " "󰢝 " "󰂉 " "󰢞 " "󰂊 " "󰂋 " "󰂅 ")
 SESSION_TYPE="$XDG_SESSION_TYPE"
-DISCHARGED_COLOR="#D35F5D"
-CHARGED_COLOR="#A0E8A2"
+DISCHARGED_COLOR=""
+CHARGED_COLOR=""
 
 has_battery() {
     local battery_path=$(upower -e | grep 'BAT')
@@ -43,6 +43,13 @@ print_status() {
     local charging_status=$(is_charging)
     local icon=""
     local color=""
+    local icon_only=false
+
+    for arg in "$@"; do
+        if [[ "$arg" == "--icon-only" ]]; then
+            icon_only=true
+        fi
+    done
 
     if [ "$charging_status" == "charging" ]; then
         icon="${CHARGING_ICONS[9]}" # Иконка для 100%
@@ -70,16 +77,28 @@ print_status() {
         esac
     fi
 
-	if [[ "$SESSION_TYPE" == "wayland" ]]; then
-		echo "<span color=\"$color\">$icon$charge%</span>"
-	elif [[ "$SESSION_TYPE" == "x11" ]]; then
-    	echo "%{F$color}$icon$charge%%{F-}"
+    local output=""
+    if $icon_only; then
+        output="$icon"
+    else
+        output="${icon}${charge}%"
     fi
+
+	if [[ -n "$color" ]]; then
+	    if [[ "$SESSION_TYPE" == "wayland" ]]; then
+	        echo "<span color=\"$color\">$output</span>"
+	    elif [[ "$SESSION_TYPE" == "x11" ]]; then
+	        echo "%{F$color}$output%{F-}"
+	    fi
+	else
+	    echo "$output"
+	fi
 }
 
 main() {
 	local status_mode=false
 	local notify_mode=false
+	local icon_only=false
 	
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
@@ -99,6 +118,10 @@ main() {
                 DISCHARGED_COLOR="$2"
                 shift 2
                 ;;
+            --icon-only)
+                icon_only=true
+                shift
+                ;;
             *)
                 echo "Invalid option: $1"
                 exit 1
@@ -107,7 +130,11 @@ main() {
     done
 
     if [[ $status_mode == true ]]; then
-        print_status
+        if $icon_only; then
+            print_status --icon-only
+        else
+            print_status
+        fi
     fi
 
     if [[ $notify_mode == true ]]; then
@@ -136,7 +163,52 @@ main() {
     fi
 }
 
-
 if has_battery; then
     main "$@"
+else
+    status_mode=false
+    icon_only=false
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --status)
+                status_mode=true
+                shift
+                ;;
+            --icon-only)
+                icon_only=true
+                shift
+                ;;
+            --charged-color)
+                CHARGED_COLOR="$2"
+                shift 2
+                ;;
+            --discharged-color)
+                DISCHARGED_COLOR="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    if [[ $status_mode == true ]]; then
+        output="󱟩"
+        color="$DISCHARGED_COLOR"
+        
+        if ! $icon_only; then
+			if [[ -n "$color" ]]; then
+	            case "$SESSION_TYPE" in
+	                "wayland") echo "<span color='$color'>$output</span>" ;;
+	                "x11")     echo "%{F$color}$output%{F-}" ;;
+	                *)         echo "$output" ;;
+	            esac
+	        else
+	            echo "$output"
+	        fi
+       else
+           echo "$output"
+       fi
+    fi
 fi
