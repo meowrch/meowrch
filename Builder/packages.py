@@ -69,7 +69,7 @@ BASE = Packages(
             ###########################################
             "ttf-meslo-nerd-font-powerlevel10k",
 		],
-		bspwm_packages=["i3lock-color", "picom-ftlabs-git"],
+		bspwm_packages=["xkb-switch", "i3lock-color", "picom-ftlabs-git"],
 		hyprland_packages=[
 			"hyprpicker", "swaylock-effects-git", "wlr-randr-git", 
 			"hyprprop", "grimblast-git"
