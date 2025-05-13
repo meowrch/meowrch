@@ -113,6 +113,7 @@ tooltip {
 #clock,
 #idle_inhibitor,
 #language,
+#custom-capslock,
 #custom-l_end,
 #custom-r_end {
     color: @main-fg;
