@@ -44,7 +44,7 @@ BASE = Packages(
 		hyprland_packages=[
 			"hyprland", "waybar", "hyprlock", "swww", "wl-clipboard", 
             "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
-			"xdg-desktop-portal-wlr", "hypridle"
+			"xdg-desktop-portal-wlr", "hypridle", "hyprpicker", "wlr-randr"
         ]
 	),
 	aur=DistributionPackages(
@@ -71,7 +71,7 @@ BASE = Packages(
 		],
 		bspwm_packages=["xkb-switch", "i3lock-color", "picom-ftlabs-git"],
 		hyprland_packages=[
-			"hyprpicker", "wlr-randr-git", "hyprprop", "grimblast-git"
+			"hyprprop", "grimblast-git"
 		]
 	)
 )
