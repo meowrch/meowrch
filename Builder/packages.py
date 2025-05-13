@@ -42,7 +42,7 @@ BASE = Packages(
 			"wmname", "polybar", "xorg-xrandr", "xsettingsd", "clipnotify",
 		],
 		hyprland_packages=[
-			"hyprland", "waybar", "swww", "wl-clipboard", 
+			"hyprland", "waybar", "hyprlock", "swww", "wl-clipboard", 
             "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
 			"xdg-desktop-portal-wlr", "hypridle"
         ]
@@ -71,8 +71,7 @@ BASE = Packages(
 		],
 		bspwm_packages=["xkb-switch", "i3lock-color", "picom-ftlabs-git"],
 		hyprland_packages=[
-			"hyprpicker", "swaylock-effects-git", "wlr-randr-git", 
-			"hyprprop", "grimblast-git"
+			"hyprpicker", "wlr-randr-git", "hyprprop", "grimblast-git"
 		]
 	)
 )

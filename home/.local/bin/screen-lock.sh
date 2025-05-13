@@ -7,7 +7,7 @@
 # ┏┛┗┛┣┫┣┫┃┃┃┃┃┃╋╋┃┗━┛┣┫┣┳┛┏┓┗┓
 # ┗━━━┻━━┻┛┗┛┗┻┛╋╋┗━━━┻━━┻━┛┗━┛
 # The program was created by DIMFLIX
-# Github: https://github.com/DIMFLIX-OFFICIAL
+# Github: https://github.com/DIMFLIX
 
 SESSION_TYPE=$XDG_SESSION_TYPE
 
@@ -61,7 +61,7 @@ case "$SESSION_TYPE" in
         if [[ "$1" == "--suspend" ]]; then
             systemctl suspend
         else
-            swaylock
+            hyprlock
         fi
         ;;
     "x11")
