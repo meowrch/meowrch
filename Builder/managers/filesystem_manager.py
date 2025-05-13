@@ -168,7 +168,7 @@ class FileSystemManager:
         if exclude_bspwm:
             config_folders_exclusions.extend(["bspwm", "polybar"])
         if exclude_hyprland:
-            config_folders_exclusions.extend(["hypr", "swaylock", "waybar"])
+            config_folders_exclusions.extend(["hypr", "waybar"])
 
         FileSystemManager.copy_with_exclusions(
             src=Path("./home/.config"),
