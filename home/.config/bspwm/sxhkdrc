@@ -24,6 +24,9 @@ ctrl + shift + Escape
 
 Print
     flameshot gui
+
+alt + shift
+    xkb-switch -n
 ##############################################################################################
 
 ##==> USER APPS
