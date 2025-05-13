@@ -11,8 +11,8 @@
 
 
 SESSION_TYPE="$XDG_SESSION_TYPE"
-ENABLED_COLOR="#A3BE8C"
-DISABLED_COLOR="#D35F5E"
+ENABLED_COLOR=""
+DISABLED_COLOR=""
 SIGNAL_ICONS=("󰤟 " "󰤢 " "󰤥 " "󰤨 ")
 SECURED_SIGNAL_ICONS=("󰤡 " "󰤤 " "󰤧 " "󰤪 ")
 WIFI_CONNECTED_ICON=" "
@@ -20,7 +20,7 @@ ETHERNET_CONNECTED_ICON=" "
 
 get_status() {
     if nmcli -t -f TYPE,STATE device status | grep 'ethernet:connected' > /dev/null; then
-        local status_icon="󰈀"
+        local status_icon="󰈀 "
         local status_color=$ENABLED_COLOR
     elif nmcli -t -f TYPE,STATE device status | grep 'wifi:connected' > /dev/null; then
         local wifi_info=$(nmcli --terse --fields "IN-USE,SIGNAL,SECURITY,SSID" device wifi list --rescan no | grep '\*')
@@ -28,6 +28,7 @@ get_status() {
             IFS=: read -r in_use signal security ssid <<< "$wifi_info"
             local signal_icon="${SIGNAL_ICONS[3]}"
             local signal_level=$((signal / 25))
+            
             if [[ "$signal_level" -lt "${#SIGNAL_ICONS[@]}" ]]; then
                 signal_icon="${SIGNAL_ICONS[$signal_level]}"
             fi
@@ -45,11 +46,15 @@ get_status() {
         local status_color=$DISABLED_COLOR
     fi
 
-    if [[ "$SESSION_TYPE" == "wayland" ]]; then
-        echo "<span color=\"$status_color\">$status_icon</span>"
-    elif [[ "$SESSION_TYPE" == "x11" ]]; then
-        echo "%{F$status_color}$status_icon%{F-}"
-    fi
+	if [[ -n "$status_color" ]]; then
+	    if [[ "$SESSION_TYPE" == "wayland" ]]; then
+	        echo "<span color=\"$status_color\">$status_icon</span>"
+	    elif [[ "$SESSION_TYPE" == "x11" ]]; then
+	        echo "%{F$status_color}$status_icon%{F-}"
+	    fi
+	else
+	    echo "$status_icon"
+	fi
 }
 
 manage_wifi() {
