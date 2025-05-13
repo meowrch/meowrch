@@ -18,8 +18,8 @@
 	],
 	"modules-right": [
 		"group/system-levels",
-		"custom/l_end","idle_inhibitor","clock","custom/r_end",
-        "custom/l_end","hyprland/language","custom/r_end",
+		"custom/l_end", "idle_inhibitor", "clock", "custom/r_end",
+        "custom/l_end", "hyprland/language", "custom/capslock", "custom/r_end",
 		"group/control-panel", "custom/padd"
 	],
     "group/system-info": {
@@ -196,6 +196,13 @@
         "min-length": 2,
         "tooltip": false
     },
+    "custom/capslock": {
+   	    "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/kb-layout.sh --caps --plain",
+   	    "return-type": "raw",
+   	   	"format": "| {}",
+   	    "signal": 8,
+   		"interval": 3600
+   	},
     "custom/system-update": {
         "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/system-update.sh --status --unupdated-color \"#df8e1d\" --updated-color \"#40a02b\" | cat",
         "return-type": "raw",
