@@ -8,8 +8,8 @@
 super + {Return,e,w,t,p,v,d,x,l,c,b,period}
     {kitty, \
     nemo, \
-    python ~/.config/meowrch/meowrch.py --action select-wallpaper, \
-    python ~/.config/meowrch/meowrch.py --action select-theme, \
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/wallpaper-selector.sh, \
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/theme-selector.sh, \
     pavucontrol, \
     sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/clipboard-manager.sh, \
     rofi -show drun, \
