@@ -17,7 +17,7 @@ lock_x11() {
     local wrong=db4b4b
     local date=7aa2f7
     local verify=7aa2f7
-    local lock_image="$HOME/.config/meowrch/current_wallpaper"
+    local lock_image="${XDG_DATA_HOME:-$HOME/.local/share}/wallpapers/.current.wall"
 
     i3lock -n --force-clock -i "$lock_image" -e \
         --indicator --radius=20 --ring-width=40 \
