@@ -2,8 +2,8 @@ import os
 import subprocess
 import tempfile
 import traceback
-
 from pathlib import Path
+
 from loguru import logger
 from packages import CUSTOM
 from utils.schemes import TerminalShell
@@ -68,21 +68,29 @@ class PostInstallation:
                 logger.success(f'Locale "{target_line}" successfully added!')
                 return True
             except subprocess.CalledProcessError as e:
-                logger.warning(f"Failed to add a locale. Error: {e}")
+                logger.warning(f"Failed to add a locale. Error: {e.stderr}")
                 return False
             except Exception:
-                logger.warning(f"Failed to add a locale. Error: {traceback.format_exc()}")
+                logger.warning(
+                    f"Failed to add a locale. Error: {traceback.format_exc()}"
+                )
         else:
             logger.success(f'Locale "{target_line}" successfully added!')
             return True
 
     @staticmethod
     def _set_terminal_shell(terminal_shell: TerminalShell) -> None:
+        error_msg = "Error changing shell: {err}"
+
         try:
-            subprocess.run(["chsh", "-s", f"/usr/bin/{terminal_shell.value}"], check=True)
+            subprocess.run(
+                ["chsh", "-s", f"/usr/bin/{terminal_shell.value}"], check=True
+            )
             logger.success(f"The shell is changed to {terminal_shell.value}!")
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(f"Error changing shell: {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
     @staticmethod
     def _add_to_gamemode_group() -> bool:
@@ -91,19 +99,21 @@ class PostInstallation:
             and "gamemode" in CUSTOM["games"]
             and CUSTOM["games"]["gamemode"].selected
         ):
+            error_msg = "Error adding user to group for gamemode: {err}"
             try:
                 username = os.getenv("USER") or os.getenv("LOGNAME")
                 subprocess.run(
                     ["sudo", "usermod", "-a", username, "-G", "gamemode"], check=True
                 )
                 logger.success("The user is added to the gamemode group!")
+            except subprocess.CalledProcessError as e:
+                logger.error(error_msg.format(err=e.stderr))
             except Exception:
-                logger.error(
-                    f"Error adding user to group for gamemode: {traceback.format_exc()}"
-                )
+                logger.error(error_msg.format(err=traceback.format_exc()))
 
     @staticmethod
     def _set_default_term() -> bool:
+        error_msg = "Error setting default terminal: {err}"
         try:
             subprocess.run(
                 [
@@ -117,17 +127,21 @@ class PostInstallation:
             )
             logger.success("The default terminal is set to kitty!")
             return True
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(f"Error setting default terminal: {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
             return False
-        
+
     @staticmethod
     def _set_wallpaper() -> None:
         wallpaper_selector = Path.home() / ".local/bin/rofi-menus/wallpaper-selector.sh"
-
+        error_msg = "Error setting random wallpaper: {err}"
         if wallpaper_selector.exists():
             try:
                 subprocess.run(["sh", str(wallpaper_selector), "--random"])
+            except subprocess.CalledProcessError as e:
+                logger.error(error_msg.format(err=e.stderr))
             except Exception:
-                logger.error(f"Error setting random wallpaper: {traceback.format_exc()}")
+                logger.error(error_msg.format(err=traceback.format_exc()))
                 return False

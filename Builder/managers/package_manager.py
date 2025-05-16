@@ -11,12 +11,14 @@ class PackageManager:
     @staticmethod
     def update_database() -> None:
         logger.info("Starting to update the package database.")
-
+        error_msg = "Error updating package database: {err}"
         try:
             subprocess.run(["sudo", "pacman", "-Sy"], check=True)
             logger.success("The package database update was successful!")
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(f"Error updating package database: {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
     @staticmethod
     def check_package_installed(package: str) -> bool:
@@ -28,13 +30,12 @@ class PackageManager:
                 stderr=subprocess.PIPE,
             )
             return True
-        except subprocess.CalledProcessError:
-            return False
-        except FileNotFoundError:
+        except Exception:
             return False
 
     @staticmethod
     def clone_repository(repo_url: str, target_path: str) -> bool:
+        error_msg = 'Error while cloning repository "{repo_url}": {err}'
         try:
             os.makedirs(os.path.dirname(target_path), exist_ok=True)
 
@@ -43,15 +44,18 @@ class PackageManager:
                 check=True,
             )
             return True
-        except Exception as e:
-            logger.error(f'Error while cloning repository "{repo_url}": {e}')
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(repo_url=repo_url, err=e.stderr))
+            return False
+        except Exception:
+            logger.error(error_msg.format(repo_url=repo_url, err=traceback.format_exc()))
             return False
 
     @staticmethod
     def install_aur_manager() -> None:
-        logger.info("Starting the \"yay\" package manager installation process.")
+        logger.info('Starting the "yay" package manager installation process.')
         target_path = "/tmp/yay"
-
+        error_msg = 'Error while installing "yay": {err}'
         try:
             PackageManager.install_packages(["git", "base-devel"])
 
@@ -66,17 +70,20 @@ class PackageManager:
                         return
 
                 subprocess.run(["makepkg", "-si"], cwd=target_path, check=True)
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
+            exit(1)
         except Exception:
-            logger.error(f"Error while installing \"yay\": {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
             exit(1)
 
-        logger.success("Package \"yay\" has been successfully installed!")
+        logger.success('Package "yay" has been successfully installed!')
 
     @staticmethod
     def install_paru_manager() -> None:
-        logger.info("Starting the \"paru\" package manager installation process.")
+        logger.info('Starting the "paru" package manager installation process.')
         target_path = "/tmp/paru"
-
+        error_msg = 'Error while installing "paru": {err}'
         try:
             PackageManager.install_packages(["git", "base-devel"])
 
@@ -91,11 +98,14 @@ class PackageManager:
                         return
 
                 subprocess.run(["makepkg", "-si"], cwd=target_path, check=True)
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
+            exit(1)
         except Exception:
-            logger.error(f"Error while installing \"paru\": {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
             exit(1)
 
-        logger.success("Package \"paru\" has been successfully installed!")
+        logger.success('Package "paru" has been successfully installed!')
 
     @staticmethod
     def install_i3lock_color() -> bool:
@@ -123,7 +133,9 @@ class PackageManager:
             return False
 
     @staticmethod
-    def install_package(package: str, aur: AurHelper = None, error_retries: int = 3) -> bool:
+    def install_package(
+        package: str, aur: AurHelper = None, error_retries: int = 3
+    ) -> bool:
         """Installs the package with pacman or some aur helper
 
         Args:
@@ -135,11 +147,14 @@ class PackageManager:
             bool: Status, whether the package is installed or not
         """
 
+        error_msg = 'Error while installing package "{package}": {err}'
+
         for _ in range(error_retries):
             try:
                 if aur is not None:
                     subprocess.run(
-                        [aur.value, "-S", "--noconfirm", "--needed", package], check=True
+                        [aur.value, "-S", "--noconfirm", "--needed", package],
+                        check=True,
                     )
                 else:
                     subprocess.run(
@@ -148,20 +163,25 @@ class PackageManager:
                     )
                 logger.success(f'Package "{package}" has been successfully installed!')
                 return True
+            except subprocess.CalledProcessError as e:
+                # Для проблемных пакетов
+                if package == "i3lock-color":
+                    if PackageManager.install_i3lock_color():
+                        return True
+
+                logger.error(error_msg.format(package=package, err=e.stderr))
             except Exception:
                 # Для проблемных пакетов
                 if package == "i3lock-color":
                     if PackageManager.install_i3lock_color():
                         return True
 
-                logger.error(
-                    f'Error while installing package "{package}": {traceback.format_exc()}'
-                )
-            
+                logger.error(error_msg.format(package=package, err=traceback.format_exc()))
+
             continue
-        
+
         return False
-    
+
     @staticmethod
     def install_packages(packages_list: List[str], aur: AurHelper = None) -> List[str]:
         """Installs a lot of packages via pacman or some aur helper
@@ -176,10 +196,7 @@ class PackageManager:
         not_installed_packages = []
 
         for package in packages_list:
-            installed = PackageManager.install_package(
-                package=package, 
-                aur=aur
-            )
+            installed = PackageManager.install_package(package=package, aur=aur)
 
             if not installed:
                 not_installed_packages.append(package)
@@ -229,15 +246,16 @@ class PackageManager:
             with open(temp_pacman_config_path, "w") as file:
                 file.writelines(updated_lines)
 
+            error_msg = "Error while configuring pacman: {err}"
             try:
                 subprocess.run(
                     ["sudo", "mv", temp_pacman_config_path, pacman_config_path],
                     check=True,
                 )
                 logger.success("Pacman has been successfully configured!")
+            except subprocess.CalledProcessError as e:
+                logger.error(err=error_msg.format(e.stderr))
             except Exception:
-                logger.error(
-                    f"Error while configuring pacman: {traceback.format_exc()}"
-                )
+                logger.error(err=error_msg.format(traceback.format_exc()))
         else:
             logger.warning("Pacman configuration skipped... (file not found)")

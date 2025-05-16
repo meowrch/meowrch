@@ -20,15 +20,17 @@ class GrubConfigurer(AppConfigurer):
             logger.error("GRUB is not installed. Skipping theme installation.")
             return
 
+        error_msg = "The installation of the grub theme failed: {err}"
+
         try:
             self._update_grub_config()
             self._install_theme()
             self._update_grub()
             logger.success("The GRUB theme has been successfully installed!")
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(
-                f"The installation of the grub theme failed: {traceback.format_exc()}"
-            )
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
     def _update_grub_config(self) -> None:
         with open(self.grub_config_file, "r") as f:

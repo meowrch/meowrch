@@ -25,6 +25,7 @@ class VSCodeConfigurer(AppConfigurer):
             PackageManager.install_packages(packages_list=["code"])
 
     def _install_theme_extension(self) -> None:
+        error_msg = "Error installing Visual Studio Code extension: {err}"
         try:
             subprocess.run(
                 [
@@ -34,7 +35,7 @@ class VSCodeConfigurer(AppConfigurer):
                 ],
                 check=True,
             )
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(
-                f"Error installing Visual Studio Code extension: {traceback.format_exc()}"
-            )
+            logger.error(error_msg.format(err=traceback.format_exc()))

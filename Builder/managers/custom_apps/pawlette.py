@@ -31,6 +31,7 @@ class PawletteConfigurer(AppConfigurer):
                 raise
 
     def _install_available_themes(self) -> None:
+        error_msg = "Theme data parsing failed: {err}"
         try:
             result = subprocess.run(
                 ["pawlette", "get-available-themes"],
@@ -48,28 +49,32 @@ class PawletteConfigurer(AppConfigurer):
             if not isinstance(themes, dict):
                 raise ValueError("Expected dictionary of themes")
 
+            error_msg = "Skipping theme {theme_name}: {err}"
             for theme_name in themes:
                 try:
                     self._install_theme(theme_name)
-                except Exception as e:
-                    logger.error(f"Skipping theme {theme_name}: {e}")
+                except subprocess.CalledProcessError as e:
+                    logger.error(error_msg.format(theme_name=theme_name, err=e.stderr))
+                except Exception:
+                    logger.error(
+                        error_msg.format(
+                            theme_name=theme_name, err=traceback.format_exc()
+                        )
+                    )
                     continue
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(f"Theme data parsing failed: {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
     def _install_theme(self, theme_name: str) -> None:
         """Логика установки темы без изменений"""
-        try:
-            logger.info("Installing theme: {}", theme_name)
-            subprocess.run(
-                ["pawlette", "install-theme", theme_name],
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            logger.success(f"Theme {theme_name} installed")
-        except subprocess.CalledProcessError as e:
-            raise RuntimeError(
-                f"Install failed: {e.stderr.strip() or 'Unknown error'}"
-            ) from e
+        logger.info(f"Installing theme: {theme_name}")
+        subprocess.run(
+            ["pawlette", "install-theme", theme_name],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        logger.success(f"Theme {theme_name} installed")

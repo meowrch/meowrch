@@ -11,6 +11,8 @@ from .package_manager import PackageManager
 class DriversManager:
     @staticmethod
     def get_gpu_vendor() -> str:
+        error_msg = "Error processing GPU vendor: {err}"
+
         try:
             output = subprocess.check_output(
                 "lspci | grep -E 'VGA|3D'", shell=True
@@ -21,21 +23,27 @@ class DriversManager:
                 return "AMD"
             elif "Intel" in output:
                 return "Intel"
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(f"Error processing GPU vendor: {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
         return "unknown"
 
     @staticmethod
     def get_cpu_vendor() -> str:
+        error_msg = "Error processing CPU vendor: {err}"
+
         try:
             output = subprocess.check_output("lscpu", shell=True).decode()
             if "GenuineIntel" in output:
                 return "Intel"
             elif "AuthenticAMD" in output:
                 return "AMD"
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(f"Error processing CPU vendor: {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
         return "unknown"
 
