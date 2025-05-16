@@ -70,6 +70,7 @@ class Builder:
             tampermonkey=self.build_options.ff_tampermonkey,
         )
         AppsManager.configure_code()
+        AppsManager.configure_pawlette()
 
         self.daemons_setting()
         PostInstallation.apply(self.build_options.terminal_shell)
