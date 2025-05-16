@@ -26,12 +26,13 @@ class FileSystemManager:
 
         expanded_folders = [str(Path.home() / folder) for folder in default_folders]
 
+        error_msg = "Error creating default directories: {err}"
         try:
             subprocess.run(["mkdir", "-p", *expanded_folders], check=True)
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(
-                f"Error creating default directories: {traceback.format_exc()}"
-            )
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
         logger.success("The process of creating default directories is complete!")
 
@@ -195,10 +196,11 @@ class FileSystemManager:
 
         ##==> Выдаем права файлам в bin
         ##############################################
+        error_msg = "[!] Error while making {path} executable: {err}"
         for path in [home / ".config", home / ".local" / "bin"]:
             try:
                 subprocess.run(["sudo", "chmod", "-R", "700", str(path)], check=True)
+            except subprocess.CalledProcessError as e:
+                logger.error(error_msg.format(path=path, err=e.stderr))
             except Exception:
-                logger.error(
-                    f"[!] Error while making {path} executable: {traceback.format_exc()}"
-                )
+                logger.error(error_msg.format(path=path, err=traceback.format_exc()))

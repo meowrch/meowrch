@@ -28,6 +28,7 @@ class PlymouthConfigurer:
 
     def setup(self):
         """Main setup method"""
+        error_msg = "An error occurred during the installation of plymouth: {err}"
         if self._check_plymouth_installed():
             try:
                 self.update_grub_cmdline()
@@ -35,24 +36,21 @@ class PlymouthConfigurer:
                 self.setup_services()
                 self.install_theme()
                 self.run_post_commands()
-            except Exception as e:
-                logger.error(str(e))
+            except subprocess.CalledProcessError as e:
+                logger.error(error_msg.format(err=e.stderr))
+            except Exception:
+                logger.error(error_msg.format(err=traceback.format_exc()))
 
     def _run_sudo(self, command: List[str], input: Optional[str] = None) -> str:
         """Run command with sudo"""
-        try:
-            result = subprocess.run(
-                ["sudo"] + command,
-                input=input,
-                text=True,
-                capture_output=True,
-                check=True,
-            )
-            return result.stdout
-        except subprocess.CalledProcessError as e:
-            logger.error(
-                f"Command failed: {' '.join(command)}\nError: {traceback.format_exc()}"
-            )
+        result = subprocess.run(
+            ["sudo"] + command,
+            input=input,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        return result.stdout
 
     def _check_plymouth_installed(self) -> bool:
         """Check if Plymouth is installed"""
@@ -256,7 +254,4 @@ class PlymouthConfigurer:
 
         for cmd in commands:
             logger.info(f"Running {' '.join(cmd)}...")
-            try:
-                self._run_sudo(cmd)
-            except RuntimeError as e:
-                logger.warning(str(e))
+            self._run_sudo(cmd)

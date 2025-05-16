@@ -146,21 +146,23 @@ class Builder:
             "start": ["bluetooth.service"],
         }
 
+        error_msg = "Error {action} the \"{name}\" daemon: {err}"
+
         for d in daemons["enable"]:
             try:
                 subprocess.run(["sudo", "systemctl", "enable", d], check=True)
+            except subprocess.CalledProcessError as e:
+                logger.error(error_msg.format(action="enabling", name=d, err=e.stderr))
             except Exception:
-                logger.error(
-                    f'Error starting the "{d}" daemon: {traceback.format_exc()}'
-                )
+                logger.error(error_msg.format(action="enabling", name=d, err=traceback.format_exc()))
 
         for d in daemons["start"]:
             try:
                 subprocess.run(["sudo", "systemctl", "start", d], check=True)
+            except subprocess.CalledProcessError as e:
+                logger.error(error_msg.format(action="starting", name=d, err=e.stderr))
             except Exception:
-                logger.error(
-                    f'Error starting the "{d}" daemon: {traceback.format_exc()}'
-                )
+                logger.error(error_msg.format(action="starting", name=d, err=traceback.format_exc()))
 
         logger.success("The setting of the daemons is complete!")
 

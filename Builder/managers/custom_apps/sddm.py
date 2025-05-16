@@ -15,15 +15,16 @@ class SDDMConfigurer(AppConfigurer):
 
     def setup(self) -> None:
         logger.info("Starting the SDDM installation process")
+        error_msg = "The installation of the SDDM theme failed: {err}"
         try:
             self._create_config()
             self._install_theme()
             self.granging_permissions()
             logger.success("The SDDM theme has been successfully installed!")
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(
-                f"The installation of the SDDM theme failed: {traceback.format_exc()}"
-            )
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
     def _create_config(self) -> None:
         config_content = (
@@ -46,6 +47,7 @@ class SDDMConfigurer(AppConfigurer):
     def granging_permissions(self) -> None:
         ##==> Выдаем права sddm
         ##############################################
+        error_msg = "[!] An error occurred when granting permissions for sddm: {err}"
         try:
             subprocess.run(
                 ["setfacl", "-m", "u:sddm:x", "~/"],
@@ -59,7 +61,7 @@ class SDDMConfigurer(AppConfigurer):
                 shell=True,
                 capture_output=True,
             )
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(
-                f"[!] An error occurred when granting permissions for sddm: {traceback.format_exc()}"
-            )
+            logger.error(error_msg.format(err=traceback.format_exc()))

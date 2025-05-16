@@ -24,18 +24,21 @@ class FirefoxConfigurer(AppConfigurer):
             (ublock, "uBlock0@raymondhill.net.xpi"),
             (twp, "{036a55b4-5e72-4d05-a06c-cba2dfcc134a}.xpi"),
             (unpaywall, "{f209234a-76f0-4735-9920-eb62507a54cd}.xpi"),
-            (tampermonkey, "firefox@tampermonkey.net.xpi")
+            (tampermonkey, "firefox@tampermonkey.net.xpi"),
         ]
 
     def setup(self) -> None:
         logger.info("Start installing Firefox")
+        error_msg = "Error installing firefox: {err}"
         try:
             self._init_firefox_profile()
             self._copy_profile()
             self._cleanup_plugins()
             logger.success("Firefox has been successfully installed!")
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
         except Exception:
-            logger.error(f"Error installing firefox: {traceback.format_exc()}")
+            logger.error(error_msg.format(err=traceback.format_exc()))
 
     def _init_firefox_profile(self) -> None:
         subprocess.Popen(["timeout", "2", "firefox", "--headless"])
