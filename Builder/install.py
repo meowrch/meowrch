@@ -61,6 +61,7 @@ class Builder:
 
         AppsManager.configure_grub()
         AppsManager.configure_sddm()
+        AppsManager.configure_plymouth()
         AppsManager.configure_firefox(
             darkreader=self.build_options.ff_darkreader,
             ublock=self.build_options.ff_ublock,
