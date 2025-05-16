@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import traceback
 
+from pathlib import Path
 from loguru import logger
 from packages import CUSTOM
 from utils.schemes import TerminalShell
@@ -16,6 +17,7 @@ class PostInstallation:
         PostInstallation._add_to_gamemode_group()
         PostInstallation._set_default_term()
         PostInstallation._ensure_en_us_locale()
+        PostInstallation._set_wallpaper()
         logger.info("The post-installation configuration is complete!")
 
     @staticmethod
@@ -118,3 +120,14 @@ class PostInstallation:
         except Exception:
             logger.error(f"Error setting default terminal: {traceback.format_exc()}")
             return False
+        
+    @staticmethod
+    def _set_wallpaper() -> None:
+        wallpaper_selector = Path.home() / ".local/bin/rofi-menus/wallpaper-selector.sh"
+
+        if wallpaper_selector.exists():
+            try:
+                subprocess.run(["sh", str(wallpaper_selector), "--random"])
+            except Exception:
+                logger.error(f"Error setting random wallpaper: {traceback.format_exc()}")
+                return False
