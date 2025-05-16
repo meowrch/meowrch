@@ -30,7 +30,7 @@ class VSCodeConfigurer(AppConfigurer):
                 [
                     "code",
                     "--install-extension",
-                    "./misc/apps/vscode/meowrch-theme-1.0.0.vsix",
+                    "dimflix-official.meowrch-theme",
                 ],
                 check=True,
             )
