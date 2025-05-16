@@ -28,7 +28,7 @@ class PlymouthConfigurer:
 
     def setup(self):
         """Main setup method"""
-        if self.self._check_plymouth_installed():
+        if self._check_plymouth_installed():
             try:
                 self.update_grub_cmdline()
                 self.update_mkinitcpio_hooks()
