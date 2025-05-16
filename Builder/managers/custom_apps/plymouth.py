@@ -248,8 +248,7 @@ class PlymouthConfigurer:
         """Run post-installation commands"""
         commands = [
             ["update-grub"],
-            ["mkinitcpio", "-P"],
-            ["systemctl", "daemon-reload"],
+            ["mkinitcpio", "-P"]
         ]
 
         for cmd in commands:
