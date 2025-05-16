@@ -142,27 +142,21 @@ class Builder:
         logger.info("The daemons are starting to run...")
 
         daemons = {
-            "enable": ["NetworkManager", "bluetooth.service", "sddm.service"],
+            "disable": ["sddm.service"],
+            "enable": ["NetworkManager", "bluetooth.service"],
             "start": ["bluetooth.service"],
         }
 
-        error_msg = "Error {action} the \"{name}\" daemon: {err}"
+        error_msg = "Daemon \"{name}\" {action} error: {err}"
 
-        for d in daemons["enable"]:
-            try:
-                subprocess.run(["sudo", "systemctl", "enable", d], check=True)
-            except subprocess.CalledProcessError as e:
-                logger.error(error_msg.format(action="enabling", name=d, err=e.stderr))
-            except Exception:
-                logger.error(error_msg.format(action="enabling", name=d, err=traceback.format_exc()))
-
-        for d in daemons["start"]:
-            try:
-                subprocess.run(["sudo", "systemctl", "start", d], check=True)
-            except subprocess.CalledProcessError as e:
-                logger.error(error_msg.format(action="starting", name=d, err=e.stderr))
-            except Exception:
-                logger.error(error_msg.format(action="starting", name=d, err=traceback.format_exc()))
+        for action, dmns in daemons.items():
+            for d in dmns:
+                try:
+                    subprocess.run(["sudo", "systemctl", action, d], check=True)
+                except subprocess.CalledProcessError as e:
+                    logger.error(error_msg.format(action=action, name=d, err=e.stderr))
+                except Exception:
+                    logger.error(error_msg.format(action=action, name=d, err=traceback.format_exc()))
 
         logger.success("The setting of the daemons is complete!")
 
