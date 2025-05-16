@@ -202,21 +202,3 @@ class FileSystemManager:
                 logger.error(
                     f"[!] Error while making {path} executable: {traceback.format_exc()}"
                 )
-
-        ##==> Выдаем права sddm
-        ##############################################
-        try:
-            subprocess.run(
-                ["setfacl", "-m", "u:sddm:x", "~/"],
-                check=True,
-                capture_output=True,
-            )
-            subprocess.run(
-                ["setfacl", "-m", "u:sddm:r", "~/.face.icon"],
-                check=True,
-                capture_output=True,
-            )
-        except Exception:
-            logger.error(
-                f"[!] An error occurred when granting permissions for sddm: {traceback.format_exc()}"
-            )
