@@ -51,7 +51,7 @@ BASE = Packages(
 		common=[
 			##==> GUI
             ###########################################
-            "gnome-calculator-gtk3", "flameshot-git", "themix-gui-git", 
+            "gnome-calculator-gtk3", "flameshot-git",
             "visual-studio-code-bin", "rofi-lbonn-wayland-git",
             
             ##==> Кастомизация: Темы, иконки и курсор
