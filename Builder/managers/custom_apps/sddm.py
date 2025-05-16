@@ -1,5 +1,6 @@
 import subprocess
 import traceback
+from pathlib import Path
 
 from loguru import logger
 
@@ -19,7 +20,7 @@ class SDDMConfigurer(AppConfigurer):
         try:
             self._create_config()
             self._install_theme()
-            self.granging_permissions()
+            self.granting_permissions()
             logger.success("The SDDM theme has been successfully installed!")
         except subprocess.CalledProcessError as e:
             logger.error(error_msg.format(err=e.stderr))
@@ -44,23 +45,28 @@ class SDDMConfigurer(AppConfigurer):
             ["sudo", "cp", "-r", "./misc/sddm_theme", self.theme_path], check=True
         )
 
-    def granging_permissions(self) -> None:
+    def granting_permissions(self) -> None:
         ##==> Выдаем права sddm
         ##############################################
         error_msg = "[!] An error occurred when granting permissions for sddm: {err}"
+
+        face_icon = Path.home() / ".face.icon"
+        face_icon.touch(exist_ok=True)
+
         try:
-            subprocess.run(
-                ["setfacl", "-m", "u:sddm:x", "~/"],
-                check=True,
-                shell=True,
-                capture_output=True,
-            )
-            subprocess.run(
-                ["setfacl", "-m", "u:sddm:r", "~/.face.icon"],
-                check=True,
-                shell=True,
-                capture_output=True,
-            )
+            commands = [
+                ["setfacl", "-m", "u:sddm:x", str(Path.home())],
+                ["setfacl", "-m", "u:sddm:r", str(face_icon)]
+            ]
+            
+            for cmd in commands:
+                subprocess.run(
+                    ["sudo"] + cmd,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    shell=False
+                )
         except subprocess.CalledProcessError as e:
             logger.error(error_msg.format(err=e.stderr))
         except Exception:
