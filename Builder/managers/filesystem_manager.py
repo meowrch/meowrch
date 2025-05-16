@@ -183,7 +183,7 @@ class FileSystemManager:
         )
         shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
         shutil.copy(src=Path("./home/.env"), dst=home / ".env")
-        shutil.copy(src=Path("./home/.face.icon", dst=home / ".face.icon"))
+        shutil.copy(src=Path("./home/.face.icon"), dst=home / ".face.icon")
 
         if not exclude_bspwm:
             shutil.copy(src=Path("./home/.Xresources"), dst=home / ".Xresources")
