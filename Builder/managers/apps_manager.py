@@ -27,13 +27,13 @@ class AppsManager:
         unpaywall: bool,
         tampermonkey: bool,
     ) -> None:
-        FirefoxConfigurer().setup(
+        FirefoxConfigurer(
             darkreader=darkreader,
             ublock=ublock,
             twp=twp,
             unpaywall=unpaywall,
             tampermonkey=tampermonkey,
-        )
+        ).setup()
 
     @staticmethod
     def configure_grub() -> None:
