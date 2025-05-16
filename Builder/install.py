@@ -45,6 +45,9 @@ class Builder:
             enable_multilib=self.build_options.enable_multilib
         )
 
+        if self.build_options.update_arch_database:
+            PackageManager.update_database()
+            
         if self.build_options.aur_helper == AurHelper.PARU:
             PackageManager.install_paru_manager()
         elif self.build_options.aur_helper == AurHelper.YAY:
@@ -52,9 +55,6 @@ class Builder:
         else:
             logger.error("Unsupported AUR helper!")
             exit(1)
-
-        if self.build_options.update_arch_database:
-            PackageManager.update_database()
 
         self.packages_installation()
         self.drivers_installation()
