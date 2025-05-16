@@ -50,11 +50,13 @@ class SDDMConfigurer(AppConfigurer):
             subprocess.run(
                 ["setfacl", "-m", "u:sddm:x", "~/"],
                 check=True,
+                shell=True,
                 capture_output=True,
             )
             subprocess.run(
                 ["setfacl", "-m", "u:sddm:r", "~/.face.icon"],
                 check=True,
+                shell=True,
                 capture_output=True,
             )
         except Exception:
