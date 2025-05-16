@@ -18,6 +18,7 @@ class SDDMConfigurer(AppConfigurer):
         try:
             self._create_config()
             self._install_theme()
+            self.granging_permissions()
             logger.success("The SDDM theme has been successfully installed!")
         except Exception:
             logger.error(
@@ -41,3 +42,22 @@ class SDDMConfigurer(AppConfigurer):
         subprocess.run(
             ["sudo", "cp", "-r", "./misc/sddm_theme", self.theme_path], check=True
         )
+
+    def granging_permissions(self) -> None:
+        ##==> Выдаем права sddm
+        ##############################################
+        try:
+            subprocess.run(
+                ["setfacl", "-m", "u:sddm:x", "~/"],
+                check=True,
+                capture_output=True,
+            )
+            subprocess.run(
+                ["setfacl", "-m", "u:sddm:r", "~/.face.icon"],
+                check=True,
+                capture_output=True,
+            )
+        except Exception:
+            logger.error(
+                f"[!] An error occurred when granting permissions for sddm: {traceback.format_exc()}"
+            )
