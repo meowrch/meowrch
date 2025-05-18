@@ -217,8 +217,8 @@ class PlymouthConfigurer:
             self._run_sudo(["cp", str(src), str(dest)])
 
         # Manage services
-        self._run_sudo(["systemctl", "disable", "sddm.service", "--now"])
-        self._run_sudo(["systemctl", "enable", "sddm-plymouth.service", "--now"])
+        self._run_sudo(["systemctl", "disable", "sddm.service"])
+        self._run_sudo(["systemctl", "enable", "sddm-plymouth.service"])
         self._run_sudo(["systemctl", "enable", "plymouth-wait-for-animation.service"])
         logger.success("All services for plymouth successfully enabled! ")
 
