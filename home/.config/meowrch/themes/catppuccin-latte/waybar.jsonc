@@ -11,7 +11,7 @@
     //==> Modules Layout
     ///////////////////////////////////////////////////////////////
 	"modules-left": [
-		"custom/l_end","tray","custom/r_end","custom/l_end","hyprland/workspaces","custom/r_end","custom/l_end","wlr/taskbar","custom/r_end","custom/padd"
+		"custom/l_end","tray","custom/r_end","custom/l_end","hyprland/workspaces","custom/r_end","custom/l_end","wlr/taskbar","custom/r_end","custom/media","custom/padd"
 	],
 	"modules-center": [
 		"group/system-info"
@@ -191,6 +191,16 @@
 	    "scroll-step": 5,
         "tooltip": false
 	},
+    "custom/media": {
+        "format": "{text}",
+        "format-alt": "{}",
+        "exec": "~/bin/media.sh",
+        "interval": 1,
+        "rotate": 0,
+        "return-type": "json",
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next"
+    },
 	"hyprland/language": {
         "format": "{short} {variant}",
         "rotate": 0,

@@ -11,7 +11,7 @@
     //==> Modules Layout
     ///////////////////////////////////////////////////////////////
 	"modules-left": [
-		"custom/l_end","tray","custom/r_end","custom/l_end","hyprland/workspaces","custom/r_end","custom/l_end","wlr/taskbar","custom/r_end","custom/padd"
+		"custom/l_end","tray","custom/r_end","custom/l_end","hyprland/workspaces","custom/r_end","custom/l_end","wlr/taskbar","custom/r_end","custom/media","custom/padd"
 	],
 	"modules-center": [
 		"group/system-info"
@@ -50,7 +50,7 @@
 			"custom/power"
 		]
 	},
-        
+
     //==> Left Modules
     ///////////////////////////////////////////////////////////////
     "tray": {
@@ -86,7 +86,7 @@
 
     //==> Middle Modules
     ///////////////////////////////////////////////////////////////
-    "custom/cpu": {
+	"custom/cpu": {
 		"exec": "python ~/bin/system-info.py --cpu --normal-color \"#f5c2e7\" --critical-color \"#f38ba8\" | cat",
 		"on-click": "python ~/bin/system-info.py --cpu --click",
 		"return-type": "json",
@@ -192,6 +192,16 @@
 	    "scroll-step": 5,
         "tooltip": false
 	},
+    "custom/media": {
+        "format": "{text}",
+        "format-alt": "{}",
+        "exec": "~/bin/media.sh",
+        "interval": 1,
+        "rotate": 0,
+        "return-type": "json",
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next"
+    },
 	"hyprland/language": {
         "format": "{short} {variant}",
         "rotate": 0,

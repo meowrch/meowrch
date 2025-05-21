@@ -109,6 +109,7 @@ tooltip {
 
 #tray,
 #workspaces,
+#custom-media,
 #taskbar,
 #clock,
 #idle_inhibitor,
@@ -161,4 +162,11 @@ tooltip {
 #custom-padd_bg {
     background: @main-bg;
     margin: 4px 0px 4px 0px;
+}
+
+#custom-media {
+    background: @main-bg;
+	border-radius: 20px;
+	margin: 4px 0px 4px 0px;
+    padding: 0px 20px 0px 20px;
 }
