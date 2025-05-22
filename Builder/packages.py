@@ -18,9 +18,9 @@ BASE = Packages(
 			##==> CLI-Tools
 			###########################################
             "jq", "fastfetch", "lsd", "bat", "micro", "sudo",
-            "btop", "ranger", "starship", "openssh", "sshfs", 
+            "btop", "yazi", "starship", "openssh", "sshfs", 
             "wget", "neovim", "tmux", "ffmpeg", "cliphist", "udiskie", 
-            "tree",
+            "tree", "bash-completion",
 
 			##==> GUI 
 			###########################################
