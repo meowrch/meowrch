@@ -57,7 +57,7 @@ BASE = Packages(
             ##==> Кастомизация: Темы, иконки и курсор
             ###########################################
             "bibata-cursor-theme-bin", "tela-circle-icon-theme-dracula",
-            "pawlette-git",
+            "pawlette",
             
             ##==> CLI-Tools
             ###########################################
@@ -69,7 +69,7 @@ BASE = Packages(
 		],
 		bspwm_packages=["xkb-switch", "i3lock-color", "picom-ftlabs-git"],
 		hyprland_packages=[
-			"hyprprop", "grimblast-git", "mewline-git"
+			"hyprprop", "grimblast-git", "mewline"
 		]
 	)
 )
