@@ -10,7 +10,7 @@ super + {Return,e,w,t,p,v,d,x,l,c,b,period}
     nemo, \
     sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/wallpaper-selector.sh, \
     sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/theme-selector.sh, \
-    pavucontrol, \
+    sh ${XDG_BIN_HOME:-$HOME/.local/bin}/window-pin.sh, \
     sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/clipboard-manager.sh, \
     rofi -show drun, \
     sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/powermenu.sh, \
@@ -31,11 +31,12 @@ alt + shift
 
 ##==> USER APPS
 ##############################################################################################
-super + shift + {c,f,t,o}
+super + shift + {c,f,t,o,p}
 	{code, \
 	firefox, \
 	telegram-desktop, \
-	obs}
+	obs, \
+	pavucontrol}
 ##############################################################################################
 
 ##==> SYSTEM CONTROLS
@@ -74,7 +75,7 @@ super + Escape + r
 
 #--------------------------------------------------------------------------------------------# Window actions
 super + q
-	bspc node -c
+	sh ${XDG_BIN_HOME:-$HOME/.local/bin}/window-close.sh
 
 super + space
 	bspc node -t "~"{floating,tiled}												 
