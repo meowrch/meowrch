@@ -25,7 +25,7 @@ echo "$new_bar" > "$FLAG_FILE"
 pkill -x "$current_bar"
 
 # Run the new bar through a single script
-nohup "${XDG_BIN_HOME:-$HOME/.local/bin}/toggle-bar.sh --start" >/dev/null 2>&1 &
+nohup "${XDG_BIN_HOME:-$HOME/.local/bin}/toggle-bar.sh" --start >/dev/null 2>&1 &
 disown
 
 exit 0
