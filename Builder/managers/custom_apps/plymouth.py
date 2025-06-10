@@ -76,18 +76,22 @@ class PlymouthConfigurer:
 
         def edit_grub(tmp_path: Path):
             content = tmp_path.read_text()
-            match = re.search(r'^GRUB_CMDLINE_LINUX_DEFAULT="(.+?)"', content, re.M)
+            match = re.search(
+                r'^(GRUB_CMDLINE_LINUX_DEFAULT=)(["\']?)((?:\\\2|.)*?)\2(\s*(#.*)?)$',
+                content,
+                re.MULTILINE
+            )
 
             if not match:
-                logger.error("GRUB_CMDLINE_LINUX_DEFAULT not found")
+                logger.error("GRUB_CMDLINE_LINUX_DEFAULT not found or invalid format")
                 return
 
-            current_params = set(match.group(1).split())
+            current_params = set(match.group(3).split())
             missing_params = self.required_params - current_params
 
             if missing_params:
                 new_params = " ".join(missing_params) + " " + match.group(1)
-                new_line = f'GRUB_CMDLINE_LINUX_DEFAULT="{new_params}"'
+                new_line = f"GRUB_CMDLINE_LINUX_DEFAULT='{new_params}'"
                 content = content.replace(match.group(0), new_line)
                 tmp_path.write_text(content)
 
