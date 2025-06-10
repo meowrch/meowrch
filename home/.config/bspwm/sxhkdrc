@@ -34,7 +34,7 @@ alt + shift
 super + shift + {c,f,t,o,p}
 	{code, \
 	firefox, \
-	telegram-desktop, \
+	Telegram, \
 	obs, \
 	pavucontrol}
 ##############################################################################################
