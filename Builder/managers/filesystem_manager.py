@@ -14,6 +14,7 @@ class FileSystemManager:
 
         default_folders = [
             ".config",
+            ".themes",
             "Desktop",
             "Downloads",
             "Templates",
