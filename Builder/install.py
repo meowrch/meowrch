@@ -72,6 +72,9 @@ class Builder:
         AppsManager.configure_code()
         AppsManager.configure_pawlette()
 
+        if self.build_options.install_hyprland:
+            AppsManager.configure_mewline()
+
         self.daemons_setting()
         PostInstallation.apply(self.build_options.terminal_shell)
         logger.warning(
