@@ -25,6 +25,9 @@ ctrl + shift + Escape
 Print
     flameshot gui
 
+super + Print
+    flameshot full -c
+
 alt + shift
     xkb-switch -n
 ##############################################################################################
