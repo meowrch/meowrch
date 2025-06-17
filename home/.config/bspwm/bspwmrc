@@ -79,7 +79,7 @@ dunst &
 picom --config $HOME/.config/bspwm/picom.conf &
 sh ${XDG_BIN_HOME:-$HOME/.local/bin}/toggle-bar.sh --start
 sh ${XDG_BIN_HOME:-$HOME/.local/bin}/polkitkdeauth.sh  # authentication dialogue for GUI apps
-sh ${XDG_BIN_HOME:-$HOME/.local/bin}/set-wallpaer.sh --current  # set current wallpaper
+sh ${XDG_BIN_HOME:-$HOME/.local/bin}/set-wallpaper.sh --current  # set current wallpaper
 
 ##==> Clipboard sync
 #################################
