@@ -10,9 +10,7 @@ wmname LG3D
 ##==> Vars
 #################################
 export XDG_CURRENT_DESKTOP="bspwm"
-if [ -f "$HOME/.env" ]; then
-    source "$HOME/.env"
-fi
+sh -c 'function shenv() { export "$1=$2"; }; source ~/.env;'
 
 ##==> Workspaces Configuration
 #################################
