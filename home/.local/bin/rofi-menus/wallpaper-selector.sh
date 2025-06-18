@@ -235,7 +235,7 @@ main() {
     fi
 
     if [[ -f "$wall" ]]; then
-        sh "${XDG_BIN_HOME:-$HOME/.local/bin}/set-wallpaper.sh" "$wall"
+        sh "${XDG_BIN_HOME:-$HOME/bin}/set-wallpaper.sh" "$wall"
     fi
 }
 

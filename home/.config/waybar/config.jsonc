@@ -86,8 +86,8 @@
     //==> Middle Modules
     ///////////////////////////////////////////////////////////////
     "custom/cpu": {
-		"exec": "python ${XDG_BIN_HOME:-$HOME/.local/bin}/system-info.py --cpu --normal-color \"#f5c2e7\" --critical-color \"#f38ba8\" | cat",
-		"on-click": "python ${XDG_BIN_HOME:-$HOME/.local/bin}/system-info.py --cpu --click",
+		"exec": "python ${XDG_BIN_HOME:-$HOME/bin}/system-info.py --cpu --normal-color \"#f5c2e7\" --critical-color \"#f38ba8\" | cat",
+		"on-click": "python ${XDG_BIN_HOME:-$HOME/bin}/system-info.py --cpu --click",
 		"return-type": "json",
 		"format": "{}  ",
 		"rotate": 0,
@@ -95,7 +95,7 @@
 		"tooltip": true
 	},
 	"custom/ram": {
-		"exec": "python ${XDG_BIN_HOME:-$HOME/.local/bin}/system-info.py --ram --normal-color \"#fab387\" --critical-color \"#f38ba8\" | cat",
+		"exec": "python ${XDG_BIN_HOME:-$HOME/bin}/system-info.py --ram --normal-color \"#fab387\" --critical-color \"#f38ba8\" | cat",
 		"return-type": "json",
 		"format": "{}  ",
 		"rotate": 0,
@@ -103,8 +103,8 @@
 		"tooltip": true
 	},
 	"custom/gpu": {
-		"exec": "python ${XDG_BIN_HOME:-$HOME/.local/bin}/system-info.py --gpu --normal-color \"#f5e0dc\" --critical-color \"#f38ba8\" | cat",
-		"on-click": "python ${XDG_BIN_HOME:-$HOME/.local/bin}/system-info.py --gpu --click",
+		"exec": "python ${XDG_BIN_HOME:-$HOME/bin}/system-info.py --gpu --normal-color \"#f5e0dc\" --critical-color \"#f38ba8\" | cat",
+		"on-click": "python ${XDG_BIN_HOME:-$HOME/bin}/system-info.py --gpu --click",
 		"return-type": "json",
 		"format": "{}",
 		"rotate": 0,
@@ -147,47 +147,47 @@
         }
     },
     "custom/battery": {
-        "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/battery.sh --status --discharged-color \"#f38ba8\" --charged-color \"#a6e3a1\" | cat",
+        "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/battery.sh --status --discharged-color \"#f38ba8\" --charged-color \"#a6e3a1\" | cat",
         "return-type": "raw",
 	    "format": "{}  ",
         "interval": 3,
 	    "rotate": 0,
-	    "on-click": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/battery.sh --notify",
+	    "on-click": "sh ${XDG_BIN_HOME:-$HOME/bin}/battery.sh --notify",
         "tooltip": false
     },
     "custom/brightness": {
-        "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/brightness.sh --status --color \"#61afef\" | cat",
+        "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/brightness.sh --status --color \"#61afef\" | cat",
         "return-type": "raw",
         "format": "{}  ",
         "interval": 1,
         "rotate": 0,
-        "on-scroll-up": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/brightness.sh --up",
-        "on-scroll-down": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/brightness.sh --down",
-        "on-click-left": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/brightness.sh --max",
-        "on-click-right": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/brightness.sh --min",
+        "on-scroll-up": "sh ${XDG_BIN_HOME:-$HOME/bin}/brightness.sh --up",
+        "on-scroll-down": "sh ${XDG_BIN_HOME:-$HOME/bin}/brightness.sh --down",
+        "on-click-left": "sh ${XDG_BIN_HOME:-$HOME/bin}/brightness.sh --max",
+        "on-click-right": "sh ${XDG_BIN_HOME:-$HOME/bin}/brightness.sh --min",
         "tooltip": false
     },
 	"custom/volume": {
-        "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device output --status --disabled-color \"#f38ba8\" --enabled-color \"#a6e3a1\" | cat",
+        "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device output --status --disabled-color \"#f38ba8\" --enabled-color \"#a6e3a1\" | cat",
         "return-type": "raw",
 	    "format": "{}  ",
         "interval": 1,
 	    "rotate": 0,
-	    "on-click": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device output --action toggle",
-	    "on-scroll-up": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device output --action increase",
-	    "on-scroll-down": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device output --action decrease",
+	    "on-click": "sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device output --action toggle",
+	    "on-scroll-up": "sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device output --action increase",
+	    "on-scroll-down": "sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device output --action decrease",
 	    "scroll-step": 5,
         "tooltip": false
 	},
     "custom/microphone": {
-        "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device input --status --disabled-color \"#f38ba8\" --enabled-color \"#a6e3a1\" | cat",
+        "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device input --status --disabled-color \"#f38ba8\" --enabled-color \"#a6e3a1\" | cat",
         "return-type": "raw",
 	    "format": "{}",
         "interval": 1,
 	    "rotate": 0,
-	    "on-click": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device input --action toggle",
-	    "on-scroll-up": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device input --action increase",
-	    "on-scroll-down": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/volume.sh --device input --action decrease",
+	    "on-click": "sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device input --action toggle",
+	    "on-scroll-up": "sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device input --action increase",
+	    "on-scroll-down": "sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device input --action decrease",
 	    "scroll-step": 5,
         "tooltip": false
 	},
@@ -198,28 +198,28 @@
         "tooltip": false
     },
     "custom/capslock": {
-   	    "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/kb-layout.sh --caps --plain",
+   	    "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/kb-layout.sh --caps --plain",
    	    "return-type": "raw",
    	   	"format": "| {}",
    	    "signal": 8,
    		"interval": 3600
    	},
     "custom/system-update": {
-        "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/system-update.sh --status --unupdated-color \"#fab387\" --updated-color \"#a6e3a1\" | cat",
+        "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/system-update.sh --status --unupdated-color \"#fab387\" --updated-color \"#a6e3a1\" | cat",
         "return-type": "raw",
         "format": "{} ",
         "rotate": 0,
-        "on-click": "CHECKUPDATES_DB=\"/tmp/checkup-db-${UID}-$$\" sh ${XDG_BIN_HOME:-$HOME/.local/bin}/system-update.sh",
+        "on-click": "CHECKUPDATES_DB=\"/tmp/checkup-db-${UID}-$$\" sh ${XDG_BIN_HOME:-$HOME/bin}/system-update.sh",
         "interval": 86400,
         "tooltip": false
     },
     "custom/do-not-disturb": {
-        "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/do-not-disturb.sh --status --disabled-color \"#f38ba8\" --enabled-color \"#a6e3a1\" | cat",
+        "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/do-not-disturb.sh --status --disabled-color \"#f38ba8\" --enabled-color \"#a6e3a1\" | cat",
         "return-type": "raw",
         "format": "{} ",
         "interval": 1,
         "rotate": 0,
-        "on-click": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/do-not-disturb.sh",
+        "on-click": "sh ${XDG_BIN_HOME:-$HOME/bin}/do-not-disturb.sh",
         "tooltip": false
     },
     "custom/bluetooth": {
@@ -230,16 +230,16 @@
         "tooltip": false
     },
     "custom/networkmanager": {
-        "exec": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/network-manager.sh --status --disabled-color \"#f38ba8\" --enabled-color \"#a6e3a1\" | cat",
+        "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/rofi-menus/network-manager.sh --status --disabled-color \"#f38ba8\" --enabled-color \"#a6e3a1\" | cat",
         "return-type": "raw",
         "format": "{}  ",
         "interval": 3,
         "rotate": 0,
-        "on-click": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/network-manager.sh",
+        "on-click": "sh ${XDG_BIN_HOME:-$HOME/bin}/rofi-menus/network-manager.sh",
         "tooltip": false
     },
     "custom/power": {
-        "on-click": "sh ${XDG_BIN_HOME:-$HOME/.local/bin}/rofi-menus/powermenu.sh",
+        "on-click": "sh ${XDG_BIN_HOME:-$HOME/bin}/rofi-menus/powermenu.sh",
         "format": "<span color=\"#f38ba8\"> </span>",
         "rotate": 0,
         "tooltip": false
