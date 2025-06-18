@@ -8,16 +8,16 @@
 super + {Return,e,w,t,p,v,d,x,l,c,b,period}
     {kitty, \
     nemo, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/rofi-menus/wallpaper-selector.sh, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/rofi-menus/theme-selector.sh, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/window-pin.sh, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/rofi-menus/clipboard-manager.sh, \
+    sh $XDG_BIN_HOME/rofi-menus/wallpaper-selector.sh, \
+    sh $XDG_BIN_HOME/rofi-menus/theme-selector.sh, \
+    sh $XDG_BIN_HOME/window-pin.sh, \
+    sh $XDG_BIN_HOME/rofi-menus/clipboard-manager.sh, \
     rofi -show drun, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/rofi-menus/powermenu.sh, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/screen-lock.sh, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/color-picker.sh, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/toggle-bar.sh, \
-    sh ${XDG_BIN_HOME:-$HOME/bin}/rofi-menus/rofimoji.sh}
+    sh $XDG_BIN_HOME/rofi-menus/powermenu.sh, \
+    sh $XDG_BIN_HOME/screen-lock.sh, \
+    sh $XDG_BIN_HOME/color-picker.sh, \
+    sh $XDG_BIN_HOME/toggle-bar.sh, \
+    sh $XDG_BIN_HOME/rofi-menus/rofimoji.sh}
 
 ctrl + shift + Escape 
 	alacritty -e btop
@@ -46,10 +46,10 @@ super + shift + {c,f,t,o,p}
 ##############################################################################################
 #--------------------------------------------------------------------------------------------## VOLUME
 XF86Audio{RaiseVolume,LowerVolume,Mute}
-    sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device output --action {increase,decrease,toggle}
+    sh $XDG_BIN_HOME/volume.sh --device output --action {increase,decrease,toggle}
 
 XF86AudioMicMute
-	sh ${XDG_BIN_HOME:-$HOME/bin}/volume.sh --device input --action toggle
+	sh $XDG_BIN_HOME/volume.sh --device input --action toggle
 #--------------------------------------------------------------------------------------------## PLAYER
 XF86Audio{Play,Pause,Next,Prev,Stop}
 	{playerctl play-pause, \
@@ -59,8 +59,8 @@ XF86Audio{Play,Pause,Next,Prev,Stop}
 	playerctl stop}
 #--------------------------------------------------------------------------------------------## BRIGHTNESS	
 XF86MonBrightness{Up,Down}
-	{sh ${XDG_BIN_HOME:-$HOME/bin}/brightness.sh --up, \
-	sh ${XDG_BIN_HOME:-$HOME/bin}/brightness.sh --down}				  
+	{sh $XDG_BIN_HOME/brightness.sh --up, \
+	sh $XDG_BIN_HOME/brightness.sh --down}				  
 ##############################################################################################
 
 
@@ -78,7 +78,7 @@ super + Escape + r
 
 #--------------------------------------------------------------------------------------------# Window actions
 super + q
-	sh ${XDG_BIN_HOME:-$HOME/bin}/window-close.sh
+	sh $XDG_BIN_HOME/window-close.sh
 
 super + space
 	bspc node -t "~"{floating,tiled}												 
