@@ -176,7 +176,7 @@ class PackageManager:
 
     @staticmethod
     def install_packages(packages_list: List[str], aur: AurHelper = None) -> List[str]:
-        """Installs a lot of packages via pacman or some aur helper
+        """Installs a lot of packages via pacman or some aur helper using batch processing
 
         Args:
             packages_list (List[str]): List of package names
@@ -186,14 +186,75 @@ class PackageManager:
             List[str]: List of packages that could not be installed
         """
         not_installed_packages = []
-
-        for package in packages_list:
-            installed = PackageManager.install_package(package=package, aur=aur)
-
-            if not installed:
-                not_installed_packages.append(package)
+        batch_size = 5  # Соответствует ParallelDownloads = 5
+        
+        try:
+            logger.info(f"Starting installation of {len(packages_list)} packages in batches of {batch_size}")
+            
+            # Разделяем список пакетов на батчи по 5 штук
+            for i in range(0, len(packages_list), batch_size):
+                try:
+                    batch = packages_list[i:i + batch_size]
+                    logger.info(f"Installing batch {i//batch_size + 1}: {', '.join(batch)}")
+                    
+                    # Пробуем установить весь батч сразу (только одна попытка)
+                    if PackageManager._install_batch(batch, aur):
+                        logger.success(f"Batch {i//batch_size + 1} installed successfully")
+                        continue
+                    
+                    # Если батч не установился, пробуем по одному пакету (с несколькими попытками)
+                    logger.warning(f"Batch {i//batch_size + 1} failed, trying individual packages")
+                    for package in batch:
+                        try:
+                            installed = PackageManager.install_package(package=package, aur=aur)
+                            if not installed:
+                                not_installed_packages.append(package)
+                        except Exception as e:
+                            logger.error(f"Unexpected error installing package '{package}': {e}")
+                            not_installed_packages.append(package)
+                            
+                except Exception as e:
+                    logger.error(f"Unexpected error processing batch {i//batch_size + 1}: {e}")
+                    # Если не удалось обработать батч, добавляем все пакеты как неустановленные
+                    not_installed_packages.extend(batch)
+                    
+        except Exception as e:
+            logger.error(f"Critical error in package installation process: {e}")
+            # В случае критической ошибки, добавляем все пакеты как неустановленные
+            not_installed_packages.extend(packages_list)
 
         return not_installed_packages
+    
+    @staticmethod
+    def _install_batch(packages_batch: List[str], aur: AurHelper = None) -> bool:
+        """Installs a batch of packages with one command
+
+        Args:
+            packages_batch (List[str]): List of package names to install in batch
+            aur (AurHelper, optional): If you need to install via the AUR helper, you need to specify it here. Defaults to None.
+
+        Returns:
+            bool: Status, whether the batch is installed or not
+        """
+        packages_str = ', '.join(packages_batch)
+        
+        try:
+            if aur is not None:
+                aur_cmd = aur.value.replace("-bin", "")
+                cmd = [aur_cmd, "-S", "--noconfirm", "--needed"] + packages_batch
+            else:
+                cmd = ["sudo", "pacman", "-S", "--noconfirm", "--needed"] + packages_batch
+            
+            subprocess.run(cmd, check=True)
+            logger.success(f'Batch "{packages_str}" has been successfully installed!')
+            return True
+            
+        except subprocess.CalledProcessError as e:
+            logger.warning(f'Batch "{packages_str}" failed: {e.stderr if e.stderr else "Unknown error"}')
+        except Exception as e:
+            logger.warning(f'Batch "{packages_str}" failed: {e}')
+        
+        return False
 
     @staticmethod
     def update_pacman_conf(*, enable_multilib: bool = False):
