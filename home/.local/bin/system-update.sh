@@ -43,10 +43,10 @@ pkg_installed() {
 }
 
 get_aurhlpr() {
-    if command -v yay &>/dev/null; then
-        echo "yay"
-    elif command -v paru &>/dev/null; then
+    if command -v paru &>/dev/null; then
         echo "paru"
+    elif command -v yay &>/dev/null; then
+        echo "yay"
     else
         echo "No AUR helper found"
         exit 1

@@ -112,8 +112,8 @@ class Question:
             QuestionList(
                 name="aur_helper",
                 message="3) What kind of AUR helper do you want to have?",
-                choices=["yay", "paru"],
-                default="paru",
+                choices=["yay", "paru", "yay-bin", "paru-bin"],
+                default="paru-bin",
                 carousel=True,
             ),
             QuestionList(
@@ -165,6 +165,10 @@ class Question:
 
         if answers["aur_helper"] == "paru":
             aur_helper = AurHelper.PARU
+        elif answers["aur_helper"] == "paru-bin":
+            aur_helper = AurHelper.PARU_BIN
+        elif answers["aur_helper"] == "yay-bin":
+            aur_helper = AurHelper.YAY_BIN
         else:
             aur_helper = AurHelper.YAY
 

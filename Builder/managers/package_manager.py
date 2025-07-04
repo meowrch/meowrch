@@ -52,24 +52,31 @@ class PackageManager:
             return False
 
     @staticmethod
-    def install_aur_manager() -> None:
-        logger.info('Starting the "yay" package manager installation process.')
-        target_path = "/tmp/yay"
-        error_msg = 'Error while installing "yay": {err}'
+    def _install_aur_helper(helper_name: str, repo_url: str) -> None:
+        """Универсальная функция для установки AUR хелпера
+        
+        Args:
+            helper_name (str): Имя хелпера для проверки установки
+            repo_url (str): URL репозитория для клонирования
+        """
+        logger.info(f'Starting the "{helper_name}" package manager installation process.')
+        target_path = f"/tmp/{helper_name}"
+        error_msg = f'Error while installing "{helper_name}": {{err}}'
+        
         try:
             PackageManager.install_packages(["git", "base-devel"])
 
-            if not PackageManager.check_package_installed("yay"):
+            if not PackageManager.check_package_installed(helper_name):
                 if not os.path.exists(target_path):
                     cloned = PackageManager.clone_repository(
-                        repo_url="https://aur.archlinux.org/yay.git",
+                        repo_url=repo_url,
                         target_path=target_path,
                     )
 
                     if not cloned:
                         return
 
-                subprocess.run(["makepkg", "-si"], cwd=target_path, check=True)
+                subprocess.run(["makepkg", "-si", "--noconfirm"], cwd=target_path, check=True)
         except subprocess.CalledProcessError as e:
             logger.error(error_msg.format(err=e.stderr))
             exit(1)
@@ -77,35 +84,28 @@ class PackageManager:
             logger.error(error_msg.format(err=traceback.format_exc()))
             exit(1)
 
-        logger.success('Package "yay" has been successfully installed!')
+        logger.success(f'Package "{helper_name}" has been successfully installed!')
 
     @staticmethod
-    def install_paru_manager() -> None:
-        logger.info('Starting the "paru" package manager installation process.')
-        target_path = "/tmp/paru"
-        error_msg = 'Error while installing "paru": {err}'
-        try:
-            PackageManager.install_packages(["git", "base-devel"])
-
-            if not PackageManager.check_package_installed("paru"):
-                if not os.path.exists(target_path):
-                    cloned = PackageManager.clone_repository(
-                        repo_url="https://aur.archlinux.org/paru.git",
-                        target_path=target_path,
-                    )
-
-                    if not cloned:
-                        return
-
-                subprocess.run(["makepkg", "-si"], cwd=target_path, check=True)
-        except subprocess.CalledProcessError as e:
-            logger.error(error_msg.format(err=e.stderr))
+    def install_aur_helper(aur_helper: AurHelper) -> None:
+        """Универсальная функция для установки любого AUR хелпера
+        
+        Args:
+            aur_helper (AurHelper): Тип AUR хелпера для установки
+        """
+        aur_helpers_config = {
+            AurHelper.YAY: "https://aur.archlinux.org/yay.git",
+            AurHelper.PARU: "https://aur.archlinux.org/paru.git",
+            AurHelper.YAY_BIN: "https://aur.archlinux.org/yay-bin.git",
+            AurHelper.PARU_BIN: "https://aur.archlinux.org/paru-bin.git"
+        }
+        
+        if aur_helper not in aur_helpers_config:
+            logger.error(f"Unsupported AUR helper: {aur_helper}")
             exit(1)
-        except Exception:
-            logger.error(error_msg.format(err=traceback.format_exc()))
-            exit(1)
-
-        logger.success('Package "paru" has been successfully installed!')
+        
+        url = aur_helpers_config[aur_helper]
+        PackageManager._install_aur_helper(aur_helper.value, url)
 
     @staticmethod
     def install_i3lock_color() -> bool:
@@ -152,8 +152,10 @@ class PackageManager:
         for _ in range(error_retries):
             try:
                 if aur is not None:
+                    aur_cmd = aur.value.replace("-bin", "")
+                    
                     subprocess.run(
-                        [aur.value, "-S", "--noconfirm", "--needed", package],
+                        [aur_cmd, "-S", "--noconfirm", "--needed", package],
                         check=True,
                     )
                 else:

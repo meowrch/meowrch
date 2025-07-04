@@ -10,7 +10,7 @@ from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
 from packages import BASE, CUSTOM
 from question import Question
-from utils.schemes import AurHelper, BuildOptions, NotInstalledPackages, TerminalShell
+from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
 
 
 class Builder:
@@ -48,13 +48,7 @@ class Builder:
         if self.build_options.update_arch_database:
             PackageManager.update_database()
             
-        if self.build_options.aur_helper == AurHelper.PARU:
-            PackageManager.install_paru_manager()
-        elif self.build_options.aur_helper == AurHelper.YAY:
-            PackageManager.install_aur_manager()
-        else:
-            logger.error("Unsupported AUR helper!")
-            exit(1)
+        PackageManager.install_aur_helper(self.build_options.aur_helper)
 
         self.packages_installation()
         self.drivers_installation()
