@@ -166,18 +166,8 @@ class PackageManager:
                 logger.success(f'Package "{package}" has been successfully installed!')
                 return True
             except subprocess.CalledProcessError as e:
-                # Для проблемных пакетов
-                if package == "i3lock-color":
-                    if PackageManager.install_i3lock_color():
-                        return True
-
                 logger.error(error_msg.format(package=package, err=e.stderr))
             except Exception:
-                # Для проблемных пакетов
-                if package == "i3lock-color":
-                    if PackageManager.install_i3lock_color():
-                        return True
-
                 logger.error(error_msg.format(package=package, err=traceback.format_exc()))
 
             continue
