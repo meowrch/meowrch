@@ -13,6 +13,7 @@ alias n="nvim"
 alias m="micro"
 alias ls="lsd"
 alias tree="lsd --tree"
+alias ssh="kitty +kitten ssh"
 
 #####################################
 ##==> Custom Functions

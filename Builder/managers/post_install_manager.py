@@ -17,6 +17,7 @@ class PostInstallation:
         PostInstallation._add_to_gamemode_group()
         PostInstallation._set_default_term()
         PostInstallation._ensure_en_us_locale()
+        PostInstallation._fix_kitty_desktop_icon()
         PostInstallation._set_wallpaper()
         logger.info("The post-installation configuration is complete!")
 
@@ -133,6 +134,38 @@ class PostInstallation:
             logger.error(error_msg.format(err=traceback.format_exc()))
             return False
 
+    @staticmethod
+    def _fix_kitty_desktop_icon() -> None:
+        """Заменяет $HOME на полный путь пользователя в kitty.desktop файле"""
+        kitty_desktop_path = Path.home() / ".local/share/applications/kitty.desktop"
+        
+        if not kitty_desktop_path.exists():
+            logger.warning(f"Kitty desktop file not found at {kitty_desktop_path}")
+            return
+        
+        try:
+            # Получаем домашний каталог пользователя
+            home_path = str(Path.home())
+            
+            # Читаем содержимое файла
+            with open(kitty_desktop_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Заменяем $HOME на полный путь
+            updated_content = content.replace('$HOME', home_path)
+            
+            # Записываем обновленное содержимое обратно
+            if updated_content != content:
+                with open(kitty_desktop_path, 'w', encoding='utf-8') as f:
+                    f.write(updated_content)
+                logger.success(f"Successfully updated kitty.desktop icon path: $HOME -> {home_path}")
+            else:
+                logger.info("No $HOME variables found in kitty.desktop file")
+                
+        except Exception as e:
+            logger.error(f"Error updating kitty.desktop icon path: {e}")
+            logger.error(traceback.format_exc())
+    
     @staticmethod
     def _set_wallpaper() -> None:
         wallpaper_selector = Path.home() / ".local/bin/rofi-menus/wallpaper-selector.sh"
