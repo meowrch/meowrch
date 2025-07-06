@@ -79,6 +79,7 @@
 	• Wide customization options and <a href="https://github.com/meowrch/meowrch-themes">custom theme store</a><br>
 	• Hot keys are designed to ensure maximum productivity.<br>
 	• Automatic installation and configuration of the system.<br>
+	• Chaotic AUR support for faster installation of popular AUR packages<br>
 	• Modern design.<br>
 	• Providing continuous and reliable support for the successful operation of the project<br>
 	</p>

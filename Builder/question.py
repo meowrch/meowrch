@@ -30,7 +30,7 @@ class Question:
 
             category_question = inquirer.List(
                 "category",
-                message="9) Select a category of packages and choose the ones you want",
+                message="8) Select a category of packages and choose the ones you want",
                 choices=list(
                     category
                     + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
@@ -117,36 +117,29 @@ class Question:
                 carousel=True,
             ),
             QuestionList(
-                name="enable_multilib",
-                message="4) Should I enable the multilib repository?",
-                choices=["Yes", "No"],
-                default="Yes",
-                carousel=True,
-            ),
-            QuestionList(
-                name="update_arch_database",
-                message="5) Update Arch DataBase?",
+                name="use_chaotic_aur",
+                message="4) Use Chaotic AUR for faster AUR package installation?",
                 choices=["Yes", "No"],
                 default="Yes",
                 carousel=True,
             ),
             QuestionCheckbox(
                 name="install_drivers",
-                message="6) What drivers do you want to install?",
+                message="5) What drivers do you want to install?",
                 choices=["Nvidia", "Intel", "AMD"],
                 default=drivers,
                 carousel=True,
             ),
             QuestionCheckbox(
                 name="ff_plugins",
-                message="7) Would you like to add useful plugins for firefox?",
+                message="6) Would you like to add useful plugins for firefox?",
                 choices=firefox_choices,
                 default=firefox_choices,
                 carousel=True,
             ),
             QuestionList(
                 name="install_shell",
-                message="8) Which terminal shell do you prefer?",
+                message="7) Which terminal shell do you prefer?",
                 choices=["fish", "zsh"],
                 default="fish",
                 carousel=True,
@@ -182,8 +175,7 @@ class Question:
             install_bspwm="bspwm" in answers["install_wm"],
             install_hyprland="hyprland" in answers["install_wm"],
             aur_helper=aur_helper,
-            enable_multilib=answers["enable_multilib"] == "Yes",
-            update_arch_database=answers["update_arch_database"] == "Yes",
+            use_chaotic_aur=answers["use_chaotic_aur"] == "Yes",
             install_drivers=len(answers["install_drivers"]) > 0,
             intel_driver="Intel" in answers["install_drivers"],
             nvidia_driver="Nvidia" in answers["install_drivers"],

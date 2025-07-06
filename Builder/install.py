@@ -4,6 +4,7 @@ import traceback
 import inquirer
 from loguru import logger
 from managers.apps_manager import AppsManager
+from managers.chaotic_aur_manager import ChaoticAurManager
 from managers.drivers_manager import DriversManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
@@ -41,12 +42,14 @@ class Builder:
             exclude_hyprland=not self.build_options.install_hyprland,
         )
 
-        PackageManager.update_pacman_conf(
-            enable_multilib=self.build_options.enable_multilib
-        )
-
-        if self.build_options.update_arch_database:
-            PackageManager.update_database()
+        # Включаем multilib и обновляем базу данных
+        PackageManager.update_pacman_conf(enable_multilib=True)
+        PackageManager.update_database()
+        
+        # Установка Chaotic AUR 
+        if self.build_options.use_chaotic_aur:
+            logger.info("Setting up Chaotic AUR...")
+            ChaoticAurManager.install()
             
         PackageManager.install_aur_helper(self.build_options.aur_helper)
 

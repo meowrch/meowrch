@@ -48,8 +48,7 @@ class BuildOptions:
     install_bspwm: bool
     install_hyprland: bool
     aur_helper: AurHelper
-    enable_multilib: bool
-    update_arch_database: bool
+    use_chaotic_aur: bool
     install_drivers: bool
     intel_driver: bool
     nvidia_driver: bool
