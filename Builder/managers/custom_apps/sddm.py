@@ -29,9 +29,11 @@ class SDDMConfigurer(AppConfigurer):
 
     def _create_config(self) -> None:
         config_content = (
-            f"[Theme]\nCurrent={self.theme_name}\n"
-            f"FacesDir=/var/lib/AccountsService/icons/\n"
-            f"CursorTheme=Bibata-Modern-Classic\n"
+            "[Theme]\n"
+            f"Current={self.theme_name}\n"
+            "FacesDir=/var/lib/AccountsService/icons/\n"
+            "CursorTheme=Bibata-Modern-Classic\n"
+            "DefaultSession=hyprland-uwsm.desktop\n"
         )
         with open(self.temp_config_path, "w") as f:
             f.write(config_content)

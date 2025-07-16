@@ -27,6 +27,19 @@ case "$1" in
         ;;
 esac
 
+# Launch bar with UWSM support
+launch_bar() {
+    local bar_name="$1"
+    # Use uwsm-system-launcher.sh for apps that interact with system services
+    # nohup is needed here because we want the bar to survive toggle-bar.sh exit
+    if [[ "$bar_name" == "mewline" ]]; then
+        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-system-launcher.sh" "$bar_name" >/dev/null 2>&1 &
+    else
+        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh" "$bar_name" >/dev/null 2>&1 &
+    fi
+    disown
+}
+
 handle_wayland() {
     [ ! -f "$FLAG_FILE" ] && echo "mewline" > "$FLAG_FILE"
     current_bar=$(cat "$FLAG_FILE")
@@ -34,8 +47,7 @@ handle_wayland() {
     case "$ACTION" in
         "start")
             if ! pgrep -x "$current_bar" >/dev/null; then
-                nohup "$current_bar" >/dev/null 2>&1 &
-                disown
+                launch_bar "$current_bar"
             fi
             ;;
 
@@ -47,8 +59,7 @@ handle_wayland() {
             if pgrep -x "$current_bar" >/dev/null; then
                 pkill -x "$current_bar"
             else
-                nohup "$current_bar" >/dev/null 2>&1 &
-                disown
+                launch_bar "$current_bar"
             fi
             ;;
     esac
