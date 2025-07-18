@@ -368,7 +368,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/ # Commented out to allow systemd lib dirs in AUR packages
 lib64/
 parts/
 sdist/
@@ -538,6 +538,10 @@ cython_debug/
 #.idea/
 
 
-##==> Meowrch ignores
+##=> Meowrch ignores
 ########################################
 backup/
+
+# Allow lib directories in AUR packages
+!aur-packages/*/usr/lib/
+!aur-packages/*/usr/lib/**

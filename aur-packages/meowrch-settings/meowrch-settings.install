@@ -5,6 +5,10 @@ post_install() {
     systemctl enable meowrch-optimizations.service
     systemctl start meowrch-optimizations.service
     
+    # Включаем и запускаем PCI latency оптимизацию
+    systemctl enable pci-latency.service
+    systemctl start pci-latency.service
+    
     # Включаем и запускаем ZRAM
     systemctl enable systemd-zram-setup@zram0.service
     systemctl start systemd-zram-setup@zram0.service
@@ -44,6 +48,9 @@ pre_remove() {
     # Останавливаем и отключаем сервисы
     systemctl stop meowrch-optimizations.service
     systemctl disable meowrch-optimizations.service
+    
+    systemctl stop pci-latency.service
+    systemctl disable pci-latency.service
     
     systemctl stop systemd-zram-setup@zram0.service
     systemctl disable systemd-zram-setup@zram0.service

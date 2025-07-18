@@ -1,0 +1,559 @@
+#!/usr/bin/env bash
+
+# ┏━━━┳━━┳━┓┏━┳━━━┳┓╋╋┏━━┳━┓┏━┓
+# ┗┓┏┓┣┫┣┫┃┗┛┃┃┏━━┫┃╋╋┗┫┣┻┓┗┛┏┛
+# ╋┃┃┃┃┃┃┃┏┓┏┓┃┗━━┫┃╋╋╋┃┃╋┗┓┏┛
+# ╋┃┃┃┃┃┃┃┃┃┃┃┃┏━━┫┃╋┏┓┃┃╋┏┛┗┓
+# ┏┛┗┛┣┫┣┫┃┃┃┃┃┃╋╋┃┗━┛┣┫┣┳┛┏┓┗┓
+# ┗━━━┻━━┻┛┗┛┗┻┛╋╋┗━━━┻━━┻━┛┗━┛
+# The program was created by DIMFLIX
+# Github: https://github.com/DIMFLIX
+
+# Meowrch Game Run - Intelligent Gaming Wrapper
+# Automatically detects and applies optimal game optimizations
+
+VERSION="1.0.0"
+SCRIPT_NAME="meowrch-game-run"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+NC='\033[0m' # No Color
+
+# Configuration
+MEOWRCH_CONF_DIR="/etc/meowrch"
+MEOWRCH_CACHE_DIR="$HOME/.cache/meowrch"
+GAME_DB_FILE="$MEOWRCH_CACHE_DIR/game_database.json"
+
+# Wrapper paths
+DLSS_SWAPPER="/usr/bin/dlss-swapper"
+ZINK_RUN="/usr/bin/zink-run"
+PRIME_RUN="/usr/bin/meowrch-prime-run"
+GAME_PERFORMANCE="/usr/bin/game-performance"
+
+# Create cache directory
+mkdir -p "$MEOWRCH_CACHE_DIR"
+
+log() {
+    echo -e "${BLUE}[${SCRIPT_NAME}]${NC} $1" >&2
+}
+
+warn() {
+    echo -e "${YELLOW}[${SCRIPT_NAME}]${NC} $1" >&2
+}
+
+error() {
+    echo -e "${RED}[${SCRIPT_NAME}]${NC} $1" >&2
+}
+
+success() {
+    echo -e "${GREEN}[${SCRIPT_NAME}]${NC} $1" >&2
+}
+
+show_help() {
+    cat << EOF
+${SCRIPT_NAME} v${VERSION} - Intelligent Gaming Wrapper
+
+USAGE:
+    ${SCRIPT_NAME} [OPTIONS] -- COMMAND [ARGS...]
+
+OPTIONS:
+    -h, --help              Show this help message
+    -v, --verbose           Enable verbose logging
+    -d, --debug             Enable debug mode
+    -f, --force-dlss        Force DLSS optimization
+    -z, --force-zink        Force Zink (OpenGL->Vulkan)
+    -p, --force-prime       Force NVIDIA Prime
+    -g, --force-gamemode    Force GameMode optimization
+    -n, --no-detect         Skip automatic detection
+
+EXAMPLES:
+    ${SCRIPT_NAME} -- steam-run ./game.exe
+    ${SCRIPT_NAME} --force-dlss -- lutris lutris:rungame/1
+    ${SCRIPT_NAME} -v -- %command%
+
+AUTOMATIC DETECTION:
+    - DLSS: Detects NVIDIA GPU and DLSS-compatible games
+    - Zink: Detects old OpenGL games that benefit from Vulkan
+    - Prime: Detects NVIDIA dGPU systems
+    - GameMode: Always applied for supported games
+
+INTELLIGENT DETECTION:
+    Games are automatically analyzed and optimized based on:
+    - Executable file analysis (strings, symbols)
+    - Game directory structure and files
+    - Library dependencies (DLLs, shared objects)
+    - Game engine detection (Unity, Unreal, Godot, Source)
+    - Graphics API usage (OpenGL, Vulkan, DirectX)
+    - Feature support (DLSS, FSR)
+    - Launcher detection (Steam, Lutris)
+EOF
+}
+
+# Game detection functions
+detect_nvidia_gpu() {
+    command -v nvidia-smi &>/dev/null && nvidia-smi -L &>/dev/null
+}
+
+detect_amd_gpu() {
+    lspci | grep -i "vga.*amd\|vga.*radeon" &>/dev/null
+}
+
+detect_intel_gpu() {
+    lspci | grep -i "vga.*intel" &>/dev/null
+}
+
+detect_vulkan_support() {
+    command -v vulkaninfo &>/dev/null && vulkaninfo --summary &>/dev/null
+}
+
+detect_prime_system() {
+    # Prime-run can be useful even on discrete-only systems
+    # to ensure proper GPU utilization
+    detect_nvidia_gpu
+}
+
+# Game analysis functions
+analyze_executable() {
+    local exe_path="$1"
+    local game_info=()
+    
+    if [[ ! -f "$exe_path" ]]; then
+        return 1
+    fi
+    
+    # Check for common game engines
+    if strings "$exe_path" 2>/dev/null | grep -qi "unity"; then
+        game_info+=("engine:unity")
+    fi
+    
+    if strings "$exe_path" 2>/dev/null | grep -qi "unreal"; then
+        game_info+=("engine:unreal")
+    fi
+    
+    if strings "$exe_path" 2>/dev/null | grep -qi "godot"; then
+        game_info+=("engine:godot")
+    fi
+    
+    if strings "$exe_path" 2>/dev/null | grep -qi "source.*engine\|valve.*engine"; then
+        game_info+=("engine:source")
+    fi
+    
+    # Check for graphics APIs
+    if strings "$exe_path" 2>/dev/null | grep -qi "opengl"; then
+        game_info+=("api:opengl")
+    fi
+    
+    if strings "$exe_path" 2>/dev/null | grep -qi "vulkan"; then
+        game_info+=("api:vulkan")
+    fi
+    
+    if strings "$exe_path" 2>/dev/null | grep -qi "directx\|d3d"; then
+        game_info+=("api:directx")
+    fi
+    
+    # Check for DLSS support
+    if strings "$exe_path" 2>/dev/null | grep -qi "dlss\|nvsdk\|nvngx"; then
+        game_info+=("feature:dlss")
+    fi
+    
+    # Check for FSR support
+    if strings "$exe_path" 2>/dev/null | grep -qi "fsr\|fidelityfx"; then
+        game_info+=("feature:fsr")
+    fi
+    
+    printf '%s\n' "${game_info[@]}"
+}
+
+# Analyze game directory for additional files
+analyze_game_directory() {
+    local game_dir="$1"
+    local game_info=()
+    
+    if [[ ! -d "$game_dir" ]]; then
+        return 1
+    fi
+    
+    # Look for common game files and libraries
+    if find "$game_dir" -type f \( -name "*.dll" -o -name "*.so" \) -print0 2>/dev/null | xargs -0 grep -l "opengl\|gl32\|opengl32" 2>/dev/null | head -1 | grep -q .; then
+        game_info+=("api:opengl")
+    fi
+    
+    # Check for OpenGL library files by name
+    if find "$game_dir" -type f \( -name "opengl32.dll" -o -name "*gl.dll" -o -name "*GL.so*" -o -name "libGL.so*" \) | head -1 | grep -q .; then
+        game_info+=("api:opengl")
+    fi
+    
+    if find "$game_dir" -type f \( -name "*.dll" -o -name "*.so" \) -print0 2>/dev/null | xargs -0 grep -l "vulkan\|vk" 2>/dev/null | head -1 | grep -q .; then
+        game_info+=("api:vulkan")
+    fi
+    
+    # Check for Vulkan library files by name
+    if find "$game_dir" -type f \( -name "vulkan*.dll" -o -name "*vulkan*.so*" -o -name "libvulkan.so*" \) | head -1 | grep -q .; then
+        game_info+=("api:vulkan")
+    fi
+    
+    if find "$game_dir" -type f \( -name "*.dll" -o -name "*.so" \) -print0 2>/dev/null | xargs -0 grep -l "d3d\|directx\|dxgi" 2>/dev/null | head -1 | grep -q .; then
+        game_info+=("api:directx")
+    fi
+    
+    # Check for DirectX library files by name
+    if find "$game_dir" -type f \( -name "d3d*.dll" -o -name "dxgi.dll" -o -name "*directx*.dll" \) | head -1 | grep -q .; then
+        game_info+=("api:directx")
+    fi
+    
+    # Check for DLSS DLLs
+    if find "$game_dir" -type f -name "*dlss*.dll" -o -name "*nvngx*.dll" | head -1 | grep -q .; then
+        game_info+=("feature:dlss")
+    fi
+    
+    # Check for FSR libraries
+    if find "$game_dir" -type f -name "*fsr*.dll" -o -name "*fidelityfx*.dll" | head -1 | grep -q .; then
+        game_info+=("feature:fsr")
+    fi
+    
+    # Check for Unity engine files
+    if find "$game_dir" -type f -name "UnityPlayer.dll" -o -name "unity*.dll" | head -1 | grep -q .; then
+        game_info+=("engine:unity")
+    fi
+    
+    # Check for Unreal engine files
+    if find "$game_dir" -type f -name "*UE*.dll" -o -name "*Unreal*.dll" | head -1 | grep -q .; then
+        game_info+=("engine:unreal")
+    fi
+    
+    printf '%s\n' "${game_info[@]}"
+}
+
+# Analyze command line for patterns
+analyze_command_line() {
+    local cmd="$*"
+    local game_info=()
+    
+    # Check for Steam patterns
+    if [[ "$cmd" =~ steam ]]; then
+        game_info+=("launcher:steam")
+    fi
+    
+    # Check for Lutris patterns
+    if [[ "$cmd" =~ lutris ]]; then
+        game_info+=("launcher:lutris")
+    fi
+    
+    # Check for Wine patterns
+    if [[ "$cmd" =~ wine ]]; then
+        game_info+=("compatibility:wine")
+    fi
+    
+    # Check for Proton patterns
+    if [[ "$cmd" =~ proton ]]; then
+        game_info+=("compatibility:proton")
+    fi
+    
+    # Check for executable extension
+    if [[ "$cmd" =~ \.exe$ ]]; then
+        game_info+=("platform:windows")
+    fi
+    
+    printf '%s\n' "${game_info[@]}"
+}
+
+# Find Steam game directory for analysis
+find_steam_game_dir() {
+    local cmd="$*"
+    
+    # Try to find Steam library paths
+    local steam_dirs=()
+    
+    # Common Steam library locations
+    if [[ -d "$HOME/.steam/steam/steamapps/common" ]]; then
+        steam_dirs+=("$HOME/.steam/steam/steamapps/common")
+    fi
+    
+    if [[ -d "$HOME/.local/share/Steam/steamapps/common" ]]; then
+        steam_dirs+=("$HOME/.local/share/Steam/steamapps/common")
+    fi
+    
+    # Try to extract app ID and find corresponding directory
+    local steam_appid=""
+    if [[ "$cmd" =~ steam://rungameid/([0-9]+) ]]; then
+        steam_appid="${BASH_REMATCH[1]}"
+    elif [[ "$cmd" =~ appid=([0-9]+) ]]; then
+        steam_appid="${BASH_REMATCH[1]}"
+    fi
+    
+    if [[ -n "$steam_appid" ]]; then
+        # Look for the game in Steam libraries
+        for steam_dir in "${steam_dirs[@]}"; do
+            if [[ -d "$steam_dir" ]]; then
+                # Find directories that might contain the game
+                find "$steam_dir" -maxdepth 1 -type d 2>/dev/null | head -5
+            fi
+        done
+    fi
+}
+
+determine_optimizations() {
+    local cmd="$*"
+    local optimizations=()
+    local all_analysis=()
+    
+    # Note: GameMode is disabled by default as it can sometimes hurt performance
+    # Only enable if explicitly forced
+    if [[ "$FORCE_GAMEMODE" == "true" ]] && command -v gamemoderun &>/dev/null; then
+        optimizations+=("gamemode")
+    fi
+    
+    # Force flags override everything
+    if [[ "$FORCE_DLSS" == "true" ]]; then
+        optimizations+=("dlss")
+    fi
+    
+    if [[ "$FORCE_ZINK" == "true" ]]; then
+        optimizations+=("zink")
+    fi
+    
+    if [[ "$FORCE_PRIME" == "true" ]]; then
+        optimizations+=("prime")
+    fi
+    
+    # If no force flags, do intelligent detection
+    if [[ "$FORCE_DLSS" != "true" && "$FORCE_ZINK" != "true" && "$FORCE_PRIME" != "true" ]]; then
+        # Analyze command line
+        local cmd_analysis
+        cmd_analysis=$(analyze_command_line "$cmd")
+        all_analysis+=("$cmd_analysis")
+        
+        # Find executable path for deeper analysis
+        local exe_path=""
+        local game_dir=""
+        
+        # Extract executable path from command
+        if [[ "$cmd" =~ \.exe ]]; then
+            exe_path=$(echo "$cmd" | grep -o '[^[:space:]]*\.exe' | head -1)
+            if [[ -f "$exe_path" ]]; then
+                game_dir=$(dirname "$exe_path")
+                local exe_analysis
+                exe_analysis=$(analyze_executable "$exe_path")
+                all_analysis+=("$exe_analysis")
+            fi
+        elif [[ "$cmd" =~ steam ]]; then
+            # For Steam, try to find the game directory
+            local steam_dirs
+            steam_dirs=$(find_steam_game_dir "$cmd")
+            
+            # Analyze found Steam directories
+            if [[ -n "$steam_dirs" ]]; then
+                while IFS= read -r steam_dir; do
+                    if [[ -d "$steam_dir" ]]; then
+                        local steam_analysis
+                        steam_analysis=$(analyze_game_directory "$steam_dir")
+                        all_analysis+=("$steam_analysis")
+                    fi
+                done <<< "$steam_dirs"
+            fi
+        fi
+        
+        # Analyze game directory if found
+        if [[ -n "$game_dir" && -d "$game_dir" ]]; then
+            local dir_analysis
+            dir_analysis=$(analyze_game_directory "$game_dir")
+            all_analysis+=("$dir_analysis")
+        fi
+        
+        # Combine all analysis results
+        local combined_analysis
+        combined_analysis=$(printf '%s\n' "${all_analysis[@]}" | sort | uniq)
+        
+        if [[ "$VERBOSE" == "true" ]]; then
+            log "Game analysis results:"
+            echo "$combined_analysis" | while read -r line; do
+                [[ -n "$line" ]] && log "  - $line"
+            done
+        fi
+        
+        # Apply DLSS if NVIDIA GPU + DLSS support detected
+        if detect_nvidia_gpu && echo "$combined_analysis" | grep -q "feature:dlss"; then
+            optimizations+=("dlss")
+            [[ "$VERBOSE" == "true" ]] && log "DLSS optimization enabled (NVIDIA GPU + DLSS support detected)"
+        fi
+        
+        # Apply Zink if Vulkan support + OpenGL usage detected
+        if detect_vulkan_support && echo "$combined_analysis" | grep -q "api:opengl"; then
+            # Don't use Zink if Vulkan is already used
+            if ! echo "$combined_analysis" | grep -q "api:vulkan"; then
+                optimizations+=("zink")
+                [[ "$VERBOSE" == "true" ]] && log "Zink optimization enabled (Vulkan support + OpenGL usage detected)"
+            fi
+        fi
+        
+        # Apply Prime if discrete GPU system detected
+        if detect_prime_system; then
+            optimizations+=("prime")
+            [[ "$VERBOSE" == "true" ]] && log "Prime optimization enabled (discrete GPU system detected)"
+        fi
+    fi
+    
+    printf '%s\n' "${optimizations[@]}"
+}
+
+build_command() {
+    local -n cmd_array_ref=$1
+    local optimizations
+    optimizations=$(determine_optimizations "${cmd_array_ref[@]}")
+    
+    local final_cmd_array=()
+    local env_vars=()
+    
+    # Add performance environment variables
+    env_vars+=("__GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1")
+    env_vars+=("__GL_THREADED_OPTIMIZATIONS=1")
+    env_vars+=("WINE_CPU_TOPOLOGY=4:2")
+    
+    # Apply optimizations in order - build command array properly
+    if echo "$optimizations" | grep -q "gamemode"; then
+        log "Applying GameMode optimization"
+        final_cmd_array+=("gamemoderun")
+    fi
+    
+    # Add power profile management (like CachyOS but better)
+    if command -v powerprofilesctl &>/dev/null; then
+        if powerprofilesctl list | grep -q 'performance:'; then
+            log "Applying performance power profile"
+            final_cmd_array+=("systemd-inhibit" "--why" "Meowrch game-performance is running" "powerprofilesctl" "launch" "-p" "performance" "-r" "Launched with Meowrch game-performance utility" "--")
+        fi
+    fi
+    
+    if echo "$optimizations" | grep -q "prime"; then
+        log "Applying NVIDIA Prime optimization"
+        final_cmd_array+=("$PRIME_RUN")
+    fi
+    
+    if echo "$optimizations" | grep -q "zink"; then
+        log "Applying Zink (OpenGL->Vulkan) optimization"
+        final_cmd_array+=("$ZINK_RUN")
+    fi
+    
+    if echo "$optimizations" | grep -q "dlss"; then
+        log "Applying DLSS optimization"
+        final_cmd_array+=("$DLSS_SWAPPER")
+    fi
+    
+    # Add the original command
+    final_cmd_array+=("${cmd_array_ref[@]}")
+    
+    # Export environment variables
+    for env_var in "${env_vars[@]}"; do
+        export "$env_var"
+    done
+    
+    # Return the final command array by reference
+    local -n result_ref=$2
+    result_ref=("${final_cmd_array[@]}")
+}
+
+# Main execution
+main() {
+    local VERBOSE=false
+    local DEBUG=false
+    local FORCE_DLSS=false
+    local FORCE_ZINK=false
+    local FORCE_PRIME=false
+    local FORCE_GAMEMODE=false
+    local NO_DETECT=false
+    
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -v|--verbose)
+                VERBOSE=true
+                shift
+                ;;
+            -d|--debug)
+                DEBUG=true
+                VERBOSE=true
+                shift
+                ;;
+            -f|--force-dlss)
+                FORCE_DLSS=true
+                shift
+                ;;
+            -z|--force-zink)
+                FORCE_ZINK=true
+                shift
+                ;;
+            -p|--force-prime)
+                FORCE_PRIME=true
+                shift
+                ;;
+            -g|--force-gamemode)
+                FORCE_GAMEMODE=true
+                shift
+                ;;
+            -n|--no-detect)
+                NO_DETECT=true
+                shift
+                ;;
+            --)
+                shift
+                break
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+    
+    if [[ $# -eq 0 ]]; then
+        error "No command provided"
+        show_help
+        exit 1
+    fi
+    
+    if [[ "$DEBUG" == "true" ]]; then
+        set -x
+    fi
+    
+    # Preserve original command arguments as an array
+    local original_cmd_array=("$@")
+    
+    if [[ "$VERBOSE" == "true" ]]; then
+        log "Original command: $*"
+        log "Number of arguments: $#"
+        log "Arguments: $*"
+        log "Analyzing system capabilities..."
+        
+        detect_nvidia_gpu && success "NVIDIA GPU detected"
+        detect_amd_gpu && success "AMD GPU detected"
+        detect_intel_gpu && success "Intel GPU detected"
+        detect_vulkan_support && success "Vulkan support detected"
+        detect_prime_system && success "Prime system detected"
+    fi
+    
+    local final_command_array
+    if [[ "$NO_DETECT" == "true" ]]; then
+        final_command_array=("${original_cmd_array[@]}")
+    else
+        build_command original_cmd_array final_command_array
+    fi
+    
+    if [[ "$VERBOSE" == "true" ]]; then
+        log "Final command: ${final_command_array[*]}"
+    fi
+    
+    # Execute the command - use exec with proper argument array
+    if [[ "$VERBOSE" == "true" ]]; then
+        log "Executing: ${final_command_array[*]}"
+    fi
+    exec "${final_command_array[@]}"
+}
+
+# Run main function
+main "$@"

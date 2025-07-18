@@ -8,12 +8,26 @@ post_install() {
     # Update desktop database
     update-desktop-database -q
     
+    # Create symlinks for easy access to core tools
+    ln -sf /usr/bin/core/game-performance /usr/bin/game-performance 2>/dev/null || true
+    ln -sf /usr/bin/core/meowrch-autotune /usr/bin/meowrch-autotune 2>/dev/null || true
+    ln -sf /usr/bin/core/meowrch-profile /usr/bin/meowrch-profile 2>/dev/null || true
+    
+    # Create symlinks for wrappers
+    ln -sf /usr/bin/wrappers/meowrch-prime-run /usr/bin/meowrch-prime-run 2>/dev/null || true
+    ln -sf /usr/bin/wrappers/dlss-swapper /usr/bin/dlss-swapper 2>/dev/null || true
+    ln -sf /usr/bin/wrappers/zink-run /usr/bin/zink-run 2>/dev/null || true
+    
     echo "==> Meowrch tools installed successfully!"
     echo "==> Available commands:"
     echo "    - game-performance: Toggle gaming mode"
+    echo "    - meowrch-game-run: Intelligent gaming wrapper"
     echo "    - meowrch-prime-run: Run apps with discrete GPU"
     echo "    - meowrch-autotune: Auto-configure for your hardware"
     echo "    - meowrch-profile: Manage performance profiles"
+    echo "    - dlss-swapper: NVIDIA DLSS optimization"
+    echo "    - zink-run: OpenGL to Vulkan wrapper"
+    echo "==> Gaming: Use 'meowrch-game-run %command%' in Steam for optimal performance"
     echo "==> Run 'sudo meowrch-autotune --tune' to optimize for your hardware"
 }
 
@@ -32,6 +46,14 @@ pre_remove() {
     if [[ -f /tmp/meowrch-game-mode.lock ]]; then
         game-performance --disable || true
     fi
+    
+    # Remove symlinks
+    rm -f /usr/bin/game-performance
+    rm -f /usr/bin/meowrch-autotune
+    rm -f /usr/bin/meowrch-profile
+    rm -f /usr/bin/meowrch-prime-run
+    rm -f /usr/bin/dlss-swapper
+    rm -f /usr/bin/zink-run
     
     # Clean up dynamically created files
     echo "==> Cleaning up configuration files..."
