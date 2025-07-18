@@ -1,15 +1,16 @@
 # Maintainer: dimflix <dimflix.official@gmail.com>
 pkgname=meowrch-settings
-pkgver=1.0.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="System optimization settings for Meowrch distribution"
 arch=('any')
-url="https://github.com/dimflix/meowrch"
+url="https://github.com/meowrch/meowrch"
 license=('MIT')
-depends=('systemd' 'zram-generator' 'pipewire' 'earlyoom')
+depends=('systemd' 'zram-generator' 'pipewire' 'earlyoom' 'pciutils')
 optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
             'amd-ucode: for AMD CPU microcode'
-            'intel-ucode: for Intel CPU microcode')
+            'intel-ucode: for Intel CPU microcode'
+            'hdparm: for HDD performance optimizations')
 install=meowrch-settings.install
 source=("sysctl-99-meowrch.conf"
         "udev-99-meowrch.rules"
@@ -18,8 +19,15 @@ source=("sysctl-99-meowrch.conf"
         "meowrch-apply-optimizations"
         "pipewire-99-meowrch.conf"
         "zram-generator.conf"
-        "earlyoom-meowrch")
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+        "earlyoom-meowrch"
+        "20-audio-pm.rules"
+        "20-audio-pm.conf"
+        "pci-latency"
+        "pci-latency.service"
+        "00-timeout.conf"
+        "limits.conf"
+        "00-journal-size.conf")
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
     # Sysctl настройки
@@ -27,15 +35,24 @@ package() {
     
     # Udev правила
     install -Dm644 "$srcdir/udev-99-meowrch.rules" "$pkgdir/etc/udev/rules.d/99-meowrch.rules"
+    install -Dm644 "$srcdir/20-audio-pm.rules" "$pkgdir/etc/udev/rules.d/20-audio-pm.rules"
     
     # Modprobe настройки
     install -Dm644 "$srcdir/modprobe-meowrch.conf" "$pkgdir/etc/modprobe.d/meowrch.conf"
+    install -Dm644 "$srcdir/20-audio-pm.conf" "$pkgdir/etc/modprobe.d/20-audio-pm.conf"
     
-    # Systemd сервис
+    # Systemd сервисы
     install -Dm644 "$srcdir/meowrch-optimizations.service" "$pkgdir/usr/lib/systemd/system/meowrch-optimizations.service"
+    install -Dm644 "$srcdir/pci-latency.service" "$pkgdir/usr/lib/systemd/system/pci-latency.service"
     
-    # Скрипт применения оптимизаций
+    # Systemd конфигурации
+    install -Dm644 "$srcdir/00-timeout.conf" "$pkgdir/etc/systemd/system.conf.d/00-timeout.conf"
+    install -Dm644 "$srcdir/limits.conf" "$pkgdir/etc/systemd/system.conf.d/limits.conf"
+    install -Dm644 "$srcdir/00-journal-size.conf" "$pkgdir/etc/systemd/journald.conf.d/00-journal-size.conf"
+    
+    # Скрипты
     install -Dm755 "$srcdir/meowrch-apply-optimizations" "$pkgdir/usr/bin/meowrch-apply-optimizations"
+    install -Dm755 "$srcdir/pci-latency" "$pkgdir/usr/bin/pci-latency"
     
     # PipeWire конфигурация
     install -Dm644 "$srcdir/pipewire-99-meowrch.conf" "$pkgdir/etc/pipewire/pipewire.conf.d/99-meowrch.conf"

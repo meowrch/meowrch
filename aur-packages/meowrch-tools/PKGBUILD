@@ -1,6 +1,6 @@
 # Maintainer: dimflix <dimflix.official@gmail.com>
 pkgname=meowrch-tools
-pkgver=1.0.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="Performance optimization tools and scripts for Meowrch distribution"
 arch=('any')
@@ -12,7 +12,9 @@ optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
             'mangohud: for gaming performance monitoring'
             'steam: for Steam integration'
             'lutris: for Lutris integration'
-            'cpupower: for CPU frequency management')
+            'cpupower: for CPU frequency management'
+            'mesa: for OpenGL/Vulkan optimizations with zink-run'
+            'power-profiles-daemon: for power profile management')
 install=meowrch-tools.install
 source=("game-performance"
         "meowrch-prime-run"
@@ -20,15 +22,21 @@ source=("game-performance"
         "meowrch-profile"
         "pacman-cache-cleanup.service"
         "pacman-cache-cleanup.timer"
-        "meowrch-game-performance.desktop")
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+        "meowrch-game-performance.desktop"
+        "dlss-swapper"
+        "zink-run")
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
-    # Install scripts
+    # Install core scripts
     install -Dm755 "$srcdir/game-performance" "$pkgdir/usr/bin/game-performance"
     install -Dm755 "$srcdir/meowrch-prime-run" "$pkgdir/usr/bin/meowrch-prime-run"
     install -Dm755 "$srcdir/meowrch-autotune" "$pkgdir/usr/bin/meowrch-autotune"
     install -Dm755 "$srcdir/meowrch-profile" "$pkgdir/usr/bin/meowrch-profile"
+    
+    # Install CachyOS-inspired scripts
+    install -Dm755 "$srcdir/dlss-swapper" "$pkgdir/usr/bin/dlss-swapper"
+    install -Dm755 "$srcdir/zink-run" "$pkgdir/usr/bin/zink-run"
     
     # Install systemd services
     install -Dm644 "$srcdir/pacman-cache-cleanup.service" "$pkgdir/usr/lib/systemd/system/pacman-cache-cleanup.service"

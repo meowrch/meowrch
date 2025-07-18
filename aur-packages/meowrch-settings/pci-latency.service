@@ -1,0 +1,11 @@
+[Unit]
+Description=PCI Latency Optimization for Audio
+After=graphical.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/pci-latency
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical.target
