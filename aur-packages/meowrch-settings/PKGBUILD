@@ -16,7 +16,7 @@ source=()
 sha256sums=()
 
 package() {
-    # Copy organized structure from build directory
+    # Copy the organized structure from the build directory
     cp -r "$startdir/etc" "$pkgdir/"
     cp -r "$startdir/usr" "$pkgdir/"
     
