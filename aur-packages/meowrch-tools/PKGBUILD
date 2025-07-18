@@ -20,8 +20,8 @@ source=()
 sha256sums=()
 
 package() {
-    # Copy organized structure from build directory
-    cp -r "$startdir/usr" "$pkgdir/"
+    # Copy organized structure 
+    cp -r "$srcdir/usr" "$pkgdir/"
     
     # Make all scripts executable
     chmod +x "$pkgdir/usr/bin/"*
