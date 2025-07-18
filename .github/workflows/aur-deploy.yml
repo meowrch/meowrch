@@ -20,9 +20,6 @@ jobs:
           pkgbuild: aur-packages/meowrch-settings/PKGBUILD
           assets: |
             aur-packages/meowrch-settings/meowrch-settings.install
-            aur-packages/meowrch-settings/etc
-            aur-packages/meowrch-settings/usr
-            aur-packages/meowrch-settings/systemd-conf
           commit_username: ${{ secrets.AUR_USERNAME }}
           commit_email: ${{ secrets.AUR_EMAIL }}
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
@@ -40,24 +37,8 @@ jobs:
           pkgbuild: aur-packages/meowrch-tools/PKGBUILD
           assets: |
             aur-packages/meowrch-tools/meowrch-tools.install
-            aur-packages/meowrch-tools/usr
           commit_username: ${{ secrets.AUR_USERNAME }}
           commit_email: ${{ secrets.AUR_EMAIL }}
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           commit_message: "Update meowrch-tools package"
-          allow_empty_commits: "true"
-
-  deploy-meowrch-meta:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy to AUR
-        uses: KSXGitHub/github-actions-deploy-aur@master
-        with:
-          pkgname: meowrch-meta
-          pkgbuild: aur-packages/meowrch-meta/PKGBUILD
-          commit_username: ${{ secrets.AUR_USERNAME }}
-          commit_email: ${{ secrets.AUR_EMAIL }}
-          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
-          commit_message: "Update meowrch-meta package"
           allow_empty_commits: "true"

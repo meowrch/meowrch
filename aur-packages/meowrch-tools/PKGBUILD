@@ -16,12 +16,14 @@ optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
             'mesa: for OpenGL/Vulkan optimizations with zink-run'
             'power-profiles-daemon: for power profile management')
 install=meowrch-tools.install
-source=()
-sha256sums=()
+source=("$url/archive/refs/heads/v3.0.tar.gz")
+sha256sums=('SKIP')
 
 package() {
+    cd "$srcdir/meowrch-3.0/aur-packages/meowrch-tools"
+    
     # Copy organized structure 
-    cp -r "$srcdir/usr" "$pkgdir/"
+    cp -r "usr" "$pkgdir/"
     
     # Make all scripts executable
     chmod +x "$pkgdir/usr/bin/"*
