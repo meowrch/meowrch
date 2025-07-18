@@ -1,0 +1,38 @@
+# Meowrch Udev Rules
+# Automatic device optimizations
+
+# === SSD/NVMe Optimizations ===
+# Set none scheduler for SSDs (better performance)
+ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="none"
+
+# Set none scheduler for NVMe drives
+ACTION=="add|change", KERNEL=="nvme[0-9]n[0-9]", ATTR{queue/scheduler}="none"
+
+# Optimize SSD queue depth
+ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/nr_requests}="128"
+
+# === Audio Device Optimizations ===
+# Set audio group permissions for USB audio devices
+SUBSYSTEM=="usb", ATTR{idVendor}=="*", ATTR{idProduct}=="*", GROUP="audio", MODE="0664"
+
+# Set realtime priority for audio devices
+SUBSYSTEM=="sound", KERNEL=="card*", GROUP="audio", MODE="0664"
+
+# === Gaming Device Optimizations ===
+# Gaming mice - reduce polling rate overhead
+SUBSYSTEM=="input", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c07e", ATTR{power/control}="on"
+
+# Gaming keyboards - optimize power management
+SUBSYSTEM=="input", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c33[0-9]", ATTR{power/control}="on"
+
+# === Network Device Optimizations ===
+# Optimize network interface queue length
+SUBSYSTEM=="net", ACTION=="add", KERNEL=="eth*", ATTR{tx_queue_len}="10000"
+SUBSYSTEM=="net", ACTION=="add", KERNEL=="wlan*", ATTR{tx_queue_len}="10000"
+
+# === GPU Optimizations ===
+# NVIDIA GPU power management optimization
+SUBSYSTEM=="drm", KERNEL=="card*", DRIVERS=="nvidia", ATTR{power/control}="auto"
+
+# AMD GPU power management optimization  
+SUBSYSTEM=="drm", KERNEL=="card*", DRIVERS=="amdgpu", ATTR{power/control}="auto"

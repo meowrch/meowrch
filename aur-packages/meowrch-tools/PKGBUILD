@@ -1,0 +1,43 @@
+# Maintainer: dimflix <dimflix.official@gmail.com>
+pkgname=meowrch-tools
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Performance optimization tools and scripts for Meowrch distribution"
+arch=('any')
+url="https://github.com/meowrch/meowrch"
+license=('MIT')
+depends=('bash' 'systemd' 'coreutils')
+optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
+            'gamemode: for gaming optimizations'
+            'mangohud: for gaming performance monitoring'
+            'steam: for Steam integration'
+            'lutris: for Lutris integration'
+            'cpupower: for CPU frequency management')
+install=meowrch-tools.install
+source=("game-performance"
+        "meowrch-prime-run"
+        "meowrch-autotune"
+        "meowrch-profile"
+        "pacman-cache-cleanup.service"
+        "pacman-cache-cleanup.timer"
+        "meowrch-game-performance.desktop")
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+package() {
+    # Install scripts
+    install -Dm755 "$srcdir/game-performance" "$pkgdir/usr/bin/game-performance"
+    install -Dm755 "$srcdir/meowrch-prime-run" "$pkgdir/usr/bin/meowrch-prime-run"
+    install -Dm755 "$srcdir/meowrch-autotune" "$pkgdir/usr/bin/meowrch-autotune"
+    install -Dm755 "$srcdir/meowrch-profile" "$pkgdir/usr/bin/meowrch-profile"
+    
+    # Install systemd services
+    install -Dm644 "$srcdir/pacman-cache-cleanup.service" "$pkgdir/usr/lib/systemd/system/pacman-cache-cleanup.service"
+    install -Dm644 "$srcdir/pacman-cache-cleanup.timer" "$pkgdir/usr/lib/systemd/system/pacman-cache-cleanup.timer"
+    
+    # Install desktop entry
+    install -Dm644 "$srcdir/meowrch-game-performance.desktop" "$pkgdir/usr/share/applications/meowrch-game-performance.desktop"
+    
+    # Create directories for user configs
+    install -dm755 "$pkgdir/usr/share/meowrch-tools"
+    install -dm755 "$pkgdir/etc/meowrch"
+}

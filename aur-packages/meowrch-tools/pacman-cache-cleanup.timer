@@ -1,0 +1,10 @@
+[Unit]
+Description=Clean pacman cache weekly
+Requires=pacman-cache-cleanup.service
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,77 @@
+name: Deploy AUR Packages
+
+on:
+  push:
+    paths:
+      - 'aur-packages/**'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      meowrch-settings: ${{ steps.changes.outputs.meowrch-settings }}
+      meowrch-tools: ${{ steps.changes.outputs.meowrch-tools }}
+      meowrch-meta: ${{ steps.changes.outputs.meowrch-meta }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            meowrch-settings:
+              - 'aur-packages/meowrch-settings/**'
+            meowrch-tools:
+              - 'aur-packages/meowrch-tools/**'
+            meowrch-meta:
+              - 'aur-packages/meowrch-meta/**'
+
+  deploy-meowrch-settings:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.meowrch-settings == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
+        with:
+          pkgname: meowrch-settings
+          pkgbuild: aur-packages/meowrch-settings/PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: "Update meowrch-settings package"
+
+  deploy-meowrch-tools:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.meowrch-tools == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
+        with:
+          pkgname: meowrch-tools
+          pkgbuild: aur-packages/meowrch-tools/PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: "Update meowrch-tools package"
+
+  deploy-meowrch-meta:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.meowrch-meta == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
+        with:
+          pkgname: meowrch-meta
+          pkgbuild: aur-packages/meowrch-meta/PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: "Update meowrch-meta package"

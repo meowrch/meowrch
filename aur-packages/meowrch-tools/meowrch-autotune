@@ -1,0 +1,400 @@
+#!/bin/bash
+
+# Meowrch AutoTune Script
+# Automatically configures system based on detected hardware
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+SCRIPT_NAME="AutoTune"
+CONFIG_FILE="/etc/meowrch/autotune.conf"
+
+log() {
+    echo -e "${GREEN}[${SCRIPT_NAME}]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[${SCRIPT_NAME}]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[${SCRIPT_NAME}]${NC} $1"
+}
+
+info() {
+    echo -e "${BLUE}[${SCRIPT_NAME}]${NC} $1"
+}
+
+# Function to check if running as root
+check_root() {
+    if [[ $EUID -ne 0 ]]; then
+        error "This script must be run as root (use sudo)"
+        exit 1
+    fi
+}
+
+# Function to detect CPU vendor
+detect_cpu() {
+    local cpu_vendor=""
+    local cpu_info=""
+    
+    if [[ -f /proc/cpuinfo ]]; then
+        cpu_info=$(grep -i "vendor_id" /proc/cpuinfo | head -1 | cut -d':' -f2 | tr -d ' ')
+        
+        case "$cpu_info" in
+            "GenuineIntel")
+                cpu_vendor="intel"
+                ;;
+            "AuthenticAMD")
+                cpu_vendor="amd"
+                ;;
+            *)
+                cpu_vendor="unknown"
+                ;;
+        esac
+    fi
+    
+    echo "$cpu_vendor"
+}
+
+# Function to detect GPU vendor
+detect_gpu() {
+    local gpu_vendor="unknown"
+    
+    # Check for NVIDIA
+    if lspci | grep -i nvidia &> /dev/null; then
+        gpu_vendor="nvidia"
+    # Check for AMD
+    elif lspci | grep -i -E "(radeon|amd)" &> /dev/null; then
+        gpu_vendor="amd"
+    # Check for Intel
+    elif lspci | grep -i intel | grep -i vga &> /dev/null; then
+        gpu_vendor="intel"
+    fi
+    
+    echo "$gpu_vendor"
+}
+
+# Function to detect storage type
+detect_storage() {
+    local storage_type="unknown"
+    local main_disk=""
+    
+    # Find the main disk (usually where root is mounted)
+    main_disk=$(df / | tail -1 | cut -d' ' -f1 | sed 's/[0-9]*$//')
+    
+    if [[ -n "$main_disk" ]]; then
+        # Extract disk name without /dev/
+        disk_name=$(basename "$main_disk")
+        
+        # Check if it's rotational (1 = HDD, 0 = SSD)
+        if [[ -f "/sys/block/$disk_name/queue/rotational" ]]; then
+            if [[ "$(cat "/sys/block/$disk_name/queue/rotational")" == "0" ]]; then
+                storage_type="ssd"
+            else
+                storage_type="hdd"
+            fi
+        fi
+    fi
+    
+    echo "$storage_type"
+}
+
+# Function to detect RAM amount
+detect_ram() {
+    local ram_gb=0
+    
+    if [[ -f /proc/meminfo ]]; then
+        local ram_kb=$(grep "MemTotal" /proc/meminfo | awk '{print $2}')
+        ram_gb=$((ram_kb / 1024 / 1024))
+    fi
+    
+    echo "$ram_gb"
+}
+
+# Function to apply CPU optimizations
+apply_cpu_optimizations() {
+    local cpu_vendor="$1"
+    
+    log "Applying CPU optimizations for: $cpu_vendor"
+    
+    case "$cpu_vendor" in
+        "intel")
+            # Intel-specific optimizations
+            if [[ -f /sys/devices/system/cpu/intel_pstate/status ]]; then
+                # Use Intel P-State if available
+                echo "active" > /sys/devices/system/cpu/intel_pstate/status 2>/dev/null || true
+                log "Intel P-State enabled"
+            fi
+            
+            # Enable Intel turbo boost
+            if [[ -f /sys/devices/system/cpu/intel_pstate/no_turbo ]]; then
+                echo "0" > /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null || true
+                log "Intel Turbo Boost enabled"
+            fi
+            ;;
+            
+        "amd")
+            # AMD-specific optimizations
+            if [[ -f /sys/devices/system/cpu/amd_pstate/status ]]; then
+                # Use AMD P-State if available
+                echo "active" > /sys/devices/system/cpu/amd_pstate/status 2>/dev/null || true
+                log "AMD P-State enabled"
+            fi
+            
+            # Set AMD CPU governor
+            for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+                if [[ -f "$cpu" ]]; then
+                    echo "schedutil" > "$cpu" 2>/dev/null || true
+                fi
+            done
+            log "AMD CPU governor set to schedutil"
+            ;;
+    esac
+}
+
+# Function to apply GPU optimizations
+apply_gpu_optimizations() {
+    local gpu_vendor="$1"
+    
+    log "Applying GPU optimizations for: $gpu_vendor"
+    
+    case "$gpu_vendor" in
+        "nvidia")
+            # NVIDIA optimizations
+            if command -v nvidia-smi &> /dev/null; then
+                # Enable persistence mode
+                nvidia-smi -pm 1 &> /dev/null || warn "Failed to enable NVIDIA persistence mode"
+                
+                # Set power management to prefer maximum performance
+                nvidia-smi -pl $(nvidia-smi --query-gpu=power.max_limit --format=csv,noheader,nounits) &> /dev/null || warn "Failed to set NVIDIA power limit"
+                
+                log "NVIDIA GPU optimizations applied"
+            fi
+            ;;
+            
+        "amd")
+            # AMD GPU optimizations
+            if [[ -d /sys/class/drm/card0/device ]]; then
+                # Enable high performance mode
+                echo "high" > /sys/class/drm/card0/device/power_dpm_force_performance_level 2>/dev/null || warn "Failed to set AMD GPU performance level"
+                
+                # Enable all power states
+                if [[ -f /sys/class/drm/card0/device/pp_dpm_sclk ]]; then
+                    echo "auto" > /sys/class/drm/card0/device/pp_dpm_sclk 2>/dev/null || true
+                fi
+                
+                log "AMD GPU optimizations applied"
+            fi
+            ;;
+            
+        "intel")
+            # Intel GPU optimizations
+            if [[ -f /sys/class/drm/card0/gt_max_freq_mhz ]]; then
+                # Set maximum GPU frequency
+                local max_freq=$(cat /sys/class/drm/card0/gt_max_freq_mhz)
+                echo "$max_freq" > /sys/class/drm/card0/gt_min_freq_mhz 2>/dev/null || true
+                log "Intel GPU frequency optimized"
+            fi
+            ;;
+    esac
+}
+
+# Function to apply storage optimizations
+apply_storage_optimizations() {
+    local storage_type="$1"
+    
+    log "Applying storage optimizations for: $storage_type"
+    
+    case "$storage_type" in
+        "ssd")
+            # SSD optimizations
+            for device in /sys/block/*/queue/scheduler; do
+                if [[ -f "$device" ]]; then
+                    device_name=$(basename $(dirname $(dirname "$device")))
+                    
+                    # Check if this device is SSD
+                    if [[ -f "/sys/block/$device_name/queue/rotational" ]] && [[ "$(cat "/sys/block/$device_name/queue/rotational")" == "0" ]]; then
+                        # Use none scheduler for SSDs
+                        if grep -q "none" "$device"; then
+                            echo "none" > "$device"
+                            log "Set none scheduler for SSD $device_name"
+                        fi
+                        
+                        # Optimize queue depth
+                        if [[ -f "/sys/block/$device_name/queue/nr_requests" ]]; then
+                            echo "128" > "/sys/block/$device_name/queue/nr_requests"
+                        fi
+                    fi
+                fi
+            done
+            ;;
+            
+        "hdd")
+            # HDD optimizations
+            for device in /sys/block/*/queue/scheduler; do
+                if [[ -f "$device" ]]; then
+                    device_name=$(basename $(dirname $(dirname "$device")))
+                    
+                    # Check if this device is HDD
+                    if [[ -f "/sys/block/$device_name/queue/rotational" ]] && [[ "$(cat "/sys/block/$device_name/queue/rotational")" == "1" ]]; then
+                        # Use mq-deadline scheduler for HDDs
+                        if grep -q "mq-deadline" "$device"; then
+                            echo "mq-deadline" > "$device"
+                            log "Set mq-deadline scheduler for HDD $device_name"
+                        fi
+                        
+                        # Optimize read-ahead
+                        if [[ -f "/sys/block/$device_name/queue/read_ahead_kb" ]]; then
+                            echo "4096" > "/sys/block/$device_name/queue/read_ahead_kb"
+                        fi
+                    fi
+                fi
+            done
+            ;;
+    esac
+}
+
+# Function to apply RAM optimizations
+apply_ram_optimizations() {
+    local ram_gb="$1"
+    
+    log "Applying RAM optimizations for: ${ram_gb}GB"
+    
+    # Adjust swappiness based on RAM amount
+    if [[ "$ram_gb" -ge 16 ]]; then
+        # High RAM: minimal swap usage
+        echo "vm.swappiness = 1" > /etc/sysctl.d/99-meowrch-ram.conf
+        log "Set swappiness to 1 for high RAM system"
+    elif [[ "$ram_gb" -ge 8 ]]; then
+        # Medium RAM: low swap usage
+        echo "vm.swappiness = 5" > /etc/sysctl.d/99-meowrch-ram.conf
+        log "Set swappiness to 5 for medium RAM system"
+    else
+        # Low RAM: moderate swap usage
+        echo "vm.swappiness = 10" > /etc/sysctl.d/99-meowrch-ram.conf
+        log "Set swappiness to 10 for low RAM system"
+    fi
+    
+    # Apply immediately
+    sysctl -p /etc/sysctl.d/99-meowrch-ram.conf &> /dev/null || true
+}
+
+# Function to save configuration
+save_config() {
+    local cpu_vendor="$1"
+    local gpu_vendor="$2"
+    local storage_type="$3"
+    local ram_gb="$4"
+    
+    mkdir -p "$(dirname "$CONFIG_FILE")"
+    
+    cat > "$CONFIG_FILE" << EOF
+# Meowrch AutoTune Configuration
+# Generated on $(date)
+
+CPU_VENDOR="$cpu_vendor"
+GPU_VENDOR="$gpu_vendor"
+STORAGE_TYPE="$storage_type"
+RAM_GB="$ram_gb"
+
+# Last tuned
+LAST_TUNED="$(date +%s)"
+EOF
+    
+    log "Configuration saved to $CONFIG_FILE"
+}
+
+# Function to show detected hardware
+show_hardware() {
+    local cpu_vendor="$1"
+    local gpu_vendor="$2"
+    local storage_type="$3"
+    local ram_gb="$4"
+    
+    info "=== Hardware Detection ==="
+    echo "CPU Vendor: $cpu_vendor"
+    echo "GPU Vendor: $gpu_vendor"
+    echo "Storage Type: $storage_type"
+    echo "RAM Amount: ${ram_gb}GB"
+    echo ""
+}
+
+# Function to show help
+show_help() {
+    echo "Meowrch AutoTune Script"
+    echo "Usage: $0 [OPTION]"
+    echo ""
+    echo "Options:"
+    echo "  --detect, -d     Detect hardware only (no changes)"
+    echo "  --tune, -t       Detect and apply optimizations"
+    echo "  --status, -s     Show current configuration"
+    echo "  --help, -h       Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  $0 --detect      # Show detected hardware"
+    echo "  sudo $0 --tune   # Apply optimizations"
+    echo "  $0 --status      # Show current config"
+}
+
+# Function to show current status
+show_status() {
+    if [[ -f "$CONFIG_FILE" ]]; then
+        info "=== Current Configuration ==="
+        cat "$CONFIG_FILE"
+    else
+        warn "No configuration found. Run 'sudo meowrch-autotune --tune' first."
+    fi
+}
+
+# Main execution
+main() {
+    case "${1:-}" in
+        --detect|-d)
+            cpu_vendor=$(detect_cpu)
+            gpu_vendor=$(detect_gpu)
+            storage_type=$(detect_storage)
+            ram_gb=$(detect_ram)
+            show_hardware "$cpu_vendor" "$gpu_vendor" "$storage_type" "$ram_gb"
+            ;;
+        --tune|-t)
+            check_root
+            log "Starting hardware detection and optimization..."
+            
+            cpu_vendor=$(detect_cpu)
+            gpu_vendor=$(detect_gpu)
+            storage_type=$(detect_storage)
+            ram_gb=$(detect_ram)
+            
+            show_hardware "$cpu_vendor" "$gpu_vendor" "$storage_type" "$ram_gb"
+            
+            apply_cpu_optimizations "$cpu_vendor"
+            apply_gpu_optimizations "$gpu_vendor"
+            apply_storage_optimizations "$storage_type"
+            apply_ram_optimizations "$ram_gb"
+            
+            save_config "$cpu_vendor" "$gpu_vendor" "$storage_type" "$ram_gb"
+            
+            log "AutoTune completed successfully!"
+            info "System has been optimized for your hardware"
+            ;;
+        --status|-s)
+            show_status
+            ;;
+        --help|-h)
+            show_help
+            ;;
+        *)
+            show_help
+            ;;
+    esac
+}
+
+# Run main function
+main "$@"

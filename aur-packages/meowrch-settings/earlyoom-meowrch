@@ -1,0 +1,12 @@
+# Meowrch Earlyoom Configuration
+# Prevents system freezes due to out-of-memory conditions
+
+# Kill processes when memory usage reaches 5% and swap usage reaches 10%
+EARLYOOM_ARGS="-m 5 -s 10 --avoid '(^|/)(init|systemd|Xorg|ssh|NetworkManager|pipewire|wireplumber)$' --prefer '(^|/)(Web Content|firefox|chromium|chrome|electron|code|discord|telegram|steam)$' --dryrun"
+
+# Options explanation:
+# -m 5: Trigger when free memory drops below 5%
+# -s 10: Trigger when free swap drops below 10%
+# --avoid: Protect critical system processes
+# --prefer: Prefer to kill memory-hungry applications
+# --dryrun: Remove this option to actually kill processes (for testing)

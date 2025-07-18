@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Meowrch Prime-Run Wrapper Script
+# Simplifies running applications with discrete NVIDIA GPUs
+
+set -euo pipefail
+
+# Set environment variables for Prime Run
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __VK_LAYER_NV_optimus=NVIDIA_only
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export DXVK_ASYNC=1
+export WINE_CPU_TOPOLOGY=4:2
+
+# Execute the passed command with the above environment
+exec "$@"

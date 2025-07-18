@@ -1,0 +1,161 @@
+#!/bin/bash
+
+# Meowrch System Optimizations Script
+# This script applies runtime optimizations that can't be set via static configs
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+log() {
+    echo -e "${GREEN}[Meowrch]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[Meowrch]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[Meowrch]${NC} $1"
+}
+
+# Function to check if running as root
+check_root() {
+    if [[ $EUID -ne 0 ]]; then
+        error "This script must be run as root"
+        exit 1
+    fi
+}
+
+# Function to optimize CPU governor
+optimize_cpu_governor() {
+    log "Optimizing CPU governor..."
+    
+    # Check if cpufreq is available
+    if [[ -d /sys/devices/system/cpu/cpu0/cpufreq ]]; then
+        # Get available governors
+        available_governors=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors 2>/dev/null || echo "")
+        
+        if [[ $available_governors == *"performance"* ]]; then
+            # Set performance governor for all CPUs
+            for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+                if [[ -f "$cpu" ]]; then
+                    echo "performance" > "$cpu"
+                fi
+            done
+            log "CPU governor set to performance"
+        else
+            warn "Performance governor not available"
+        fi
+    else
+        warn "CPUfreq not available on this system"
+    fi
+}
+
+# Function to optimize I/O scheduler
+optimize_io_scheduler() {
+    log "Optimizing I/O scheduler..."
+    
+    # Optimize block devices
+    for device in /sys/block/*/queue/scheduler; do
+        if [[ -f "$device" ]]; then
+            # Check if device is rotational (HDD) or not (SSD)
+            device_name=$(basename $(dirname $(dirname "$device")))
+            
+            if [[ -f "/sys/block/$device_name/queue/rotational" ]]; then
+                rotational=$(cat "/sys/block/$device_name/queue/rotational")
+                
+                if [[ "$rotational" == "0" ]]; then
+                    # SSD - use none scheduler
+                    if grep -q "none" "$device"; then
+                        echo "none" > "$device"
+                        log "Set none scheduler for SSD $device_name"
+                    fi
+                else
+                    # HDD - use mq-deadline scheduler
+                    if grep -q "mq-deadline" "$device"; then
+                        echo "mq-deadline" > "$device"
+                        log "Set mq-deadline scheduler for HDD $device_name"
+                    fi
+                fi
+            fi
+        fi
+    done
+}
+
+# Function to optimize virtual memory
+optimize_vm() {
+    log "Optimizing virtual memory settings..."
+    
+    # Transparent hugepages - set to madvise for better performance
+    if [[ -f /sys/kernel/mm/transparent_hugepage/enabled ]]; then
+        echo "madvise" > /sys/kernel/mm/transparent_hugepage/enabled
+        log "Set transparent hugepages to madvise"
+    fi
+    
+    # Defrag - set to defer for better performance
+    if [[ -f /sys/kernel/mm/transparent_hugepage/defrag ]]; then
+        echo "defer" > /sys/kernel/mm/transparent_hugepage/defrag
+        log "Set transparent hugepage defrag to defer"
+    fi
+}
+
+# Function to optimize network
+optimize_network() {
+    log "Optimizing network settings..."
+    
+    # Optimize network interface queues
+    for interface in /sys/class/net/*/queues/rx-*/rps_cpus; do
+        if [[ -f "$interface" ]]; then
+            # Set RPS to use all CPUs
+            echo "ff" > "$interface"
+        fi
+    done
+    
+    log "Network RPS optimized"
+}
+
+# Function to optimize GPU
+optimize_gpu() {
+    log "Optimizing GPU settings..."
+    
+    # NVIDIA GPU optimizations
+    if command -v nvidia-smi &> /dev/null; then
+        # Set GPU persistence mode
+        nvidia-smi -pm 1 &> /dev/null || warn "Failed to set NVIDIA persistence mode"
+        
+        # Set maximum performance mode
+        nvidia-smi -ac $(nvidia-smi --query-gpu=clocks.max.memory,clocks.max.graphics --format=csv,noheader,nounits | tr ',' ' ') &> /dev/null || warn "Failed to set NVIDIA max clocks"
+        
+        log "NVIDIA GPU optimizations applied"
+    fi
+    
+    # AMD GPU optimizations
+    if [[ -d /sys/class/drm/card0/device/pp_dpm_sclk ]]; then
+        # Set highest performance level
+        echo "manual" > /sys/class/drm/card0/device/power_dpm_force_performance_level 2>/dev/null || warn "Failed to set AMD GPU performance level"
+        log "AMD GPU optimizations applied"
+    fi
+}
+
+# Main execution
+main() {
+    log "Starting Meowrch system optimizations..."
+    
+    check_root
+    
+    optimize_cpu_governor
+    optimize_io_scheduler
+    optimize_vm
+    optimize_network
+    optimize_gpu
+    
+    log "Meowrch system optimizations completed successfully!"
+}
+
+# Run main function
+main "$@"

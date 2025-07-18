@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Meowrch Game Performance
+Comment=Toggle gaming performance mode
+Exec=pkexec /usr/bin/game-performance
+Icon=applications-games
+Terminal=false
+Categories=System;Settings;
+Keywords=gaming;performance;optimization;
+StartupNotify=false

@@ -1,0 +1,48 @@
+# Maintainer: dimflix <dimflix.official@gmail.com>
+pkgname=meowrch-settings
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="System optimization settings for Meowrch distribution"
+arch=('any')
+url="https://github.com/dimflix/meowrch"
+license=('MIT')
+depends=('systemd' 'zram-generator' 'pipewire' 'earlyoom')
+optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
+            'amd-ucode: for AMD CPU microcode'
+            'intel-ucode: for Intel CPU microcode')
+install=meowrch-settings.install
+source=("sysctl-99-meowrch.conf"
+        "udev-99-meowrch.rules"
+        "modprobe-meowrch.conf"
+        "meowrch-optimizations.service"
+        "meowrch-apply-optimizations"
+        "pipewire-99-meowrch.conf"
+        "zram-generator.conf"
+        "earlyoom-meowrch")
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+package() {
+    # Sysctl настройки
+    install -Dm644 "$srcdir/sysctl-99-meowrch.conf" "$pkgdir/etc/sysctl.d/99-meowrch.conf"
+    
+    # Udev правила
+    install -Dm644 "$srcdir/udev-99-meowrch.rules" "$pkgdir/etc/udev/rules.d/99-meowrch.rules"
+    
+    # Modprobe настройки
+    install -Dm644 "$srcdir/modprobe-meowrch.conf" "$pkgdir/etc/modprobe.d/meowrch.conf"
+    
+    # Systemd сервис
+    install -Dm644 "$srcdir/meowrch-optimizations.service" "$pkgdir/usr/lib/systemd/system/meowrch-optimizations.service"
+    
+    # Скрипт применения оптимизаций
+    install -Dm755 "$srcdir/meowrch-apply-optimizations" "$pkgdir/usr/bin/meowrch-apply-optimizations"
+    
+    # PipeWire конфигурация
+    install -Dm644 "$srcdir/pipewire-99-meowrch.conf" "$pkgdir/etc/pipewire/pipewire.conf.d/99-meowrch.conf"
+    
+    # ZRAM конфигурация
+    install -Dm644 "$srcdir/zram-generator.conf" "$pkgdir/etc/systemd/zram-generator.conf"
+    
+    # Earlyoom конфигурация (устанавливается только если не существует)
+    install -Dm644 "$srcdir/earlyoom-meowrch" "$pkgdir/etc/default/earlyoom.meowrch"
+}

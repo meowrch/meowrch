@@ -1,0 +1,15 @@
+[Unit]
+Description=Meowrch System Optimizations
+Documentation=https://github.com/meowrch/meowrch
+After=multi-user.target network.target
+Wants=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/meowrch-apply-optimizations
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
