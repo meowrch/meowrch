@@ -12,18 +12,16 @@ optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
             'intel-ucode: for Intel CPU microcode'
             'hdparm: for HDD performance optimizations')
 install=meowrch-settings.install
-source=("etc/"
-        "usr/"
-        "systemd-conf/")
-sha256sums=('SKIP' 'SKIP' 'SKIP')
+source=()
+sha256sums=()
 
 package() {
-    # Copy organized structure
-    cp -r "$srcdir/etc" "$pkgdir/"
-    cp -r "$srcdir/usr" "$pkgdir/"
+    # Copy organized structure from build directory
+    cp -r "$startdir/etc" "$pkgdir/"
+    cp -r "$startdir/usr" "$pkgdir/"
     
     # Install systemd configuration files
-    install -Dm644 "$srcdir/systemd-conf/system.conf.d/00-timeout.conf" "$pkgdir/etc/systemd/system.conf.d/00-timeout.conf"
-    install -Dm644 "$srcdir/systemd-conf/system.conf.d/limits.conf" "$pkgdir/etc/systemd/system.conf.d/limits.conf"
-    install -Dm644 "$srcdir/systemd-conf/journald.conf.d/00-journal-size.conf" "$pkgdir/etc/systemd/journald.conf.d/00-journal-size.conf"
+    install -Dm644 "$startdir/systemd-conf/system.conf.d/00-timeout.conf" "$pkgdir/etc/systemd/system.conf.d/00-timeout.conf"
+    install -Dm644 "$startdir/systemd-conf/system.conf.d/limits.conf" "$pkgdir/etc/systemd/system.conf.d/limits.conf"
+    install -Dm644 "$startdir/systemd-conf/journald.conf.d/00-journal-size.conf" "$pkgdir/etc/systemd/journald.conf.d/00-journal-size.conf"
 }
