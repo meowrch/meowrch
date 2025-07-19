@@ -13,6 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Calculate SHA256 for meowrch-settings
+        id: sha256_settings
+        run: |
+          URL="https://github.com/meowrch/meowrch/archive/refs/heads/v3.0.tar.gz"
+          HASH=$(curl -sL "$URL" | sha256sum | cut -d' ' -f1)
+          echo "hash=$HASH" >> $GITHUB_OUTPUT
+          
+      - name: Update PKGBUILD with SHA256
+        run: |
+          sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_settings.outputs.hash }}')/" aur-packages/meowrch-settings/PKGBUILD
+          
       - name: Deploy to AUR
         uses: KSXGitHub/github-actions-deploy-aur@master
         with:
@@ -30,6 +42,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Calculate SHA256 for meowrch-tools
+        id: sha256_tools
+        run: |
+          URL="https://github.com/meowrch/meowrch/archive/refs/heads/v3.0.tar.gz"
+          HASH=$(curl -sL "$URL" | sha256sum | cut -d' ' -f1)
+          echo "hash=$HASH" >> $GITHUB_OUTPUT
+          
+      - name: Update PKGBUILD with SHA256
+        run: |
+          sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_tools.outputs.hash }}')/" aur-packages/meowrch-tools/PKGBUILD
+          
       - name: Deploy to AUR
         uses: KSXGitHub/github-actions-deploy-aur@master
         with:
