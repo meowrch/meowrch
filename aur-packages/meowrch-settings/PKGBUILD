@@ -1,7 +1,7 @@
 # Maintainer: dimflix <dimflix.official@gmail.com>
 pkgname=meowrch-settings
 pkgver=2.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="System optimization settings for Meowrch distribution"
 arch=('any')
 url="https://github.com/meowrch/meowrch"
