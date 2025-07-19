@@ -7,4 +7,5 @@ else
     libDir=/usr/lib
 fi
 
-${libDir}/polkit-gnome/polkit-gnome-authentication-agent-1 &
+# Run without & since UWSM will manage the process
+exec ${libDir}/polkit-gnome/polkit-gnome-authentication-agent-1

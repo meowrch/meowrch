@@ -1,0 +1,15 @@
+[Unit]
+Description=Meowrch Session Helper
+Documentation=https://github.com/meowrch/meowrch
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+# This is a dummy service to ensure graphical-session.target starts correctly
+# It helps prevent UWSM from waiting for graphical.target
+
+[Install]
+WantedBy=graphical-session.target

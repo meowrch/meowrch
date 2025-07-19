@@ -30,12 +30,12 @@ esac
 # Launch bar with UWSM support
 launch_bar() {
     local bar_name="$1"
-    # Use uwsm-system-launcher.sh for apps that interact with system services
+    # Use service type for auto-restart capability when UWSM is active
     # nohup is needed here because we want the bar to survive toggle-bar.sh exit
     if [[ "$bar_name" == "mewline" ]]; then
-        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-system-launcher.sh" "$bar_name" >/dev/null 2>&1 &
+        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh" -t service -s s "$bar_name" >/dev/null 2>&1 &
     else
-        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh" "$bar_name" >/dev/null 2>&1 &
+        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh" -t service -s s "$bar_name" >/dev/null 2>&1 &
     fi
     disown
 }
