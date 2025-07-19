@@ -34,6 +34,24 @@ post_install() {
     # Применяем sysctl параметры
     sysctl --system
     
+    # Оптимизация загрузки системы
+    echo "==> Optimizing system boot performance..."
+    
+    # Отключаем NetworkManager-wait-online для ускорения загрузки (только если NetworkManager включен)
+    if systemctl is-enabled NetworkManager.service >/dev/null 2>&1; then
+        systemctl disable NetworkManager-wait-online.service 2>/dev/null || true
+        echo "==> Disabled NetworkManager-wait-online for faster boot"
+    else
+        echo "==> NetworkManager not enabled, skipping wait-online optimization"
+    fi
+    
+    # Убеждаемся что plocate использует таймер, а не service при загрузке
+    if systemctl list-unit-files plocate-updatedb.service >/dev/null 2>&1; then
+        systemctl disable plocate-updatedb.service 2>/dev/null || true
+        systemctl enable plocate-updatedb.timer 2>/dev/null || true
+        echo "==> Optimized plocate to use timer instead of boot service"
+    fi
+    
     echo "==> Meowrch system optimizations have been applied!"
     echo "==> Reboot is recommended to fully activate all optimizations."
 }
@@ -61,6 +79,10 @@ pre_remove() {
     # Перезагружаем udev правила
     udevadm control --reload-rules
     udevadm trigger
+    
+    # Восстанавливаем стандартные настройки загрузки
+    echo "==> Restoring standard boot settings..."
+    systemctl enable NetworkManager-wait-online.service 2>/dev/null || true
     
     echo "==> Meowrch optimizations have been disabled."
     echo "==> Reboot is recommended to fully revert all changes."
