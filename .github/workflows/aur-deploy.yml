@@ -21,8 +21,14 @@ jobs:
           HASH=$(curl -sL "$URL" | sha256sum | cut -d' ' -f1)
           echo "hash=$HASH" >> $GITHUB_OUTPUT
           
-      - name: Update PKGBUILD with SHA256
+      - name: Update PKGBUILD with SHA256 and increment pkgrel
         run: |
+          # Get current pkgrel and increment it
+          CURRENT_REL=$(grep '^pkgrel=' aur-packages/meowrch-settings/PKGBUILD | cut -d'=' -f2)
+          NEW_REL=$((CURRENT_REL + 1))
+          
+          # Update both pkgrel and sha256sums
+          sed -i "s/^pkgrel=.*/pkgrel=$NEW_REL/" aur-packages/meowrch-settings/PKGBUILD
           sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_settings.outputs.hash }}')/" aur-packages/meowrch-settings/PKGBUILD
           
       - name: Deploy to AUR
@@ -50,8 +56,14 @@ jobs:
           HASH=$(curl -sL "$URL" | sha256sum | cut -d' ' -f1)
           echo "hash=$HASH" >> $GITHUB_OUTPUT
           
-      - name: Update PKGBUILD with SHA256
+      - name: Update PKGBUILD with SHA256 and increment pkgrel
         run: |
+          # Get current pkgrel and increment it
+          CURRENT_REL=$(grep '^pkgrel=' aur-packages/meowrch-tools/PKGBUILD | cut -d'=' -f2)
+          NEW_REL=$((CURRENT_REL + 1))
+          
+          # Update both pkgrel and sha256sums
+          sed -i "s/^pkgrel=.*/pkgrel=$NEW_REL/" aur-packages/meowrch-tools/PKGBUILD
           sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_tools.outputs.hash }}')/" aur-packages/meowrch-tools/PKGBUILD
           
       - name: Deploy to AUR
