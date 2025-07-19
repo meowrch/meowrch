@@ -1,4 +1,3 @@
-import re
 import shutil
 import subprocess
 import tempfile
@@ -7,17 +6,22 @@ from pathlib import Path
 from typing import List, Optional
 
 from loguru import logger
-
+from utils.grub_config import GrubConfigEditor
+from utils.mkinitcpio_config import MkinitcpioConfigEditor
 
 class PlymouthConfigurer:
     def __init__(self):
         self.theme_name = "meowrch"
-        self.grub_path = Path("/etc/default/grub")
-        self.mkinitcpio_path = Path("/etc/mkinitcpio.conf")
         self.services_src = Path("./misc/services")
         self.theme_src = Path("./misc/plymouth_theme")
         self.theme_dest = Path("/usr/share/plymouth/themes/")
-        self.required_params = {
+        
+        # Инициализируем редакторы конфигурации
+        self.grub_editor = GrubConfigEditor()
+        self.mkinitcpio_editor = MkinitcpioConfigEditor()
+        
+        # Требуемые параметры GRUB
+        self.required_grub_params = {
             "quiet",
             "loglevel=3",
             "splash",
@@ -60,147 +64,84 @@ class PlymouthConfigurer:
         
         return True
 
-    def _safe_file_edit(self, path: Path, edit_callback: callable):
-        """Edit file safely using temporary file and sudo"""
-        with tempfile.NamedTemporaryFile(mode="w+", delete=False) as tmp:
-            original_content = self._run_sudo(["cat", str(path)])
-            tmp.write(original_content)
-            tmp.flush()
-
-            edit_callback(Path(tmp.name))
-            if Path(tmp.name).read_text() != original_content:
-                self._run_sudo(["cp", tmp.name, str(path)])
 
     def update_grub_cmdline(self):
         """Update GRUB_CMDLINE_LINUX_DEFAULT"""
-
-        def edit_grub(tmp_path: Path):
-            content = tmp_path.read_text()
-            match = re.search(
-                r'^(GRUB_CMDLINE_LINUX_DEFAULT=)(["\']?)((?:\\\2|.)*?)\2(\s*(#.*)?)$',
-                content,
-                re.MULTILINE
-            )
-
-            if not match:
-                logger.error("GRUB_CMDLINE_LINUX_DEFAULT not found or invalid format")
-                return
-
-            current_params = set(match.group(3).split())
-            missing_params = self.required_params - current_params
-
-            if missing_params:
-                new_params = " ".join(missing_params) + " " + match.group(1)
-                new_line = f"GRUB_CMDLINE_LINUX_DEFAULT='{new_params}'"
-                content = content.replace(match.group(0), new_line)
-                tmp_path.write_text(content)
-
         logger.info("The process of configuring the settings of GRUB has begun")
-        self._safe_file_edit(self.grub_path, edit_grub)
-        logger.success("GRUB settings configured successfully!")
+        changes_made = self.grub_editor.add_cmdline_params(
+            self.required_grub_params, 
+            update_grub=False  # Не запускаем update-grub пока, сделаем в конце
+        )
+        if changes_made:
+            logger.success("GRUB settings configured successfully!")
+        else:
+            logger.info("All required GRUB parameters are already configured")
 
     def update_mkinitcpio_hooks(self):
-        """Update hooks with proper plymouth placement, including dependency reordering"""
-
-        def edit_mkinitcpio(tmp_path: Path):
-            content = tmp_path.read_text()
-            match = re.search(r"^HOOKS=\((.*?)\)", content, re.M)
-
-            if not match:
-                logger.error("HOOKS not found in mkinitcpio.conf")
-                return
-
-            hooks = match.group(1).split()
-
-            # Replace udev with systemd
-            hooks = [h if h != "udev" else "systemd" for h in hooks]
-
-            if "plymouth" in hooks:
-                return
-
-            # Definition of dependencies
-            before_plymouth = {
-                "systemd",
-                "autodetect",
-                "microcode",
-                "modconf",
-                "kms",
-                "keyboard",
-                "keymap",
-                "consolefont",
-            }
-
-            # Find encrypt/sd-encrypt positions
-            encrypt_indices = [
-                i for i, h in enumerate(hooks) if h in ("encrypt", "sd-encrypt")
-            ]
-            first_encrypt = encrypt_indices[0] if encrypt_indices else len(hooks)
-
-            # Move all before_plymouth hooks before encrypt
-            new_hooks = []
-            moved_hooks = set()
-
-            # First add everything up to the first encrypt
-            for hook in hooks[:first_encrypt]:
-                new_hooks.append(hook)
-                if hook in before_plymouth:
-                    moved_hooks.add(hook)
-
-            # Adding the missing before_plymobile hooks
-            for hook in before_plymouth:
-                if hook not in new_hooks and hook in hooks:
-                    new_hooks.append(hook)
-                    moved_hooks.add(hook)
-
-            # Add encrypt and the rest
-            new_hooks.extend(hooks[first_encrypt:])
-
-            # Remove duplicates of before_plymouth after a move
-            final_hooks = []
-            seen_before = set()
-            for hook in new_hooks:
-                if hook in before_plymouth:
-                    if hook not in seen_before:
-                        final_hooks.append(hook)
-                        seen_before.add(hook)
-                else:
-                    final_hooks.append(hook)
-
-            # Insert plymouth after the last before_plymouth
-            last_before = max(
-                [i for i, h in enumerate(final_hooks) if h in before_plymouth],
-                default=-1,
-            )
-
-            if last_before != -1:
-                insert_pos = last_before + 1
-            else:
-                # Fallback: after systemd or base
-                systemd_index = next(
-                    (i for i, h in enumerate(final_hooks) if h == "systemd"), -1
-                )
-                insert_pos = systemd_index + 1 if systemd_index != -1 else 1
-
-            # Make sure plymouth before encrypt.
-            if encrypt_indices:
-                first_encrypt_new = next(
-                    (
-                        i
-                        for i, h in enumerate(final_hooks)
-                        if h in ("encrypt", "sd-encrypt")
-                    ),
-                    len(final_hooks),
-                )
-                insert_pos = min(insert_pos, first_encrypt_new)
-
-            final_hooks.insert(insert_pos, "plymouth")
-
-            new_hooks_str = f"HOOKS=({' '.join(final_hooks)})"
-            tmp_path.write_text(content.replace(match.group(0), new_hooks_str))
-
+        """Update hooks with proper plymouth placement using our new utilities"""
         logger.info("The process of configuring the settings of mkinitcpio has begun")
-        self._safe_file_edit(self.mkinitcpio_path, edit_mkinitcpio)
+        
+        current_hooks = self.mkinitcpio_editor.list_hooks()
+        logger.info(f"Current hooks: {' '.join(current_hooks)}")
+        
+        # Replace udev with systemd if needed
+        if "udev" in current_hooks and "systemd" not in current_hooks:
+            self.mkinitcpio_editor.remove_hook("udev")
+            self.mkinitcpio_editor.add_hook("systemd", "start")
+            logger.info("Replaced udev with systemd")
+        
+        # Check if plymouth already exists
+        if "plymouth" in current_hooks:
+            logger.info("Plymouth hook already exists in configuration")
+            return
+        
+        # Define hooks that should be before plymouth
+        before_plymouth_hooks = {
+            "systemd", "autodetect", "microcode", "modconf", 
+            "kms", "keyboard", "keymap", "consolefont"
+        }
+        
+        # Find the last hook from before_plymouth_hooks
+        last_before_hook = None
+        updated_hooks = self.mkinitcpio_editor.list_hooks()
+        for hook in reversed(updated_hooks):
+            if hook in before_plymouth_hooks:
+                last_before_hook = hook
+                break
+        
+        # Find first encrypt hook to ensure plymouth goes before it
+        first_encrypt_hook = None
+        for hook in updated_hooks:
+            if hook in ("encrypt", "sd-encrypt"):
+                first_encrypt_hook = hook
+                break
+        
+        # Add plymouth with smart positioning
+        if last_before_hook and first_encrypt_hook:
+            # Plymouth after last_before_hook but before first_encrypt_hook
+            self.mkinitcpio_editor.add_hook("plymouth", 
+                                          after_hook=last_before_hook, 
+                                          before_hook=first_encrypt_hook)
+            logger.info(f"Added plymouth after {last_before_hook} and before {first_encrypt_hook}")
+        elif last_before_hook:
+            # Just after last_before_hook
+            self.mkinitcpio_editor.add_hook("plymouth", "after", last_before_hook)
+            logger.info(f"Added plymouth after {last_before_hook}")
+        elif first_encrypt_hook:
+            # Before first_encrypt_hook
+            self.mkinitcpio_editor.add_hook("plymouth", "before", first_encrypt_hook)
+            logger.info(f"Added plymouth before {first_encrypt_hook}")
+        else:
+            # Fallback: add after systemd or at start
+            if "systemd" in updated_hooks:
+                self.mkinitcpio_editor.add_hook("plymouth", "after", "systemd")
+                logger.info("Added plymouth after systemd")
+            else:
+                self.mkinitcpio_editor.add_hook("plymouth", "start")
+                logger.info("Added plymouth at start of hooks list")
+        
         logger.success("mkinitcpio settings configured successfully!")
+
 
     def setup_services(self):
         """Install and configure services"""

@@ -55,6 +55,9 @@ class Builder:
 
         self.packages_installation()
         self.drivers_installation()
+        
+        # Настройка модулей GPU для ранней загрузки (критично для Plymouth)
+        DriversManager.setup_gpu_modules_for_early_boot()
 
         AppsManager.configure_grub()
         AppsManager.configure_sddm()

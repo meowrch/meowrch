@@ -1,9 +1,10 @@
 import subprocess
 import traceback
-from typing import List
+from typing import List, Optional
 
 from loguru import logger
 from packages import DRIVERS
+from utils.mkinitcpio_config import MkinitcpioConfigEditor, Position
 
 from .package_manager import PackageManager
 
@@ -69,3 +70,60 @@ class DriversManager:
     @staticmethod
     def install_nvidia_drivers() -> None:
         PackageManager.install_packages(packages_list=DRIVERS["nvidia"].pacman.common)
+    
+    @staticmethod
+    def add_gpu_modules(gpu_type: Optional[str] = None, force: bool = False) -> bool:
+        """Добавить модули GPU для ранней загрузки в mkinitcpio
+        
+        Args:
+            gpu_type: Тип GPU ("nvidia", "amd", "intel", None для автодетекта)
+            force: Принудительно добавить модули даже если GPU не обнаружен
+            
+        Returns:
+            bool: True если модули были добавлены
+        """
+        mkinitcpio_editor = MkinitcpioConfigEditor()
+        
+        # Маппинг между GPU типами и модулями для загрузки
+        gpu_modules = {
+            "nvidia": ["nvidia", "nvidia_modeset", "nvidia_uvm", "nvidia_drm"],
+            "amd": ["amdgpu", "radeon"],
+            "intel": ["i915"]
+        }
+        
+        if gpu_type is None:
+            gpu_type = DriversManager.get_gpu_vendor().lower()
+            
+        if gpu_type not in gpu_modules and not force:
+            logger.warning(f"GPU type '{gpu_type}' not supported or not detected, skipping GPU modules setup")
+            return False
+            
+        modules_to_add = gpu_modules.get(gpu_type, [])
+        if not modules_to_add:
+            logger.error(f"Unsupported GPU type: {gpu_type}")
+            return False
+            
+        logger.info(f"Adding {gpu_type.upper()} modules for early boot: {', '.join(modules_to_add)}")
+        
+        # Добавляем модули в начало для ранней загрузки
+        changes_made = mkinitcpio_editor.add_modules(
+            modules_to_add, 
+            Position.START
+        )
+        
+        if changes_made:
+            logger.success(f"{gpu_type.upper()} modules configured for early boot")
+        else:
+            logger.info(f"{gpu_type.upper()} modules already configured")
+            
+        return changes_made
+    
+    @staticmethod
+    def setup_gpu_modules_for_early_boot() -> bool:
+        """Настроить GPU модули для ранней загрузки
+        
+        Returns:
+            bool: True если были внесены изменения
+        """
+        logger.info("Setting up GPU modules for early boot...")
+        return DriversManager.add_gpu_modules()
