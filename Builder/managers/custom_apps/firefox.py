@@ -40,6 +40,7 @@ class FirefoxConfigurer(AppConfigurer):
             self._configure_theme_preferences()
             self._create_meowrch_bookmark()
             self._cleanup_plugins()
+            self._init_firefox_profile()
             logger.success("Firefox has been successfully installed!")
         except subprocess.CalledProcessError as e:
             logger.error(error_msg.format(err=e.stderr))
@@ -47,8 +48,8 @@ class FirefoxConfigurer(AppConfigurer):
             logger.error(error_msg.format(err=traceback.format_exc()))
 
     def _init_firefox_profile(self) -> None:
-        subprocess.Popen(["timeout", "2", "firefox", "--headless"])
-        time.sleep(3)
+        subprocess.Popen(["timeout", "5", "firefox", "--headless", "--new-tab", "https://meowrch.github.io/"])
+        time.sleep(6)
 
     def _copy_profile(self) -> None:
         # Profile initialization is handled by _init_firefox_profile
