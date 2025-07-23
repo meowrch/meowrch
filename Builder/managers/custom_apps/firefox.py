@@ -225,40 +225,6 @@ fi
         # Make script executable
         os.chmod(update_script_path, 0o755)
 
-        # Create systemd user service
-        systemd_user_dir = os.path.expanduser("~/.config/systemd/user")
-        os.makedirs(systemd_user_dir, exist_ok=True)
-
-        service_content = f"""[Unit]
-Description=Firefox GNOME Theme Auto-Update
-
-[Service]
-Type=oneshot
-ExecStart={update_script_path}
-"""
-
-        service_path = os.path.join(systemd_user_dir, "firefox-theme-update.service")
-        with open(service_path, "w") as f:
-            f.write(service_content)
-
-        # Create systemd user timer (check for updates at startup and daily)
-        timer_content = """[Unit]
-Description=Firefox GNOME Theme Auto-Update Timer
-Requires=firefox-theme-update.service
-
-[Timer]
-OnBootSec=2min
-OnCalendar=daily
-Persistent=true
-
-[Install]
-WantedBy=timers.target
-"""
-
-        timer_path = os.path.join(systemd_user_dir, "firefox-theme-update.timer")
-        with open(timer_path, "w") as f:
-            f.write(timer_content)
-
         # Enable and start the timer
         try:
             subprocess.run(["systemctl", "--user", "daemon-reload"], check=True)
@@ -270,7 +236,7 @@ WantedBy=timers.target
                 ["systemctl", "--user", "start", "firefox-theme-update.timer"],
                 check=True,
             )
-            logger.info("Firefox theme auto-update system configured successfully")
+            logger.info("Firefox theme auto-update system set up successfully")
         except subprocess.CalledProcessError as e:
             logger.warning(f"Failed to set up auto-update timer: {e}")
 
