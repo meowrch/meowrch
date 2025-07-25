@@ -27,15 +27,16 @@ jobs:
           CURRENT_REL=$(grep '^pkgrel=' aur-packages/meowrch-settings/PKGBUILD | cut -d'=' -f2)
           NEW_REL=$((CURRENT_REL + 1))
           
-          # Update both pkgrel and sha256sums
-          sed -i "s/^pkgrel=.*/pkgrel=$NEW_REL/" aur-packages/meowrch-settings/PKGBUILD
-          sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_settings.outputs.hash }}')/" aur-packages/meowrch-settings/PKGBUILD
+          # Update both pkgrel and sha256sums (работаем с копией для деплоя)
+          cp aur-packages/meowrch-settings/PKGBUILD aur-packages/meowrch-settings/PKGBUILD.deploy
+          sed -i "s/^pkgrel=.*/pkgrel=$NEW_REL/" aur-packages/meowrch-settings/PKGBUILD.deploy
+          sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_settings.outputs.hash }}')/" aur-packages/meowrch-settings/PKGBUILD.deploy
           
       - name: Deploy to AUR
         uses: KSXGitHub/github-actions-deploy-aur@master
         with:
           pkgname: meowrch-settings
-          pkgbuild: aur-packages/meowrch-settings/PKGBUILD
+          pkgbuild: aur-packages/meowrch-settings/PKGBUILD.deploy
           assets: |
             aur-packages/meowrch-settings/meowrch-settings.install
           commit_username: ${{ secrets.AUR_USERNAME }}
@@ -62,15 +63,16 @@ jobs:
           CURRENT_REL=$(grep '^pkgrel=' aur-packages/meowrch-tools/PKGBUILD | cut -d'=' -f2)
           NEW_REL=$((CURRENT_REL + 1))
           
-          # Update both pkgrel and sha256sums
-          sed -i "s/^pkgrel=.*/pkgrel=$NEW_REL/" aur-packages/meowrch-tools/PKGBUILD
-          sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_tools.outputs.hash }}')/" aur-packages/meowrch-tools/PKGBUILD
+          # Update both pkgrel and sha256sums (работаем с копией для деплоя)
+          cp aur-packages/meowrch-tools/PKGBUILD aur-packages/meowrch-tools/PKGBUILD.deploy
+          sed -i "s/^pkgrel=.*/pkgrel=$NEW_REL/" aur-packages/meowrch-tools/PKGBUILD.deploy
+          sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_tools.outputs.hash }}')/" aur-packages/meowrch-tools/PKGBUILD.deploy
           
       - name: Deploy to AUR
         uses: KSXGitHub/github-actions-deploy-aur@master
         with:
           pkgname: meowrch-tools
-          pkgbuild: aur-packages/meowrch-tools/PKGBUILD
+          pkgbuild: aur-packages/meowrch-tools/PKGBUILD.deploy
           assets: |
             aur-packages/meowrch-tools/meowrch-tools.install
           commit_username: ${{ secrets.AUR_USERNAME }}
