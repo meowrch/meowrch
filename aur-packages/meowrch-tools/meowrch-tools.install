@@ -18,6 +18,11 @@ post_install() {
     ln -sf /usr/bin/wrappers/dlss-swapper /usr/bin/dlss-swapper 2>/dev/null || true
     ln -sf /usr/bin/wrappers/zink-run /usr/bin/zink-run 2>/dev/null || true
     
+    # Initialize meowrch-profile configurations
+    echo "==> Initializing performance profiles..."
+    mkdir -p /etc/meowrch
+    chmod 755 /etc/meowrch
+    
     echo "==> Meowrch tools installed successfully!"
     echo "==> Available commands:"
     echo "    - game-performance: Toggle gaming mode"
