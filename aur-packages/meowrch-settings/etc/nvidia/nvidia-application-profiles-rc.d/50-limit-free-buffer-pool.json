@@ -1,0 +1,16 @@
+{
+  "rules": [
+    {
+      "pattern": { "feature": "procname", "matches": "Hyprland" },
+      "profile": "Limit Free Buffer Pool"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "Limit Free Buffer Pool",
+      "settings": [
+        { "key": "GLVidHeapReuseRatio", "value": 0 }
+      ]
+    }
+  ]
+}
