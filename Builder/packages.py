@@ -51,6 +51,10 @@ BASE = Packages(
 	),
 	aur=DistributionPackages(
 		common=[
+            ##==> System
+            ###########################################
+            "meowrch-settings", "meowrch-tools", "update-grub",
+
 			##==> GUI
             ###########################################
             "gnome-calculator-gtk3", "flameshot-git",
@@ -63,7 +67,7 @@ BASE = Packages(
             
             ##==> CLI-Tools
             ###########################################
-            "update-grub", "cava", "pokemon-colorscripts",
+            "cava", "pokemon-colorscripts",
             
             ##==> Шрифты
             ###########################################
