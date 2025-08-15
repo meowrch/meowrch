@@ -1,0 +1,11 @@
+[Unit]
+Description=Check for Meowrch updates daily
+Requires=meowrch-update-checker.service
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=Meowrch Update Checker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=%i
+ExecStart=%h/.local/bin/meowrch-updater.sh check-update
+Environment=DISPLAY=:0
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%i/bus
+
+[Install]
+WantedBy=default.target
