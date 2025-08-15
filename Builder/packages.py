@@ -30,6 +30,7 @@ BASE = Packages(
             "vlc", "loupe", "dunst", "qt5ct", "qt6ct", "qt5-graphicaleffects", 
             "qt5-svg", "qt5-multimedia", "qt5-quickcontrols2", "gst-plugins-good", 
             "redshift", "zenity", "polkit-gnome", "gnome-disk-utility","rofimoji",
+            "flameshot",
             
 			##==> Шрифты
             ###########################################
@@ -57,8 +58,8 @@ BASE = Packages(
 
 			##==> GUI
             ###########################################
-            "gnome-calculator-gtk3", "flameshot-git",
-            "visual-studio-code-bin", "rofi-lbonn-wayland-git",
+            "gnome-calculator-gtk3", "visual-studio-code-bin", 
+            "rofi-lbonn-wayland-git",
             
             ##==> Кастомизация: Темы, иконки и курсор
             ###########################################
