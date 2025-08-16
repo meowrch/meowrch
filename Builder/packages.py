@@ -48,7 +48,7 @@ BASE = Packages(
 			"hyprland", "waybar", "hyprlock", "swww", "wl-clipboard", 
             "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
 			"xdg-desktop-portal-wlr", "hypridle", "hyprpicker", "wlr-randr",
-            "uwsm", "libnewt", "swaync"
+            "uwsm", "libnewt", "swaync", "wl-clip-persist"
         ]
 	),
 	aur=DistributionPackages(
