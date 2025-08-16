@@ -5,10 +5,8 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=%i
 ExecStart=/usr/bin/update-meowrch check
 Environment=DISPLAY=:0
-Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%i/bus
 
 [Install]
 WantedBy=default.target
