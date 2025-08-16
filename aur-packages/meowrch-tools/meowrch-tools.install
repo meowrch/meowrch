@@ -5,6 +5,11 @@ post_install() {
     systemctl enable pacman-cache-cleanup.timer
     systemctl start pacman-cache-cleanup.timer
     
+    # Enable update checker for current user
+    echo "==> Setting up Meowrch update system..."
+    systemctl --user enable meowrch-update-checker.timer || echo "Warning: Could not enable update checker (run manually with: systemctl --user enable meowrch-update-checker.timer)"
+    systemctl --user start meowrch-update-checker.timer || true
+    
     # Update desktop database
     update-desktop-database -q
     
@@ -32,8 +37,10 @@ post_install() {
     echo "    - meowrch-profile: Manage performance profiles"
     echo "    - dlss-swapper: NVIDIA DLSS optimization"
     echo "    - zink-run: OpenGL to Vulkan wrapper"
+    echo "    - update-meowrch: Meowrch system update tool"
     echo "==> Gaming: Use 'meowrch-game-run %command%' in Steam for optimal performance"
     echo "==> Run 'sudo meowrch-autotune --tune' to optimize for your hardware"
+    echo "==> System updates: Run 'update-meowrch update' to update Meowrch"
 }
 
 post_upgrade() {
@@ -46,6 +53,10 @@ pre_remove() {
     # Disable and stop pacman cache cleanup timer
     systemctl stop pacman-cache-cleanup.timer
     systemctl disable pacman-cache-cleanup.timer
+    
+    # Disable update checker
+    systemctl --user stop meowrch-update-checker.timer || true
+    systemctl --user disable meowrch-update-checker.timer || true
     
     # Disable gaming mode if enabled
     if [[ -f /tmp/meowrch-game-mode.lock ]]; then

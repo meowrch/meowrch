@@ -1,12 +1,12 @@
 # Maintainer: dimflix <dimflix.official@gmail.com>
 pkgname=meowrch-tools
 pkgver=2.0.0
-pkgrel=3
+pkgrel=6
 pkgdesc="Performance optimization tools and scripts for Meowrch distribution"
 arch=('any')
 url="https://github.com/meowrch/meowrch"
 license=('MIT')
-depends=('bash' 'systemd' 'coreutils')
+depends=('bash' 'systemd' 'coreutils' 'curl' 'jq' 'tar' 'python3')
 optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
             'gamemode: for gaming optimizations'
             'mangohud: for gaming performance monitoring'
@@ -14,10 +14,14 @@ optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
             'lutris: for Lutris integration'
             'cpupower: for CPU frequency management'
             'mesa: for OpenGL/Vulkan optimizations with zink-run'
-            'power-profiles-daemon: for power profile management')
+            'power-profiles-daemon: for power profile management'
+            'less: for migration file preview'
+            'sudo: for system updates')
 install=meowrch-tools.install
-source=("$url/archive/refs/heads/v3.0.tar.gz")
-sha256sums=('SKIP')  # Автоматическая замена в workflow
+source=("$url/archive/refs/heads/v3.0.tar.gz"
+        "meowrch-logo.png")
+sha256sums=('SKIP'  # Автоматическая замена в workflow
+            'SKIP')
 
 package() {
     cd "$srcdir/meowrch-3.0/aur-packages/meowrch-tools"
@@ -34,4 +38,8 @@ package() {
     # Create directories for user configs
     install -dm755 "$pkgdir/usr/share/meowrch-tools"
     install -dm755 "$pkgdir/etc/meowrch"
+    
+    # Install icon
+    install -dm755 "$pkgdir/usr/share/pixmaps"
+    install -Dm644 "$srcdir/meowrch-logo.png" "$pkgdir/usr/share/pixmaps/meowrch-logo.png"
 }
