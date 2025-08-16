@@ -27,7 +27,7 @@ BASE = Packages(
 			###########################################
 			"sddm", "plymouth", "firefox", "kitty", "blueman", "ark", "nemo", 
             "nemo-fileroller", "gvfs", "ffmpegthumbnailer", "imagemagick", 
-            "vlc", "loupe", "dunst", "qt5ct", "qt6ct", "qt5-graphicaleffects", 
+            "vlc", "loupe", "qt5ct", "qt6ct", "qt5-graphicaleffects", 
             "qt5-svg", "qt5-multimedia", "qt5-quickcontrols2", "gst-plugins-good", 
             "redshift", "zenity", "polkit-gnome", "gnome-disk-utility","rofimoji",
             "flameshot",
@@ -42,12 +42,13 @@ BASE = Packages(
 		bspwm_packages=[
 			"xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
 			"wmname", "polybar", "xorg-xrandr", "xsettingsd", "clipnotify",
+            "dunst",
 		],
 		hyprland_packages=[
 			"hyprland", "waybar", "hyprlock", "swww", "wl-clipboard", 
             "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
 			"xdg-desktop-portal-wlr", "hypridle", "hyprpicker", "wlr-randr",
-            "uwsm", "libnewt"
+            "uwsm", "libnewt", "swaync"
         ]
 	),
 	aur=DistributionPackages(
