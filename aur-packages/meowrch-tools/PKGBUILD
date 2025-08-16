@@ -18,10 +18,9 @@ optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
             'less: for migration file preview'
             'sudo: for system updates')
 install=meowrch-tools.install
-source=("$url/archive/refs/heads/v3.0.tar.gz"
-        "meowrch-logo.png")
-sha256sums=('SKIP'
-            'SKIP') # Автоматическая замена в workflow
+source=("$url/archive/refs/heads/v3.0.tar.gz")
+# Автоматическая замена в workflow
+sha256sums=('SKIP')
 
 package() {
     cd "$srcdir/meowrch-3.0/aur-packages/meowrch-tools"
@@ -38,8 +37,4 @@ package() {
     # Create directories for user configs
     install -dm755 "$pkgdir/usr/share/meowrch-tools"
     install -dm755 "$pkgdir/etc/meowrch"
-    
-    # Install icon
-    install -dm755 "$pkgdir/usr/share/pixmaps"
-    install -Dm644 "$srcdir/meowrch-logo.png" "$pkgdir/usr/share/pixmaps/meowrch-logo.png"
 }
