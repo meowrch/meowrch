@@ -14,7 +14,7 @@ BASE = Packages(
         	"timeshift", "sddm", "qt5-graphicaleffects", "qt5-svg",  "qt5-quickcontrols2", "clipnotify",
 			"xdg-desktop-portal-gtk", "gnome-disk-utility", "evince", "neovim", "tmux", "cowsay", "polkit-gnome",
 			"rofimoji", "wmname", "pyenv", "xdg-desktop-portal", "ttf-hack-nerd", "networkmanager", "noto-fonts", 
-            "noto-fonts-cjk", "noto-fonts-emoji", "noto-fonts-extra", "flameshot"
+            "noto-fonts-cjk", "noto-fonts-emoji", "noto-fonts-extra", "flameshot", "rofi-wayland"
 		],
 		bspwm_packages=["xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", "lxappearance", "polybar", "xorg-xrandr", "xsettingsd"],
 		hyprland_packages=[
@@ -23,7 +23,7 @@ BASE = Packages(
 	),
 	aur=DistributionPackages(
 		common=[
-			"gnome-calculator-gtk3", "rofi-lbonn-wayland-git", "bibata-cursor-theme-bin", "tela-circle-icon-theme-dracula",
+			"gnome-calculator-gtk3", "bibata-cursor-theme-bin", "tela-circle-icon-theme-dracula",
 			"themix-theme-oomox-git", "themix-plugin-base16-git", "themix-gui-git", "themix-export-spotify-git",
 			"themix-theme-materia-git", "oomox-qt5-styleplugin-git", "oomox-qt6-styleplugin-git", "cava", "pokemon-colorscripts",
 			"youtube-dl", "update-grub", "ttf-meslo-nerd-font-powerlevel10k", "visual-studio-code-bin"
