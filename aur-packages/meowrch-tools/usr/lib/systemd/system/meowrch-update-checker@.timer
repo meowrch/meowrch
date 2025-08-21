@@ -1,0 +1,10 @@
+[Unit]
+Description=Check for Meowrch updates 5 minutes after boot
+Requires=meowrch-update-checker@%i.service
+
+[Timer]
+OnBootSec=5min
+Unit=meowrch-update-checker@%i.service
+
+[Install]
+WantedBy=timers.target

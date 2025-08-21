@@ -5,8 +5,9 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/update-meowrch check
-Environment=DISPLAY=:0
+User=%i
+Group=%i
+ExecStart=/usr/bin/meowrch-update-checker-wrapper %i
 
 [Install]
 WantedBy=default.target

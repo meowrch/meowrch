@@ -14,6 +14,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Prepare PKGBUILD for deployment
+        id: prepare_settings
+        run: |
+          # Get package info
+          PKGNAME=$(grep '^pkgname=' aur-packages/meowrch-settings/PKGBUILD | cut -d'=' -f2)
+          PKGVER=$(grep '^pkgver=' aur-packages/meowrch-settings/PKGBUILD | cut -d'=' -f2)
+          PKGREL=$(grep '^pkgrel=' aur-packages/meowrch-settings/PKGBUILD | cut -d'=' -f2)
+          
+          # Create unique archive name
+          ARCHIVE_NAME="${PKGNAME}-${PKGVER}-${PKGREL}.tar.gz"
+          
+          # Export for next step
+          echo "archive_name=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
+          
+          # Create deploy copy with unique source name
+          cp aur-packages/meowrch-settings/PKGBUILD aur-packages/meowrch-settings/PKGBUILD.deploy
+          sed -i "s|\$url/archive/refs/heads/v3.0.tar.gz|\$url/archive/refs/heads/v3.0.tar.gz#/${ARCHIVE_NAME}|" aur-packages/meowrch-settings/PKGBUILD.deploy
+          
       - name: Calculate SHA256 for meowrch-settings
         id: sha256_settings
         run: |
@@ -21,15 +39,9 @@ jobs:
           HASH=$(curl -sL "$URL" | sha256sum | cut -d' ' -f1)
           echo "hash=$HASH" >> $GITHUB_OUTPUT
           
-      - name: Update PKGBUILD with SHA256 and increment pkgrel
+      - name: Finalize PKGBUILD
         run: |
-          # Get current pkgrel and increment it
-          CURRENT_REL=$(grep '^pkgrel=' aur-packages/meowrch-settings/PKGBUILD | cut -d'=' -f2)
-          NEW_REL=$((CURRENT_REL + 1))
-          
-          # Update both pkgrel and sha256sums (работаем с копией для деплоя)
-          cp aur-packages/meowrch-settings/PKGBUILD aur-packages/meowrch-settings/PKGBUILD.deploy
-          sed -i "s/^pkgrel=.*/pkgrel=$NEW_REL/" aur-packages/meowrch-settings/PKGBUILD.deploy
+          # Update sha256sums in deploy version
           sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_settings.outputs.hash }}')/" aur-packages/meowrch-settings/PKGBUILD.deploy
           
       - name: Deploy to AUR
@@ -50,6 +62,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Prepare PKGBUILD for deployment
+        id: prepare_tools
+        run: |
+          # Get package info
+          PKGNAME=$(grep '^pkgname=' aur-packages/meowrch-tools/PKGBUILD | cut -d'=' -f2)
+          PKGVER=$(grep '^pkgver=' aur-packages/meowrch-tools/PKGBUILD | cut -d'=' -f2)
+          PKGREL=$(grep '^pkgrel=' aur-packages/meowrch-tools/PKGBUILD | cut -d'=' -f2)
+          
+          # Create unique archive name
+          ARCHIVE_NAME="${PKGNAME}-${PKGVER}-${PKGREL}.tar.gz"
+          
+          # Export for next step
+          echo "archive_name=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
+          
+          # Create deploy copy with unique source name
+          cp aur-packages/meowrch-tools/PKGBUILD aur-packages/meowrch-tools/PKGBUILD.deploy
+          sed -i "s|\$url/archive/refs/heads/v3.0.tar.gz|\$url/archive/refs/heads/v3.0.tar.gz#/${ARCHIVE_NAME}|" aur-packages/meowrch-tools/PKGBUILD.deploy
+          
       - name: Calculate SHA256 for meowrch-tools
         id: sha256_tools
         run: |
@@ -57,15 +87,9 @@ jobs:
           HASH=$(curl -sL "$URL" | sha256sum | cut -d' ' -f1)
           echo "hash=$HASH" >> $GITHUB_OUTPUT
           
-      - name: Update PKGBUILD with SHA256 and increment pkgrel
+      - name: Finalize PKGBUILD
         run: |
-          # Get current pkgrel and increment it
-          CURRENT_REL=$(grep '^pkgrel=' aur-packages/meowrch-tools/PKGBUILD | cut -d'=' -f2)
-          NEW_REL=$((CURRENT_REL + 1))
-          
-          # Update both pkgrel and sha256sums (работаем с копией для деплоя)
-          cp aur-packages/meowrch-tools/PKGBUILD aur-packages/meowrch-tools/PKGBUILD.deploy
-          sed -i "s/^pkgrel=.*/pkgrel=$NEW_REL/" aur-packages/meowrch-tools/PKGBUILD.deploy
+          # Update sha256sums in deploy version
           sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_tools.outputs.hash }}')/" aur-packages/meowrch-tools/PKGBUILD.deploy
           
       - name: Deploy to AUR
