@@ -107,7 +107,7 @@ DRIVERS = {
 				"nvidia-dkms", "nvidia-utils", "lib32-nvidia-utils",
 				"nvidia-settings", "vulkan-icd-loader", "opencl-nvidia",
 				"lib32-vulkan-icd-loader", "lib32-opencl-nvidia",
-				"libxnvctrl"
+				"libxnvctrl", "libva-nvidia-driver"
 			]
 		)
 	)
