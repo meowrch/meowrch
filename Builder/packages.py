@@ -25,7 +25,7 @@ BASE = Packages(
 
 			##==> GUI 
 			###########################################
-			"sddm", "plymouth", "firefox", "kitty", "blueman", "ark", "nemo", 
+			"sddm", "plymouth", "firefox", "kitty", "blueman", "file-roller", "nemo", 
             "nemo-fileroller", "gvfs", "ffmpegthumbnailer", "imagemagick", 
             "vlc", "loupe", "qt5ct", "qt6ct", "qt5-graphicaleffects", 
             "qt5-svg", "qt5-multimedia", "qt5-quickcontrols2", "gst-plugins-good", 
