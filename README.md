@@ -255,7 +255,7 @@ If you would like to support my work, you can send a donation to the following c
 | **Bitcoin**  | `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn`       |
 | **Tron**     | `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs`               |
 
-## 📊 Star History
+## 📊 Stats
 <a href="https://star-history.com/#meowrch/meowrch&Date">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
@@ -263,3 +263,5 @@ If you would like to support my work, you can send a donation to the following c
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
  </picture>
 </a>
+
+![Alt](https://repobeats.axiom.co/api/embed/96a58cbd631f6100db2e77966316aa5cf0c21f47.svg "Repobeats analytics image")
