@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 import tempfile
@@ -6,8 +7,8 @@ from pathlib import Path
 from typing import List, Optional
 
 from loguru import logger
-from utils.grub_config import GrubConfigEditor
-from utils.mkinitcpio_config import MkinitcpioConfigEditor
+from Builder.utils.grub_config import GrubConfigEditor
+from Builder.utils.mkinitcpio_config import MkinitcpioConfigEditor
 
 class PlymouthConfigurer:
     def __init__(self):
@@ -64,10 +65,42 @@ class PlymouthConfigurer:
         
         return True
 
+    def _bootloader_type(self) -> str:
+        """Detect the bootloader type: 'grub', 'systemd-boot', or 'unknown'"""
+        try:
+            if shutil.which("bootctl"):
+                try:
+                    subprocess.run(["bootctl", "is-installed"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    return "systemd-boot"
+                except subprocess.CalledProcessError:
+                    pass
+            if Path("/boot/loader/entries").exists() or Path("/boot/loader/loader.conf").exists():
+                return "systemd-boot"
+        except Exception:
+            pass
+        if Path("/etc/default/grub").exists() or Path("/boot/grub").exists() or shutil.which("grub-mkconfig"):
+            return "grub"
+        return "unknown"
+
+    def _is_boot_mounted(self) -> bool:
+        """Check if /boot is a mounted filesystem"""
+        try:
+            return os.path.ismount("/boot")
+        except Exception:
+            return Path("/boot").exists()
+
 
     def update_grub_cmdline(self):
         """Update GRUB_CMDLINE_LINUX_DEFAULT"""
         logger.info("The process of configuring the settings of GRUB has begun")
+        # Skip if not a GRUB system
+        if self._bootloader_type() != "grub":
+            logger.info("Skipping GRUB configuration: bootloader is not GRUB (likely systemd-boot).")
+            return
+        # Ensure the GRUB config file exists
+        if not Path("/etc/default/grub").exists():
+            logger.warning("Skipping GRUB configuration: /etc/default/grub not found.")
+            return
         changes_made = self.grub_editor.add_cmdline_params(
             self.required_grub_params, 
             update_grub=False  # Не запускаем update-grub пока, сделаем в конце
@@ -191,11 +224,23 @@ class PlymouthConfigurer:
 
     def run_post_commands(self):
         """Run post-installation commands"""
-        commands = [
-            ["update-grub"],
-            ["mkinitcpio", "-P"]
-        ]
+        bootloader = self._bootloader_type()
+        logger.info(f"Detected bootloader: {bootloader}")
 
-        for cmd in commands:
-            logger.info(f"Running {' '.join(cmd)}...")
-            self._run_sudo(cmd)
+        # Regenerate bootloader configuration when appropriate
+        if bootloader == "grub":
+            if not self._is_boot_mounted():
+                logger.warning("Skipping GRUB config generation: /boot is not mounted.")
+            elif not Path("/boot/grub").exists():
+                logger.warning("Skipping GRUB config generation: /boot/grub directory does not exist.")
+            elif not shutil.which("grub-mkconfig"):
+                logger.warning("Skipping GRUB config generation: grub-mkconfig not found.")
+            else:
+                logger.info("Running grub-mkconfig -o /boot/grub/grub.cfg...")
+                self._run_sudo(["grub-mkconfig", "-o", "/boot/grub/grub.cfg"])
+        else:
+            logger.info("Skipping GRUB config generation: system is not using GRUB.")
+
+        # Always rebuild initramfs after changes
+        logger.info("Running mkinitcpio -P...")
+        self._run_sudo(["mkinitcpio", "-P"])
