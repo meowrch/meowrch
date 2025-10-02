@@ -7,8 +7,12 @@ from pathlib import Path
 from typing import List, Optional
 
 from loguru import logger
-from Builder.utils.grub_config import GrubConfigEditor
-from Builder.utils.mkinitcpio_config import MkinitcpioConfigEditor
+try:
+    from Builder.utils.grub_config import GrubConfigEditor
+    from Builder.utils.mkinitcpio_config import MkinitcpioConfigEditor
+except ImportError:
+    from utils.grub_config import GrubConfigEditor
+    from utils.mkinitcpio_config import MkinitcpioConfigEditor
 
 class PlymouthConfigurer:
     def __init__(self):

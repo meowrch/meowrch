@@ -5,7 +5,10 @@ import traceback
 from pathlib import Path
 
 from loguru import logger
-from Builder.utils.grub_config import GrubConfigEditor
+try:
+    from Builder.utils.grub_config import GrubConfigEditor
+except ImportError:
+    from utils.grub_config import GrubConfigEditor
 
 from .base import AppConfigurer
 
