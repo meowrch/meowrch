@@ -74,13 +74,13 @@ class GrubConfigEditor:
                 content = content.replace(match.group(0), new_line)
                 tmp_path.write_text(content)
                 changes_made = True
-                logger.info(f"Добавлены параметры: {', '.join(missing_params)}")
+                logger.info(f"Added parameters: {', '.join(missing_params)}")
 
-        logger.info("Обновление параметров GRUB...")
+        logger.info("Updating GRUB parameters...")
         self._safe_file_edit(self.grub_path, edit_grub)
         
         if changes_made and update_grub:
-            logger.info("Запуск update-grub...")
+            logger.info("Running update-grub...")
             self._run_sudo(["update-grub"])
             
         return changes_made
@@ -125,13 +125,13 @@ class GrubConfigEditor:
                 content = content.replace(match.group(0), new_line)
                 tmp_path.write_text(content)
                 changes_made = True
-                logger.info(f"Удалены параметры: {', '.join(params_to_remove)}")
+                logger.info(f"Removed parameters: {', '.join(params_to_remove)}")
 
-        logger.info("Удаление параметров GRUB...")
+        logger.info("Removing GRUB parameters...")
         self._safe_file_edit(self.grub_path, edit_grub)
         
         if changes_made and update_grub:
-            logger.info("Запуск update-grub...")
+            logger.info("Running update-grub...")
             self._run_sudo(["update-grub"])
             
         return changes_made
@@ -149,7 +149,7 @@ class GrubConfigEditor:
             if match:
                 return set(match.group(2).split()) if match.group(2) else set()
             else:
-                logger.warning("GRUB_CMDLINE_LINUX_DEFAULT не найден")
+                logger.warning("GRUB_CMDLINE_LINUX_DEFAULT not found")
                 return set()
         except Exception as e:
             logger.error(f"Ошибка при чтении конфигурации GRUB: {e}")

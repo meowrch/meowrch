@@ -2,7 +2,7 @@ import re
 import tempfile
 import subprocess
 from pathlib import Path
-from typing import List, Optional, Set
+from typing import List, Optional
 from enum import Enum
 from loguru import logger
 from .mkinitcpio_rules import MkinitcpioRules
@@ -78,7 +78,7 @@ class MkinitcpioConfigEditor:
         else:
             # По умолчанию используем рекомендации из базы знаний
             suggestion = self.rules.suggest_hook_placement(hooks, new_hook)
-            logger.info(f"Использована рекомендация для {new_hook}: {suggestion['description']}")
+            logger.info(f"Recommendation used for {new_hook}: {suggestion['description']}")
             return suggestion['position']
 
     def add_hook(self, hook: str, position: Optional[str] = None, reference_hook: Optional[str] = None,
@@ -104,7 +104,7 @@ class MkinitcpioConfigEditor:
             hooks = match.group(1).split()
 
             if hook in hooks:
-                logger.info(f"Хук {hook} уже существует в конфигурации")
+                logger.info(f"Hook {hook} already exists in the configuration")
                 return
 
             # Определяем позицию для вставки
@@ -116,9 +116,9 @@ class MkinitcpioConfigEditor:
             new_hooks_str = f"HOOKS=({' '.join(hooks)})"
             tmp_path.write_text(content.replace(match.group(0), new_hooks_str))
 
-        logger.info("Добавление хука в mkinitcpio.conf...")
+        logger.info("Adding hook to mkinitcpio.conf...")
         self._safe_file_edit(self.mkinitcpio_path, edit_mkinitcpio)
-        logger.success("Хук успешно добавлен!")
+        logger.success("Hook added successfully!")
 
     def remove_hook(self, hook: str):
         """Удалить хук из конфигурации mkinitcpio"""
@@ -134,7 +134,7 @@ class MkinitcpioConfigEditor:
             hooks = match.group(1).split()
 
             if hook not in hooks:
-                logger.info(f"Хук {hook} не найден в конфигурации")
+                logger.info(f"Hook {hook} not found in configuration")
                 return
 
             hooks.remove(hook)
@@ -142,9 +142,9 @@ class MkinitcpioConfigEditor:
             new_hooks_str = f"HOOKS=({' '.join(hooks)})"
             tmp_path.write_text(content.replace(match.group(0), new_hooks_str))
 
-        logger.info("Удаление хука из mkinitcpio.conf...")
+        logger.info("Removing hook from mkinitcpio.conf...")
         self._safe_file_edit(self.mkinitcpio_path, edit_mkinitcpio)
-        logger.success("Хук успешно удален!")
+        logger.success("Hook removed successfully!")
 
     def list_hooks(self) -> List[str]:
         """Получить текущий список хуков из mkinitcpio.conf"""
@@ -155,7 +155,7 @@ class MkinitcpioConfigEditor:
             if match:
                 return match.group(1).split()
             else:
-                logger.warning("HOOKS не найдены в mkinitcpio.conf")
+                logger.warning("HOOKS not found in mkinitcpio.conf")
                 return []
         except Exception as e:
             logger.error(f"Ошибка при чтении mkinitcpio.conf: {e}")
@@ -182,16 +182,13 @@ class MkinitcpioConfigEditor:
             match = re.search(r'^(#?\s*)(MODULES=)(\(.*?\))', content, re.M | re.S)
             
             if not match:
-                logger.warning("MODULES не найдены в mkinitcpio.conf, создаем новую строку")
+                logger.warning("MODULES not found in mkinitcpio.conf, creating new line")
                 # Добавляем новую строку MODULES в конец файла
                 modules_str = ' '.join(modules)
                 content += f"\nMODULES=({modules_str})\n"
                 tmp_path.write_text(content)
                 changes_made = True
                 return
-            
-            # Если строка закомментирована, убираем комментарий
-            is_commented = match.group(1).strip().startswith('#')
             
             # Извлекаем текущие модули
             modules_content = match.group(3)[1:-1].strip()  # Убираем скобки
@@ -200,7 +197,7 @@ class MkinitcpioConfigEditor:
             # Добавляем только новые модули
             new_modules = [m for m in modules if m not in current_modules]
             if not new_modules:
-                logger.info("Все указанные модули уже присутствуют в конфигурации")
+                logger.info("All specified modules are already present in the configuration")
                 return
             
             # Определяем позицию вставки
@@ -224,9 +221,9 @@ class MkinitcpioConfigEditor:
             # Заменяем в контенте
             tmp_path.write_text(content.replace(match.group(0), new_line))
             changes_made = True
-            logger.info(f"Добавлены модули: {', '.join(new_modules)}")
+            logger.info(f"Added modules: {', '.join(new_modules)}")
         
-        logger.info("Добавление модулей в mkinitcpio.conf...")
+        logger.info("Adding modules to mkinitcpio.conf...")
         self._safe_file_edit(self.mkinitcpio_path, edit_modules)
         return changes_made
     
@@ -249,7 +246,7 @@ class MkinitcpioConfigEditor:
             match = re.search(r'^(#?\s*)(MODULES=)(\(.*?\))', content, re.M | re.S)
             
             if not match:
-                logger.warning("MODULES не найдены в mkinitcpio.conf")
+                logger.warning("MODULES not found in mkinitcpio.conf")
                 return
             
             # Извлекаем текущие модули
@@ -259,7 +256,7 @@ class MkinitcpioConfigEditor:
             # Удаляем указанные модули
             modules_to_remove = [m for m in modules if m in current_modules]
             if not modules_to_remove:
-                logger.info("Указанные модули не найдены в конфигурации")
+                logger.info("Specified modules not found in configuration")
                 return
             
             remaining_modules = [m for m in current_modules if m not in modules]
@@ -271,9 +268,9 @@ class MkinitcpioConfigEditor:
             # Заменяем в контенте
             tmp_path.write_text(content.replace(match.group(0), new_line))
             changes_made = True
-            logger.info(f"Удалены модули: {', '.join(modules_to_remove)}")
+            logger.info(f"Removed modules: {', '.join(modules_to_remove)}")
         
-        logger.info("Удаление модулей из mkinitcpio.conf...")
+        logger.info("Removing modules from mkinitcpio.conf...")
         self._safe_file_edit(self.mkinitcpio_path, edit_modules)
         return changes_made
     
@@ -287,7 +284,7 @@ class MkinitcpioConfigEditor:
                 modules_content = match.group(1).strip()
                 return [m.strip() for m in modules_content.split() if m.strip()]
             else:
-                logger.warning("MODULES не найдены в mkinitcpio.conf")
+                logger.warning("MODULES not found in mkinitcpio.conf")
                 return []
         except Exception as e:
             logger.error(f"Ошибка при чтении mkinitcpio.conf: {e}")
@@ -324,7 +321,7 @@ class MkinitcpioConfigEditor:
     
     def apply_hooks(self):
         """Запустить mkinitcpio -P для применения изменений"""
-        logger.info("Применение изменений mkinitcpio...")
+        logger.info("Applying mkinitcpio changes...")
         self._run_sudo(["mkinitcpio", "-P"])
-        logger.success("Изменения успешно применены!")
+        logger.success("Changes applied successfully!")
 

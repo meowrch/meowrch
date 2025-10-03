@@ -1,9 +1,9 @@
 """
-База знаний для правильного порядка хуков и модулей в mkinitcpio
-Основано на официальной документации Arch Linux и лучших практиках
+Knowledge base for the correct order of hooks and modules in mkinitcpio
+Based on Arch Linux official documentation and best practices
 """
 
-from typing import Dict, List, Set
+from typing import Dict, List
 from loguru import logger
 
 
@@ -183,9 +183,9 @@ class MkinitcpioRules:
         
         # Логируем изменения
         if sorted_hooks != hooks:
-            logger.info(f"Изменен порядок хуков:")
-            logger.info(f"  Было: {' '.join(hooks)}")
-            logger.info(f"  Стало: {' '.join(sorted_hooks)}")
+            logger.info("Hook order changed:")
+            logger.info(f"  Before: {' '.join(hooks)}")
+            logger.info(f"  After: {' '.join(sorted_hooks)}")
         
         return sorted_hooks
     
@@ -197,9 +197,9 @@ class MkinitcpioRules:
         sorted_modules = sorted(modules, key=module_sort_key)
         
         if sorted_modules != modules:
-            logger.info(f"Изменен порядок модулей:")
-            logger.info(f"  Было: {' '.join(modules)}")
-            logger.info(f"  Стало: {' '.join(sorted_modules)}")
+            logger.info("Module order changed:")
+            logger.info(f"  Before: {' '.join(modules)}")
+            logger.info(f"  After: {' '.join(sorted_modules)}")
         
         return sorted_modules
     
@@ -214,7 +214,7 @@ class MkinitcpioRules:
         if after_pos <= before_pos:
             return after_pos
         
-        logger.warning(f"Конфликт позиций для {new_hook}: после {after_hook} ({after_pos-1}) и до {before_hook} ({before_pos})")
+        logger.warning(f"Position conflict for {new_hook}: after {after_hook} ({after_pos-1}) and before {before_hook} ({before_pos})")
         
         # Используем приоритеты для разрешения конфликта
         new_hook_priority = self.get_hook_priority(new_hook)
@@ -230,7 +230,7 @@ class MkinitcpioRules:
                 best_pos = i
                 break
         
-        logger.info(f"Разрешен конфликт: {new_hook} размещен в позиции {best_pos} на основе приоритета {new_hook_priority}")
+        logger.info(f"Conflict resolved: {new_hook} placed at position {best_pos} based on priority {new_hook_priority}")
         return best_pos
     
     def suggest_hook_placement(self, hooks: List[str], new_hook: str) -> Dict:
