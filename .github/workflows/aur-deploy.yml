@@ -30,7 +30,7 @@ jobs:
           
           # Create deploy copy with unique source name
           cp aur-packages/meowrch-settings/PKGBUILD aur-packages/meowrch-settings/PKGBUILD.deploy
-          sed -i "s|\$url/archive/refs/heads/v3.0.tar.gz|\$url/archive/refs/heads/v3.0.tar.gz#/${ARCHIVE_NAME}|" aur-packages/meowrch-settings/PKGBUILD.deploy
+          sed -i "s|\$url/archive/refs/heads/v3.0.tar.gz|${ARCHIVE_NAME}::\$url/archive/refs/heads/v3.0.tar.gz|" aur-packages/meowrch-settings/PKGBUILD.deploy
           
       - name: Calculate SHA256 for meowrch-settings
         id: sha256_settings
@@ -78,7 +78,7 @@ jobs:
           
           # Create deploy copy with unique source name
           cp aur-packages/meowrch-tools/PKGBUILD aur-packages/meowrch-tools/PKGBUILD.deploy
-          sed -i "s|\$url/archive/refs/heads/v3.0.tar.gz|\$url/archive/refs/heads/v3.0.tar.gz#/${ARCHIVE_NAME}|" aur-packages/meowrch-tools/PKGBUILD.deploy
+          sed -i "s|\$url/archive/refs/heads/v3.0.tar.gz|${ARCHIVE_NAME}::\$url/archive/refs/heads/v3.0.tar.gz|" aur-packages/meowrch-tools/PKGBUILD.deploy
           
       - name: Calculate SHA256 for meowrch-tools
         id: sha256_tools
