@@ -38,7 +38,7 @@ super + shift + {c,f,t,o,p}
 	{code, \
 	firefox, \
 	Telegram, \
-	obs, \
+	obsidian, \
 	pavucontrol}
 ##############################################################################################
 
@@ -71,10 +71,10 @@ super + Delete
 	bspc quit	
 
 ctrl + shift + r
-	bspc wm -r	
-	
-super + Escape + r
-	pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config' -t 1500
+    bspc wm -r; pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config' -t 1500
+
+super + Escape
+    pkill -USR1 -x sxhkd && sxhkd -c ~/.config/bspwm/sxhkdrc_disabled &
 
 #--------------------------------------------------------------------------------------------# Window actions
 super + q
