@@ -45,7 +45,7 @@
 	</tr>
 	<tr>
 	    <td>Bar</td>
-	    <td><a href="https://github.com/polybar/polybar">Polybar</a> | <a href="https://github.com/Alexays/Waybar">Waybar</a></td>
+	    <td><a href="https://github.com/polybar/polybar">Polybar</a> | <a href="https://github.com/Alexays/Waybar">Waybar</a> + <a href="https://github.com/meowrch/mewline">Mewline</a></td>
 	</tr>
 	<tr>
 	    <td>Compositor</td>
@@ -56,16 +56,16 @@
 	    <td><a href="https://github.com/kovidgoyal/kitty">Kitty</a></td>
 	</tr>
 	<tr>
-	    <td>App Launcher</td>
-	    <td><a href="https://github.com/davatorium/rofi">Rofi</a></td>
+	    <td>Widgets</td>
+	    <td><a href="https://github.com/davatorium/rofi">Rofi</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
 	</tr>
 	<tr>
 	    <td>Notify Daemon</td>
-	    <td><a href="https://github.com/dunst-project/dunst">Dunst</a></td>
+	    <td><a href="https://github.com/dunst-project/dunst">Dunst</a> | <a href="https://github.com/ErikReider/SwayNotificationCenter">Swaync</a></td>
 	</tr>
 	<tr>
 	    <td>Shell</td>
-	    <td><a href="https://github.com/fish-shell/fish-shell">Fish</a></td>
+	    <td><a href="https://github.com/fish-shell/fish-shell">Fish</a> | <a href="https://www.zsh.org">Zsh</a></td>
 	</tr>
 </table>
 <div align="left">
@@ -75,24 +75,17 @@
 	</p>
 	<h3>🚀 Особенности</h2>
 	<p>
-	• Система полностью настроена для повседневного комфортного использования.<br>
-	• Широкие возможности кастомизации и <a href="https://github.com/meowrch/meowrch-themes">пользовательский магазин тем</a><br>
+	• Автоматическая установка и настройка системы.<br>
+	• Глубокая оптимизация системы на уровне <b><a src="https://cachyos.org/">CachyOS</a></b> <br>
+	• Широкие возможности кастомизации и <b><a href="https://github.com/meowrch/pawlette-themes">официальный магазин тем</a></b><br>
 	• Горячие клавиши заточены под обеспечение максимальной производительности.<br>
-	• Автоматическая установка и настройка системы. <br>
-	• Поддержка Chaotic AUR для более быстрой установки популярных пакетов AUR<br>
-	• Современный дизайн. <br>
+	• Поддержка <b><a src="https://aur.chaotic.cx/">Chaotic AUR</a></b> для более быстрой установки популярных пакетов.<br>
 	• Обеспечение непрерывной и надежной поддержки для успешного функционирования проекта<br>
 	</p>
 </div>
 
-> [!WARNING]
-> ДАННАЯ КОНФИГУРАЦИЯ ПРЕДНАЗНАЧЕНА ДЛЯ МОНИТОРОВ С РАЗРЕШЕНИЕМ 1920X1080,
-> НЕКОТОРЫЕ ФУНКЦИИ ОБОЛОЧКИ МОГУТ РАБОТАТЬ НЕПРАВИЛЬНО.
-> В ЭТОМ СЛУЧАЕ ВАМ НЕОБХОДИМО ВНЕСТИ ИЗМЕНЕНИЯ ВРУЧНУЮ.
-> ЕСЛИ ВЫ ОБНАРУЖИТЕ ОШИБКИ В ОБОЛОЧКЕ, ПОЖАЛУЙСТА, СООБЩИТЕ О ПРОБЛЕМЕ.
-
-
 <!-- IMAGES -->
+<h2>🌌 Визуальный обзор</h2>
 <table align="center">
   <tr>
     <td colspan="4"><img src=".meta/assets/1.png"></td>
@@ -136,19 +129,21 @@ sh install.sh
 > • Переход к следующему шагу: Чтобы перейти к следующему шагу, нажмите Enter.
 
 <h2>💻 Помощь</h2>
-Если у вас возникли вопросы или вам нужна помощь с проектом, пожалуйста, посетите нашу <a href="https://github.com/meowrch/meowrch/wiki">Wiki</a>. Здесь вы найдете полезные руководства и информацию, которая поможет вам лучше понять, как использовать наш продукт.<br><br>
-Если вы столкнулись с ошибками или проблемами, которых нет на нашей <a href="https://github.com/meowrch/meowrch/wiki">Wiki</a>, не стесняйтесь сообщить об этом в разделе <a href="https://github.com/meowrch/meowrch/issues">Issues</a>. 
-<br><br>
-Так-же предлагаем посетить наш <a href="https://t.me/meowrch">Telegram</a>, в котором вы найдёте <a href="https://t.me/meowrch/9">новости</a>, <a href="https://t.me/meowrch/22">отзывы</a> и <a href="https://t.me/meowrch/7">быструю поддержку</a>.
-<br><br>
-Ваши отзывы помогут нам улучшить проект и сделать его еще более удобным для пользователей.
 
+<a href="https://meowrch.github.io/">
+	<img src=".meta/assets/wiki-banner.png"/>
+</a>
+
+Если у вас возникли вопросы или вам нужна помощь с проектом, пожалуйста, посетите нашу <a href="https://meowrch.github.io/">Wiki</a>. Здесь вы найдете полезные руководства и информацию, которая поможет вам лучше понять, как использовать наш продукт.<br><br>
+Если вы столкнулись с ошибками или проблемами, которых нет на нашей <a href="https://meowrch.github.io/">Wiki</a>, не стесняйтесь сообщить об этом в разделе <a href="https://github.com/meowrch/meowrch/issues">Issues</a>. 
+<br><br>
+Так-же предлагаем посетить наш <a href="https://t.me/meowrch">Telegram</a>, в котором вы найдёте <a href="https://t.me/meowrch/9">новости</a> и <a href="https://t.me/meowrch/7">быструю поддержку</a>.
+<br><br>
 
 <h2>💻 Горячие клавиши</h2>
+
+<h3 align="center">Системные сочетания клавиш</h3>
 <table align="center">
-	<tr>
-		<td colspan="3" align="center">Сочетания клавиш</td>
-	</tr>
     <tr>
         <th>Название действия</th>
         <th>Hyprland</th>
@@ -159,36 +154,28 @@ sh install.sh
 		<td colspan="2" align="center">super + enter</td>
     </tr>
     <tr>
-        <td>Открыть меню приложений</td>
-		<td colspan="2" align="center">super + d</td>
-    </tr>
-	<tr>
         <td>Открыть файловый менеджер</td>
 		<td colspan="2" align="center">super + e</td>
     </tr>
 	<tr>
-        <td>Открыть Firefox</td>
-		<td colspan="2" align="center">super + shift + f</td>
+        <td>Открыть меню приложений</td>
+		<td colspan="2" align="center">super + d</td>
     </tr>
-	<tr>
-        <td>Открыть VSCode</td>
-		<td colspan="2" align="center">super + shift + c</td>
-    </tr>
-	<tr>
-        <td>Открыть диспетчер задач (btop)</td>
-		<td colspan="2" align="center">ctrl + shift + esc</td>
+     <tr>
+        <td>Открыть меню включения / выключения компьютера</td>
+		<td colspan="2" align="center">super + x</td>
     </tr>
 	<tr>
         <td>Открыть выбор емоджи</td>
 		<td colspan="2" align="center">super + .</td>
     </tr>
-    <tr>
-        <td>Открыть меню включения / выключения компьютера</td>
-		<td colspan="2" align="center">super + x</td>
-    </tr>
 	<tr>
         <td>Сделать скриншот</td>
 		<td colspan="2" align="center">PrintScreen</td>
+    </tr>
+	<tr>
+        <td>Сделать полный скриншот</td>
+		<td colspan="2" align="center">super + PrintScreen</td>
     </tr>
 	<tr>
         <td>Сменить обои</td>
@@ -200,30 +187,87 @@ sh install.sh
     </tr>
 	<tr>
         <td>Сменить раскладку</td>
-		<td colspan="2" align="center">shift + alt</td>
+		<td colspan="2" align="center">alt + shift</td>
     </tr>
-    <tr>
+     <tr>
         <td>Распознать цвет на экране</td>
 		<td colspan="2" align="center">super + c</td>
     </tr>
-    <tr>
+     <tr>
         <td>Заблокировать экран</td>
         <td colspan="2" align="center">super + l</td>
     </tr>
 	<tr>
+        <td>Открыть диспетчер задач (btop)</td>
+		<td colspan="2" align="center">ctrl + shift + esc</td>
+    </tr>
+	<tr>
+        <td>Закрепить окно</td>
+		<td colspan="2" align="center">super + p</td>
+    </tr>
+	<tr>
+        <td>Менеджер буфера обмена</td>
+		<td colspan="2" align="center">super + v</td>
+    </tr>
+	<tr>
+        <td>Включить/выключить панель</td>
+		<td colspan="2" align="center">super + b</td>
+    </tr>
+	<tr>
+        <td>Переключить панель на mewline/waybar</td>
+		<td>super + shift + b</td>
+		<td>N/A</td>
+    </tr>
+</table>
+
+<h3 align="center">Управление окнами и рабочими пространствами</h3>
+<table align="center">
+    <tr>
+        <th>Название действия</th>
+        <th>Hyprland</th>
+		<th>Bspwm</th>
+    </tr>
+	<tr>
         <td>Переключиться на другую рабочую область</td>
-		<td colspan="2" align="center">super + 1-10</td>
+		<td>super + 1-9</td>
+		<td>super + 1-9</td>
+    </tr>
+	<tr>
+        <td>Переключиться на следующую рабочую область</td>
+		<td>super + ctrl + right</td>
+		<td>super + ctrl + right</td>
+    </tr>
+	<tr>
+        <td>Переключиться на предыдущую рабочую область</td>
+		<td>super + ctrl + left</td>
+		<td>super + ctrl + left</td>
+    </tr>
+	<tr>
+        <td>Переключиться на первую пустую рабочую область</td>
+		<td>super + ctrl + down</td>
+		<td>super + ctrl + down</td>
+    </tr>
+	<tr>
+        <td>Прокрутка рабочих областей вперед</td>
+		<td>super + mouse_down</td>
+		<td>super + mouse_down</td>
+    </tr>
+	<tr>
+        <td>Прокрутка рабочих областей назад</td>
+		<td>super + mouse_up</td>
+		<td>super + mouse_up</td>
     </tr>
 	<tr>
         <td>Переключиться на скрытую рабочую область</td>
 		<td>super + s</td>
 		<td>N/A</td>
     </tr>
-    <tr>
+     <tr>
         <td>Перенести активное окно на другую рабочую область</td>
-		<td colspan="2" align="center">super + shift + 1-10</td>
+		<td>super + shift + 1-9</td>
+		<td>super + shift + 1-9</td>
     </tr>
-    <tr>
+     <tr>
         <td>Перевести активное окно в плавающий режим</td>
 		<td colspan="2" align="center">super + space</td>
     </tr>
@@ -231,20 +275,83 @@ sh install.sh
         <td>Перевести активное окно в полноразмерный режим</td>
 		<td colspan="2" align="center">alt + enter</td>
     </tr>
-    <tr>
+     <tr>
         <td>Закрыть активное окно</td>
 		<td colspan="2" align="center">super + q</td>
+    </tr>
+     <tr>
+        <td>Перемещение фокуса окна</td>
+		<td colspan="2" align="center">super + arrow keys</td>
+    </tr>
+	<tr>
+        <td>Изменение размера окна</td>
+		<td colspan="2" align="center">super + shift + arrow keys</td>
+    </tr>
+	<tr>
+        <td>Перемещение окна</td>
+		<td colspan="2" align="center">super + shift + ctrl + arrow keys</td>
+    </tr>
+</table>
+
+<h3 align="center">Запуск приложений</h3>
+<table align="center">
+    <tr>
+        <th>Название действия</th>
+        <th>Hyprland</th>
+		<th>Bspwm</th>
+    </tr>
+	<tr>
+        <td>Открыть Firefox</td>
+		<td colspan="2" align="center">super + shift + f</td>
+    </tr>
+	<tr>
+        <td>Открыть VSCode</td>
+		<td colspan="2" align="center">super + shift + c</td>
+    </tr>
+	<tr>
+        <td>Открыть Telegram</td>
+		<td colspan="2" align="center">super + shift + t</td>
+    </tr>
+	<tr>
+        <td>Открыть Obsidian</td>
+		<td colspan="2" align="center">super + shift + o</td>
+    </tr>
+	<tr>
+        <td>Открыть pavucontrol</td>
+		<td colspan="2" align="center">super + shift + p</td>
+    </tr>
+</table>
+
+<h3 align="center">Управление системой</h3>
+<table align="center">
+    <tr>
+        <th>Название действия</th>
+        <th>Hyprland</th>
+		<th>Bspwm</th>
+    </tr>
+	<tr>
+        <td>Выйти из сеанса</td>
+		<td colspan="2" align="center">super + delete</td>
     </tr>
     <tr>
         <td>Перезапустить оконный менеджер</td>
 		<td colspan="2" align="center">ctrl + shift + r</td>
     </tr>
 	<tr>
-		<td>Вся конфигурация находится в: </td>
-		<td>~/.config/hypr/keybindings.conf</td>
-		<td>~/.config/bspwm/sxhkdrc</td>
-	</tr>
+        <td>Отключить/Включить отслеживание сочетаний клавиш</td>
+		<td colspan="2" align="center">super + escape</td>
+    </tr>
 </table>
+
+## ⭐ Отзывы
+<a href="https://meowrch.github.io/ru/#reviews">
+	<img src=".meta/assets/reviews-banner.png"/>
+</a>
+
+Мы ценим **ваше мнение** и будем рады, если вы поделитесь своим опытом использования **Meowrch**. Ваши отзывы помогают нам делать проект лучше и вдохновляют на новые свершения.
+
+Посмотреть, что говорят другие пользователи, и оставить свой отзыв можно на **[нашем сайте](https://meowrch.github.io/ru/#reviews)**, или-же напрямую на **[github](https://github.com/meowrch/meowrch/discussions/categories/reviews)**.
+
 
 ## ☕ Поддержать проект
 Если вы хотите поддержать мою работу, вы можете отправить пожертвование на следующие криптовалютные кошельки:
