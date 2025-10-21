@@ -2,12 +2,12 @@
 # Updated with automatic SHA256 hash calculation
 pkgname=meowrch-settings
 pkgver=2.0.0
-pkgrel=5
-pkgdesc="System optimization settings for Meowrch distribution"
+pkgrel=6
+pkgdesc="System optimization settings for Meowrch distribution with dconf integration"
 arch=('any')
 url="https://github.com/meowrch/meowrch"
 license=('MIT')
-depends=('systemd' 'zram-generator' 'pipewire' 'earlyoom' 'pciutils')
+depends=('systemd' 'zram-generator' 'pipewire' 'earlyoom' 'pciutils' 'dconf')
 optdepends=('nvidia-utils: for NVIDIA GPU optimizations'
             'amd-ucode: for AMD CPU microcode'
             'intel-ucode: for Intel CPU microcode'
@@ -19,7 +19,7 @@ sha256sums=('SKIP')  # Автоматическая замена в workflow
 package() {
     cd "$srcdir/meowrch-3.0/aur-packages/meowrch-settings"
     
-    # Copy organized structure 
+    # Copy organized structure
     cp -r "etc" "$pkgdir/"
     cp -r "usr" "$pkgdir/"
     

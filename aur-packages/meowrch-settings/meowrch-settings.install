@@ -34,6 +34,11 @@ post_install() {
     # Применяем sysctl параметры
     sysctl --system
     
+    # Компилируем dconf базу данных
+    echo "==> Compiling dconf database..."
+    dconf update
+    echo "==> Applied Meowrch dconf settings (Cinnamon defaults)"
+
     # Оптимизация загрузки системы
     echo "==> Optimizing system boot performance..."
     
@@ -86,4 +91,17 @@ pre_remove() {
     
     echo "==> Meowrch optimizations have been disabled."
     echo "==> Reboot is recommended to fully revert all changes."
+}
+
+post_remove() {
+    echo "==> Cleaning up dconf settings..."
+    
+    # Удаляем скомпилированную базу данных
+    rm -f /etc/dconf/db/meowrch
+    
+    # Перекомпилируем dconf без наших настроек
+    dconf update
+    
+    echo "==> Meowrch dconf settings removed."
+    echo "==> Note: User-specific settings in ~/.config/dconf/user are preserved."
 }

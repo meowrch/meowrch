@@ -1,0 +1,2 @@
+; Meowrch default Nemo shortcuts
+(gtk_accel_path "<Actions>/DirViewActions/OpenInTerminal" "<Primary>Return")
