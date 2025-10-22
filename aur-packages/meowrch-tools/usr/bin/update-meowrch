@@ -66,6 +66,74 @@ get_latest_version_with_migration() {
     return 1
 }
 
+# Новая функция для получения всех версий с миграциями, которые новее текущей
+get_versions_with_migrations() {
+    local current_version="$1"
+    local target_version="${2:-}"  # Опциональная целевая версия
+    
+    local releases
+    releases=$(curl -s "$GITHUB_API_URL")
+    
+    local versions=()
+    while IFS= read -r version; do
+        # Пропускаем версии старее или равные текущей
+        if ! version_gt "$version" "$current_version"; then
+            continue
+        fi
+        
+        # Если указана целевая версия, пропускаем версии новее целевой
+        if [[ -n "$target_version" ]] && version_gt "$version" "$target_version"; then
+            continue
+        fi
+        
+        # Проверяем наличие миграционного файла (любого типа)
+        local migration_exists
+        migration_exists=$(echo "$releases" | jq -r --arg version "v$version" --arg version_no_v "$version" --arg full_filename "migrate_to_$version.py" --arg light_filename "migrate_to_${version}_light.py" '
+            .[] | select(.tag_name == $version or .tag_name == $version_no_v) | 
+            .assets[] | select(.name == $full_filename or .name == $light_filename) | .name'
+        )
+        
+        if [[ -n "$migration_exists" ]]; then
+            versions+=("$version")
+        fi
+    done < <(echo "$releases" | jq -r '.[].tag_name' | sed 's/^v//' | sort -V)
+    
+    printf '%s\n' "${versions[@]}"
+}
+
+# A new function for determining the migration type
+get_migration_type() {
+    local version="$1"
+    local releases
+    releases=$(curl -s "$GITHUB_API_URL")
+    
+    # Checking for easy migration
+    local light_migration
+    light_migration=$(echo "$releases" | jq -r --arg version "v$version" --arg version_no_v "$version" --arg filename "migrate_to_${version}_light.py" '
+        .[] | select(.tag_name == $version or .tag_name == $version_no_v) | 
+        .assets[] | select(.name == $filename) | .name'
+    )
+    
+    if [[ -n "$light_migration" ]]; then
+        echo "light"
+        return 0
+    fi
+    
+    # Checking for a full migration
+    local full_migration
+    full_migration=$(echo "$releases" | jq -r --arg version "v$version" --arg version_no_v "$version" --arg filename "migrate_to_$version.py" '
+        .[] | select(.tag_name == $version or .tag_name == $version_no_v) | 
+        .assets[] | select(.name == $filename) | .name'
+    )
+    
+    if [[ -n "$full_migration" ]]; then
+        echo "full"
+        return 0
+    fi
+    
+    return 1
+}
+
 # Get all releases, sorted by version
 get_all_releases() {
     curl -s "$GITHUB_API_URL" | jq -r '.[].tag_name' | sed 's/^v//' | sort -V
@@ -153,15 +221,16 @@ show_migration_preview() {
 # Download and execute migration
 run_migration() {
     local version="$1"
+    local migration_type="$2"  # "full" or "light"
     local temp_dir="/tmp/meowrch-update-$version"
     
-    # Remove old folder if exists
+    # Delete the old folder if it exists
     rm -rf "$temp_dir"
     mkdir -p "$temp_dir"
     
-    log "🔄 Checking update to version $version..."
+    log "🔄 Checking update to version $version (type: $migration_type)..."
     
-    # Get release data (try both with v prefix and without)
+    # Getting the release data
     local release_data
     release_data=$(curl -s "$GITHUB_API_URL" | jq --arg version "v$version" --arg version_no_v "$version" '.[] | select(.tag_name == $version or .tag_name == $version_no_v)')
     
@@ -171,111 +240,146 @@ run_migration() {
         return 1
     fi
     
-    # FIRST check if migration file exists
-    local migration_download_url
-    migration_download_url=$(echo "$release_data" | jq -r --arg filename "migrate_to_$version.py" '.assets[] | select(.name == $filename) | .browser_download_url')
-    
-    if [[ -z "$migration_download_url" || "$migration_download_url" == "null" ]]; then
-        log "📝 Migration file migrate_to_$version.py not found for version $version"
-        log "⏭️ Skipping this version (version NOT updated)"
-        rm -rf "$temp_dir"
-        return 0
-    fi
-    
-    # Only if migration file exists - download archive
-    log "✅ Found migration file for version $version"
-    
-    # Get URL of TAR.GZ archive of release (tarball is usually smaller)
-    local tarball_url
-    tarball_url=$(echo "$release_data" | jq -r '.tarball_url')
-    
-    if [[ -z "$tarball_url" || "$tarball_url" == "null" ]]; then
-        error "TAR.GZ archive for version $version not found"
-        rm -rf "$temp_dir"
-        return 1
-    fi
-    
-    log "📦 Downloading TAR.GZ archive of release $version..."
-    local tar_file="$temp_dir/release.tar.gz"
-    
-    # Download with progress bar if supported
-    if [[ -t 2 ]]; then  # Check that stderr is a terminal
-        if ! curl -L --progress-bar "$tarball_url" -o "$tar_file"; then
-            error "Failed to download TAR.GZ archive of release"
+    if [[ "$migration_type" == "light" ]]; then
+        # Light migration
+        local migration_download_url
+        migration_download_url=$(echo "$release_data" | jq -r --arg filename "migrate_to_${version}_light.py" '.assets[] | select(.name == $filename) | .browser_download_url')
+        
+        if [[ -z "$migration_download_url" || "$migration_download_url" == "null" ]]; then
+            error "Light migration file migrate_to_${version}_light.py not found for version $version"
             rm -rf "$temp_dir"
             return 1
         fi
-    else
-        # Without progress bar for scripts/automation
-        if ! curl -L -s "$tarball_url" -o "$tar_file"; then
-            error "Failed to download TAR.GZ archive of release"
+        
+        log "📥 Downloading light migration file..."
+        local migration_file="$temp_dir/migrate_to_${version}_light.py"
+        if ! curl -L -s "$migration_download_url" -o "$migration_file"; then
+            error "Failed to download light migration file"
             rm -rf "$temp_dir"
             return 1
         fi
-    fi
-    
-    log "📂 Extracting archive..."
-    if ! tar -xzf "$tar_file" -C "$temp_dir"; then
-        error "Failed to extract TAR.GZ archive"
-        rm -rf "$temp_dir"
-        return 1
-    fi
-    
-    # Find extracted folder (GitHub creates folder like username-reponame-commitid)
-    # Exclude the parent temp_dir folder itself
-    local extracted_dir
-    extracted_dir=$(find "$temp_dir" -maxdepth 1 -type d -name "*meowrch*" ! -path "$temp_dir" | head -n1)
-    
-    if [[ -z "$extracted_dir" ]]; then
-        error "Failed to find extracted release folder"
-        log "Contents of $temp_dir:"
-        ls -la "$temp_dir" >&2
-        rm -rf "$temp_dir"
-        return 1
-    fi
-    
-    log "🔄 Found extracted folder: $(basename "$extracted_dir")"
-    
-    # Rename to standard name
-    mv "$extracted_dir" "$temp_dir/meowrch"
-    
-    log "📥 Downloading migration file..."
-    local migration_file="$temp_dir/meowrch/migrate_to_$version.py"
-    if ! curl -L -s "$migration_download_url" -o "$migration_file"; then
-        error "Failed to download migration file"
-        rm -rf "$temp_dir"
-        return 1
-    fi
-    
-    # Show migration contents to user
-    if ! show_migration_preview "$migration_file" "$version"; then
-        warn "Migration cancelled by user"
-        rm -rf "$temp_dir"
-        return 1
-    fi
-    
-    log "🔄 Executing migration to version $version..."
-    
-    # Go to release folder for migration execution
-    cd "$temp_dir/meowrch" || {
-        error "Failed to change to release folder"
-        rm -rf "$temp_dir"
-        return 1
-    }
-    
-    # Execute migration
-    if python3 "migrate_to_$version.py"; then
-        log "✅ Migration to version $version completed successfully"
-        set_version "$version"
+        
+        # Showing the migration content to the user
+        if ! show_migration_preview "$migration_file" "$version"; then
+            warn "Migration cancelled by user"
+            rm -rf "$temp_dir"
+            return 1
+        fi
+        
+        log "🔄 Executing light migration to version $version..."
+        
+        # Performing migration
+        if python3 "$migration_file"; then
+            log "✅ Light migration to version $version completed successfully"
+            set_version "$version"
+        else
+            error "Light migration to version $version failed"
+            rm -rf "$temp_dir"
+            return 1
+        fi
+        
     else
-        error "Migration to version $version failed"
+        # Full migration
+        local migration_download_url
+        migration_download_url=$(echo "$release_data" | jq -r --arg filename "migrate_to_$version.py" '.assets[] | select(.name == $filename) | .browser_download_url')
+        
+        if [[ -z "$migration_download_url" || "$migration_download_url" == "null" ]]; then
+            log "📝 Migration file migrate_to_$version.py not found for version $version"
+            log "⏭️ Skipping this version (version NOT updated)"
+            rm -rf "$temp_dir"
+            return 0
+        fi
+        
+        log "✅ Found full migration file for version $version"
+        
+        # Getting the TAR.GZ URL of the release archive
+        local tarball_url
+        tarball_url=$(echo "$release_data" | jq -r '.tarball_url')
+        
+        if [[ -z "$tarball_url" || "$tarball_url" == "null" ]]; then
+            error "TAR.GZ archive for version $version not found"
+            rm -rf "$temp_dir"
+            return 1
+        fi
+        
+        log "📦 Downloading TAR.GZ archive of release $version..."
+        local tar_file="$temp_dir/release.tar.gz"
+        
+        # Download from the progress bar if supported
+        if [[ -t 2 ]]; then
+            if ! curl -L --progress-bar "$tarball_url" -o "$tar_file"; then
+                error "Failed to download TAR.GZ archive of release"
+                rm -rf "$temp_dir"
+                return 1
+            fi
+        else
+            if ! curl -L -s "$tarball_url" -o "$tar_file"; then
+                error "Failed to download TAR.GZ archive of release"
+                rm -rf "$temp_dir"
+                return 1
+            fi
+        fi
+        
+        log "📂 Extracting archive..."
+        if ! tar -xzf "$tar_file" -C "$temp_dir"; then
+            error "Failed to extract TAR.GZ archive"
+            rm -rf "$temp_dir"
+            return 1
+        fi
+        
+        # Find the extracted folder
+        local extracted_dir
+        extracted_dir=$(find "$temp_dir" -maxdepth 1 -type d -name "*meowrch*" ! -path "$temp_dir" | head -n1)
+        
+        if [[ -z "$extracted_dir" ]]; then
+            error "Failed to find extracted release folder"
+            ls -la "$temp_dir" >&2
+            rm -rf "$temp_dir"
+            return 1
+        fi
+        
+        log "🔄 Found extracted folder: $(basename "$extracted_dir")"
+        mv "$extracted_dir" "$temp_dir/meowrch"
+        
+        log "📥 Downloading migration file..."
+        local migration_file="$temp_dir/meowrch/migrate_to_$version.py"
+        if ! curl -L -s "$migration_download_url" -o "$migration_file"; then
+            error "Failed to download migration file"
+            rm -rf "$temp_dir"
+            return 1
+        fi
+        
+        # Showing the migration content to the user
+        if ! show_migration_preview "$migration_file" "$version"; then
+            warn "Migration cancelled by user"
+            rm -rf "$temp_dir"
+            return 1
+        fi
+        
+        log "🔄 Executing full migration to version $version..."
+        
+        # Go to the release folder to perform the migration
+        cd "$temp_dir/meowrch" || {
+            error "Failed to change to release folder"
+            rm -rf "$temp_dir"
+            return 1
+        }
+        
+        # Выполняем миграцию
+        if python3 "migrate_to_$version.py"; then
+            log "✅ Full migration to version $version completed successfully"
+            set_version "$version"
+        else
+            error "Full migration to version $version failed"
+            cd - > /dev/null
+            rm -rf "$temp_dir"
+            return 1
+        fi
+        
+        # Return to the original directory
         cd - > /dev/null
-        rm -rf "$temp_dir"
-        return 1
     fi
     
-    # Return to original directory
-    cd - > /dev/null
     rm -rf "$temp_dir"
     return 0
 }
@@ -523,66 +627,120 @@ show_status() {
     current_version=$(get_current_version)
     local latest_version
     latest_version=$(get_latest_version)
-    local latest_with_migration
-    latest_with_migration=$(get_latest_version_with_migration)
     
     log "📋 Current version: $current_version"
     log "📋 Latest version on GitHub: $latest_version"
     
-    if [[ -n "$latest_with_migration" ]]; then
-        log "📋 Latest version with migration: $latest_with_migration"
-        
-        if [[ "$current_version" == "$latest_with_migration" ]]; then
-            log "✅ You have the latest version with available updates"
-        elif version_gt "$latest_with_migration" "$current_version"; then
-            log "🆕 Update available to version $latest_with_migration"
-        else
-            log "ℹ️ Your version is newer than the latest version with migration"
-        fi
+    # Showing the available migrations
+    local available_versions
+    available_versions=($(get_versions_with_migrations "$current_version"))
+    
+    if [[ ${#available_versions[@]} -gt 0 ]]; then
+        log "🔄 Available migrations:"
+        for version in "${available_versions[@]}"; do
+            local migration_type
+            migration_type=$(get_migration_type "$version")
+            log "   - $version ($migration_type)"
+        done
+        log "💡 To update use: update-meowrch update [version]"
     else
-        log "ℹ️ No available versions with migration files"
+        log "✅ You have the latest version with available updates"
+    fi
+    
+    # Showing the update chain to the latest version
+    local update_chain
+    update_chain=($(get_versions_with_migrations "$current_version" "$latest_version"))
+    if [[ ${#update_chain[@]} -gt 0 ]]; then
+        local chain="$current_version"
+        for version in "${update_chain[@]}"; do
+            chain+=" → $version"
+        done
+        log "📈 Update path to latest: $chain"
     fi
 }
 
 # Perform update
 perform_update() {
+    if [[ "$EUID" -eq 0 ]]; then
+        error "This command cannot be run as root or with sudo privileges."
+        error "Please run without sudo to update for your user account."
+        exit 1
+    fi
+
+    while true; do
+        echo -ne "${YELLOW}==> Are you sure you want to update? [Y/n]: ${NC}" >&2
+        read -r response
+        case "$response" in
+            ""|[Yy]|[Yy][Ee][Ss])
+                break
+                ;;
+            [Nn]|[Nn][Oo])
+                echo -e "${RED}Update cancelled${NC}" >&2
+                return 0
+                ;;
+            *)
+                echo -e "${RED}Please enter Y (yes) or N (no)${NC}" >&2
+                ;;
+        esac
+    done
+
+    local target_version="${1:-}"  # Optional target version
+    
     local current_version
     current_version=$(get_current_version)
     
-    # Now update only to latest version with migration
-    local target_version
-    target_version=$(get_latest_version_with_migration)
+    # Getting all versions with migrations from current to target
+    local versions_to_update
+    versions_to_update=($(get_versions_with_migrations "$current_version" "$target_version"))
     
-    if [[ -z "$target_version" ]]; then
-        warn "No available versions with migration files"
-        return 0
-    fi
-
-    log "🔄 Updating from $current_version to $target_version"
-
-    if [[ "$current_version" == "$target_version" ]]; then
-        log "✅ Version $target_version is already installed"
+    if [[ ${#versions_to_update[@]} -eq 0 ]]; then
+        if [[ -n "$target_version" ]]; then
+            warn "No available migrations from $current_version to $target_version"
+        else
+            warn "No available migrations from current version $current_version"
+        fi
         return 0
     fi
     
-    if ! version_gt "$target_version" "$current_version"; then
-        log "ℹ️ Your version ($current_version) is not older than latest available ($target_version)"
-        return 0
-    fi
-
-    log "📋 Direct update: $current_version → $target_version"
-    
-    # Try to run migration
-    if run_migration "$target_version"; then
-        log "✅ Update completed successfully: $current_version → $target_version"
+    if [[ -n "$target_version" ]]; then
+        log "🔄 Updating from $current_version to $target_version via ${#versions_to_update[@]} step(s)"
     else
-        error "❌ Update failed"
-        return 1
+        log "🔄 Updating from $current_version to latest version via ${#versions_to_update[@]} step(s)"
+    fi
+    
+    log "📋 Update chain: ${versions_to_update[*]}"
+    
+    # We perform migrations in order
+    for version in "${versions_to_update[@]}"; do
+        local migration_type
+        migration_type=$(get_migration_type "$version")
+        
+        if [[ -z "$migration_type" ]]; then
+            error "No migration found for version $version"
+            return 1
+        fi
+        
+        log "🔜 Next: $current_version → $version ($migration_type migration)"
+        
+        if ! run_migration "$version" "$migration_type"; then
+            error "❌ Migration to $version failed"
+            return 1
+        fi
+        
+        # Update the current version for the next iteration
+        current_version="$version"
+        log "✅ Successfully updated to $version"
+    done
+    
+    if [[ -n "$target_version" ]]; then
+        log "🎉 Successfully updated from $current_version to $target_version"
+    else
+        log "🎉 Successfully updated to latest version $current_version"
     fi
 }
 
 # Main functionality
-case "${1:-status}" in
+case "${1:-update}" in
     "check")
         check_update
         ;;
@@ -590,19 +748,23 @@ case "${1:-status}" in
         show_status
         ;;
     "update")
-        perform_update
+        perform_update "${2:-}"
         ;;
     "open-terminal")
         open_update_terminal
         ;;
     *)
-        echo "Usage: update-meowrch [check|status|update|open-terminal]"
+        echo "Usage: update-meowrch [check|status|update|open-terminal] [version]"
         echo ""
         echo "Commands:"
-        echo "  check         - Check for updates and show notification if available"
-        echo "  status        - Show current version status"
-        echo "  update        - Update to the latest version with migration"
-        echo "  open-terminal - Open update in new terminal window"
+        echo "  check              - Check for updates and show notification if available"
+        echo "  status             - Show current version status and available migrations"
+        echo "  update [version]   - Update to specific version or latest (chain migrations)"
+        echo "  open-terminal      - Open update in new terminal window"
+        echo ""
+        echo "Examples:"
+        echo "  update-meowrch update           # Update to latest version via chain"
+        echo "  update-meowrch update 2.5.0     # Update to specific version 2.5.0"
         echo ""
         echo "Default command is 'check' when no arguments provided"
         ;;
