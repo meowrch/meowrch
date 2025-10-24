@@ -276,9 +276,13 @@ We also invite you to visit our <a href="https://t.me/meowrch">Telegram</a>, whe
         <td>Toggle active window to fullscreen mode</td>
 		<td colspan="2" align="center">alt + enter</td>
     </tr>
-     <tr>
+    <tr>
         <td>Close active window</td>
 		<td colspan="2" align="center">super + q</td>
+    </tr>
+	<tr>
+        <td>Kill active window</td>
+		<td colspan="2" align="center">super + k</td>
     </tr>
      <tr>
         <td>Move window focus</td>

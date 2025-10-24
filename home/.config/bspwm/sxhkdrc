@@ -80,6 +80,9 @@ super + Escape
 super + q
 	sh $XDG_BIN_HOME/window-close.sh
 
+super + k
+	sh $XDG_BIN_HOME/window-kill.sh
+
 super + space
 	bspc node -t "~"{floating,tiled}												 
 																							 	

@@ -278,9 +278,13 @@ sh install.sh
         <td>Перевести активное окно в полноразмерный режим</td>
 		<td colspan="2" align="center">alt + enter</td>
     </tr>
-     <tr>
+    <tr>
         <td>Закрыть активное окно</td>
 		<td colspan="2" align="center">super + q</td>
+    </tr>
+	<tr>
+        <td>Убить активное окно</td>
+		<td colspan="2" align="center">super + k</td>
     </tr>
      <tr>
         <td>Перемещение фокуса окна</td>
