@@ -40,7 +40,7 @@ BASE = Packages(
 			"ttf-fira-code",
 		],
 		bspwm_packages=[
-			"xorg", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
+			"xorg-server", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
 			"wmname", "polybar", "xorg-xrandr", "xsettingsd", "clipnotify",
             "dunst",
 		],
