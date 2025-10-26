@@ -2,7 +2,7 @@
 # Updated with automatic SHA256 hash calculation
 pkgname=meowrch-settings
 pkgver=2.0.0
-pkgrel=6
+pkgrel=7
 pkgdesc="System optimization settings for Meowrch distribution with dconf integration"
 arch=('any')
 url="https://github.com/meowrch/meowrch"
