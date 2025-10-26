@@ -5,5 +5,4 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=%i
-ExecStart=/home/%i/.local/bin/update-firefox-gnome-theme.sh
+ExecStart=%h/.local/bin/update-firefox-gnome-theme.sh
