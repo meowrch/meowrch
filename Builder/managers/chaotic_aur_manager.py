@@ -1,4 +1,5 @@
 import subprocess
+import time
 from loguru import logger
 
 
@@ -16,46 +17,78 @@ class ChaoticAurManager:
             return False
     
     @staticmethod
-    def install() -> bool:
+    def install(max_retries: int = 3) -> bool:
         """Устанавливает Chaotic AUR репозиторий"""
         logger.info("Installing Chaotic AUR repository...")
         
-        try:
-            logger.info("Setting up Chaotic AUR using official method...")
-            
-            # Импортируем ключи
-            logger.info("Importing PGP keys...")
-            subprocess.run([
-                "sudo", "pacman-key", "--recv-key", "3056513887B78AEB", "--keyserver", "keyserver.ubuntu.com"
-            ], check=True)
-            
-            subprocess.run([
-                "sudo", "pacman-key", "--lsign-key", "3056513887B78AEB"
-            ], check=True)
-            
-            # Устанавливаем keyring и mirrorlist через прямые URL (официальный способ)
-            logger.info("Installing keyring and mirrorlist...")
-            subprocess.run([
-                "sudo", "pacman", "-U", "--noconfirm", 
-                "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst",
-                "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst"
-            ], check=True)
-            
-            # Добавляем репозиторий в pacman.conf
-            ChaoticAurManager._add_to_pacman_conf()
-            
-            # Обновляем базу данных
-            subprocess.run(["sudo", "pacman", "-Sy"], check=True)
-            
-            logger.success("Chaotic AUR repository installed successfully!")
-            return True
-        except subprocess.CalledProcessError as e:
-            error_msg = e.stderr if e.stderr else f"Command failed with exit code {e.returncode}"
-            logger.error(f"Error installing Chaotic AUR: {error_msg}")
-            return False
-        except Exception as e:
-            logger.error(f"Unexpected error installing Chaotic AUR: {e}")
-            return False
+        for attempt in range(max_retries):
+            try:
+                logger.info(f"Attempt {attempt + 1}/{max_retries} to install Chaotic AUR...")
+                
+                # Импортируем ключи
+                logger.info("Importing PGP keys...")
+                subprocess.run([
+                    "sudo", "pacman-key", "--recv-key", "3056513887B78AEB", "--keyserver", "keyserver.ubuntu.com"
+                ], check=True, timeout=60)
+                
+                subprocess.run([
+                    "sudo", "pacman-key", "--lsign-key", "3056513887B78AEB"
+                ], check=True, timeout=60)
+                
+                # Пробуем разные зеркала
+                mirrors = [
+                    "https://cdn-mirror.chaotic.cx/chaotic-aur",
+                    "https://mirror.chaotic.cx/chaotic-aur",
+                    "https://lonewolf-builder.chaotic.cx"
+                ]
+                
+                for mirror in mirrors:
+                    try:
+                        logger.info(f"Trying mirror: {mirror}")
+                        subprocess.run([
+                            "sudo", "pacman", "-U", "--noconfirm", 
+                            f"{mirror}/chaotic-keyring.pkg.tar.zst",
+                            f"{mirror}/chaotic-mirrorlist.pkg.tar.zst"
+                        ], check=True, timeout=120)
+                        logger.success(f"Successfully used mirror: {mirror}")
+                        break
+                    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+                        logger.warning(f"Mirror {mirror} failed, trying next...")
+                        continue
+                else:
+                    logger.error("All mirrors failed!")
+                    return False
+                
+                # Добавляем репозиторий в pacman.conf
+                ChaoticAurManager._add_to_pacman_conf()
+                
+                # Обновляем базу данных
+                subprocess.run(["sudo", "pacman", "-Sy"], check=True, timeout=60)
+                
+                logger.success("Chaotic AUR repository installed successfully!")
+                return True
+                
+            except subprocess.TimeoutExpired:
+                logger.warning(f"Timeout occurred on attempt {attempt + 1}")
+                if attempt < max_retries - 1:
+                    logger.info("Waiting 5 seconds before retry...")
+                    time.sleep(5)
+                continue
+                
+            except subprocess.CalledProcessError as e:
+                error_msg = e.stderr if e.stderr else f"Command failed with exit code {e.returncode}"
+                logger.error(f"Error installing Chaotic AUR (attempt {attempt + 1}): {error_msg}")
+                if attempt < max_retries - 1:
+                    logger.info("Waiting 5 seconds before retry...")
+                    time.sleep(5)
+                continue
+                
+            except Exception as e:
+                logger.error(f"Unexpected error installing Chaotic AUR: {e}")
+                return False
+        
+        logger.error(f"Failed to install Chaotic AUR after {max_retries} attempts")
+        return False
     
     @staticmethod
     def _add_to_pacman_conf() -> None:
