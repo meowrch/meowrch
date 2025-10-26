@@ -45,6 +45,7 @@ jobs:
           sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_settings.outputs.hash }}')/" aur-packages/meowrch-settings/PKGBUILD.deploy
           
       - name: Deploy to AUR
+        timeout-minutes: 10
         uses: KSXGitHub/github-actions-deploy-aur@master
         with:
           pkgname: meowrch-settings
@@ -93,6 +94,7 @@ jobs:
           sed -i "s/^sha256sums=.*/sha256sums=('${{ steps.sha256_tools.outputs.hash }}')/" aur-packages/meowrch-tools/PKGBUILD.deploy
           
       - name: Deploy to AUR
+        timeout-minutes: 10
         uses: KSXGitHub/github-actions-deploy-aur@master
         with:
           pkgname: meowrch-tools
