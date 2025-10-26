@@ -86,14 +86,6 @@ class PlymouthConfigurer:
             return "grub"
         return "unknown"
 
-    def _is_boot_mounted(self) -> bool:
-        """Check if /boot is a mounted filesystem"""
-        try:
-            return os.path.ismount("/boot")
-        except Exception:
-            return Path("/boot").exists()
-
-
     def update_grub_cmdline(self):
         """Update GRUB_CMDLINE_LINUX_DEFAULT"""
         logger.info("The process of configuring the settings of GRUB has begun")
@@ -233,9 +225,7 @@ class PlymouthConfigurer:
 
         # Regenerate bootloader configuration when appropriate
         if bootloader == "grub":
-            if not self._is_boot_mounted():
-                logger.warning("Skipping GRUB config generation: /boot is not mounted.")
-            elif not Path("/boot/grub").exists():
+            if not Path("/boot/grub").exists():
                 logger.warning("Skipping GRUB config generation: /boot/grub directory does not exist.")
             elif not shutil.which("grub-mkconfig"):
                 logger.warning("Skipping GRUB config generation: grub-mkconfig not found.")

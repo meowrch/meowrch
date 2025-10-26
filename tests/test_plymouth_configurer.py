@@ -55,7 +55,6 @@ def test_plymouth_grub_calls_grub_mkconfig_when_ready():
 
     # Force GRUB environment
     pc._bootloader_type = lambda: "grub"
-    pc._is_boot_mounted = lambda: True
 
     # Patch module-level which to return a path for grub-mkconfig
     orig_which = plymouth_mod.shutil.which
@@ -94,7 +93,6 @@ def test_plymouth_grub_skips_when_boot_not_mounted():
     pc._run_sudo = _fake_run_sudo_factory(calls)
 
     pc._bootloader_type = lambda: "grub"
-    pc._is_boot_mounted = lambda: False  # simulate unmounted /boot
 
     # Ensure which returns a valid grub-mkconfig path
     orig_which = plymouth_mod.shutil.which

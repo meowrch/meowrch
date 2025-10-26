@@ -36,13 +36,6 @@ class GrubConfigurer(AppConfigurer):
             return "grub"
         return "unknown"
 
-    def _is_boot_mounted(self) -> bool:
-        """Check if /boot is a mounted filesystem"""
-        try:
-            return os.path.ismount("/boot")
-        except Exception:
-            return Path("/boot").exists()
-
     def setup(self) -> None:
         logger.info("Starting the GRUB theme installation process")
         # Skip if this system is not using GRUB
@@ -80,10 +73,6 @@ class GrubConfigurer(AppConfigurer):
             logger.warning("GRUB theme source not found, skipping theme installation")
             return
 
-        # Ensure /boot is mounted and destination exists
-        if not self._is_boot_mounted():
-            logger.warning("Skipping GRUB theme copy: /boot is not mounted.")
-            return
         if not Path("/boot/grub").exists():
             logger.warning("Skipping GRUB theme copy: /boot/grub directory does not exist.")
             return
@@ -99,9 +88,6 @@ class GrubConfigurer(AppConfigurer):
     def _update_grub(self) -> None:
         """Update GRUB configuration"""
         # Only regenerate if /boot is mounted and grub directory exists
-        if not self._is_boot_mounted():
-            logger.warning("Skipping GRUB config generation: /boot is not mounted.")
-            return
         if not Path("/boot/grub").exists():
             logger.warning("Skipping GRUB config generation: /boot/grub directory does not exist.")
             return
