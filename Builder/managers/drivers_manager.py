@@ -3,10 +3,8 @@ import traceback
 from typing import List, Optional
 
 from loguru import logger
-from packages import DRIVERS
-from utils.mkinitcpio_config import MkinitcpioConfigEditor, Position
 
-from .package_manager import PackageManager
+from utils.mkinitcpio_config import MkinitcpioConfigEditor, Position
 
 
 class DriversManager:
@@ -59,18 +57,6 @@ class DriversManager:
 
         return drivers_for
 
-    @staticmethod
-    def install_intel_drivers() -> None:
-        PackageManager.install_packages(packages_list=DRIVERS["intel"].pacman.common)
-
-    @staticmethod
-    def install_amd_drivers() -> None:
-        PackageManager.install_packages(packages_list=DRIVERS["amd"].pacman.common)
-
-    @staticmethod
-    def install_nvidia_drivers() -> None:
-        PackageManager.install_packages(packages_list=DRIVERS["nvidia"].pacman.common)
-    
     @staticmethod
     def add_gpu_modules(gpu_type: Optional[str] = None, force: bool = False) -> bool:
         """Добавить модули GPU для ранней загрузки в mkinitcpio

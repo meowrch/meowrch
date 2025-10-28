@@ -1,4 +1,3 @@
-import os
 import shutil
 import subprocess
 import tempfile
@@ -35,7 +34,7 @@ class PlymouthConfigurer:
             "rd.udev.log_level=3",
         }
 
-    def setup(self):
+    def setup(self) -> None:
         """Main setup method"""
         error_msg = "An error occurred during the installation of plymouth: {err}"
         if self._check_plymouth_installed():

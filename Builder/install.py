@@ -9,9 +9,10 @@ from managers.drivers_manager import DriversManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
-from packages import BASE, CUSTOM
+from packages import BASE, CUSTOM, DRIVERS
 from question import Question
 from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
+from utils.config_backup import ConfigBackup
 
 
 class Builder:
@@ -42,6 +43,9 @@ class Builder:
             exclude_hyprland=not self.build_options.install_hyprland,
         )
 
+        # Backup all critical system configs before any modifications
+        ConfigBackup.backup_all()
+
         # Включаем multilib и обновляем базу данных
         PackageManager.update_pacman_conf(enable_multilib=True)
         PackageManager.update_database()
@@ -54,8 +58,7 @@ class Builder:
         PackageManager.install_aur_helper(self.build_options.aur_helper)
 
         self.packages_installation()
-        self.drivers_installation()
-        
+
         # Настройка модулей GPU для ранней загрузки (критично для Plymouth)
         DriversManager.setup_gpu_modules_for_early_boot()
 
@@ -93,7 +96,23 @@ class Builder:
 
     def packages_installation(self) -> None:
         logger.info("Starting the package installation process")
-        pacman, aur = [], []
+        pacman, aur = self._collect_selected_packages()
+
+        # Устанавливаем pacman пакеты
+        self.not_installed_packages.pacman.extend(
+            PackageManager.install_packages(pacman)
+        )
+
+        # Устанавливаем aur пакеты
+        self.not_installed_packages.aur.extend(
+            PackageManager.install_packages(aur, aur=self.build_options.aur_helper)
+        )
+
+        logger.success("The installation process of all packages is complete!")
+
+    def _collect_selected_packages(self):
+        pacman: list[str] = []
+        aur: list[str] = []
 
         pacman.extend(BASE.pacman.common)
         aur.extend(BASE.aur.common)
@@ -117,29 +136,18 @@ class Builder:
         else:
             pacman.append("fish")
 
-        # Устанавливаем pacman пакеты
-        self.not_installed_packages.pacman.extend(
-            PackageManager.install_packages(pacman)
-        )
-
-        # Устанавливаем aur пакеты
-        self.not_installed_packages.aur.extend(
-            PackageManager.install_packages(aur, aur=self.build_options.aur_helper)
-        )
-
-        logger.success("The installation process of all packages is complete!")
-
-    def drivers_installation(self) -> None:
-        logger.info("Starting the driver installation process")
-
+        # Drivers
         if self.build_options.intel_driver:
-            DriversManager.install_intel_drivers()
+            pacman.extend(DRIVERS["intel"].pacman.common)
         if self.build_options.nvidia_driver:
-            DriversManager.install_nvidia_drivers()
+            pacman.extend(DRIVERS["nvidia"].pacman.common)
         if self.build_options.amd_driver:
-            DriversManager.install_amd_drivers()
+            pacman.extend(DRIVERS["amd"].pacman.common)
 
-        logger.success("The installation process of all drivers is complete!")
+        # Deduplicate while preserving order
+        pacman = list(dict.fromkeys(pacman))
+        aur = list(dict.fromkeys(aur))
+        return pacman, aur
 
     def daemons_setting(self) -> None:
         logger.info("The daemons are starting to run...")
