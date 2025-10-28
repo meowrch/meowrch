@@ -1,5 +1,6 @@
 import subprocess
 import traceback
+from pathlib import Path
 
 from loguru import logger
 
@@ -31,7 +32,7 @@ class VSCodeConfigurer(AppConfigurer):
                 [
                     "code",
                     "--install-extension",
-                    "dimflix-official.meowrch-theme",
+                    str(Path("./misc/meowrch-theme-1.1.1.vsix")),
                 ],
                 check=True,
             )
