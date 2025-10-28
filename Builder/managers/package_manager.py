@@ -96,14 +96,19 @@ class PackageManager:
         aur_helpers_config = {
             AurHelper.YAY: "https://aur.archlinux.org/yay.git",
             AurHelper.PARU: "https://aur.archlinux.org/paru.git",
-            AurHelper.YAY_BIN: "https://aur.archlinux.org/yay-bin.git",
-            AurHelper.PARU_BIN: "https://aur.archlinux.org/paru-bin.git"
+            AurHelper.YAY_BIN: "https://aur.archlinux.org/yay-bin.git"
         }
         
         if aur_helper not in aur_helpers_config:
             logger.error(f"Unsupported AUR helper: {aur_helper}")
             exit(1)
-        
+
+        yay_installed = PackageManager.check_package_installed("yay")
+        yay_bin_installed = PackageManager.check_package_installed("yay-bin")
+
+        if aur_helper.value in ["yay", "yay-bin"] and (yay_bin_installed or yay_installed):
+            return
+
         url = aur_helpers_config[aur_helper]
         PackageManager._install_aur_helper(aur_helper.value, url)
 

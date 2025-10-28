@@ -7,7 +7,6 @@ class AurHelper(Enum):
     YAY = "yay"
     PARU = "paru"
     YAY_BIN = "yay-bin"
-    PARU_BIN = "paru-bin"
 
 
 class TerminalShell(Enum):

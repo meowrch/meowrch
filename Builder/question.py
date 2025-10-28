@@ -112,8 +112,8 @@ class Question:
             QuestionList(
                 name="aur_helper",
                 message="3) What kind of AUR helper do you want to have?",
-                choices=["yay", "paru", "yay-bin", "paru-bin"],
-                default="paru-bin",
+                choices=["yay", "paru", "yay-bin"],
+                default="yay-bin",
                 carousel=True,
             ),
             QuestionList(
