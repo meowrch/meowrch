@@ -1,0 +1,22 @@
+{
+  "tags": [
+    {
+      "id": "7c711be5",
+      "name": "Configs",
+      "color": "#DC8ADD"
+    }
+  ],
+  "index": {
+    "7c711be5": [
+      "$HOME/.config/hypr/userprefs.conf",
+      "$HOME/.config/hypr/hyprland.conf",
+      "$HOME/.config/bspwm",
+      "$HOME/.config/hypr/hypridle.conf",
+      "$HOME/.config/hypr",
+      "$HOME/.config/mewline",
+      "$HOME/.config/waybar",
+      "$HOME/.config/bspwm/bspwmrc",
+      "$HOME/.config/bspwm/sxhkdrc"
+    ]
+  }
+}
