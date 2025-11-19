@@ -1,380 +1,306 @@
 <div align="center">
-	<img src=".meta/logo.png" width="300px">
-	<h1> Meowrch ≽ܫ≼</h1>
-	<a href="https://github.com/meowrch/meowrch/issues">
-		<img src="https://img.shields.io/github/issues/meowrch/meowrch?color=ffb29b&labelColor=1C2325&style=for-the-badge">
-	</a>
-	<a href="https://github.com/meowrch/meowrch/stargazers">
-		<img src="https://img.shields.io/github/stars/meowrch/meowrch?color=fab387&labelColor=1C2325&style=for-the-badge">
-	</a>
-	<a href="./LICENSE">
-		<img src="https://img.shields.io/github/license/meowrch/meowrch?color=FCA2AA&labelColor=1C2325&style=for-the-badge">
-	</a>
-	<br>
-	<br>
-	<a href="./README.ru.md">
-		<img src="https://img.shields.io/badge/README-RU-blue?color=cba6f7&labelColor=1C2325&style=for-the-badge">
-	</a>
-	<a href="./README.md">
-		<img src="https://img.shields.io/badge/README-ENG-blue?color=C9CBFF&labelColor=C9CBFF&style=for-the-badge">
-	</a>
+
+<img src=".meta/logo.png" width="280px" alt="Meowrch Logo">
+
+# ≽ܫ≼ Meowrch
+
+### *Arch Linux. Evolved.*
+**Where performance meets aesthetics**
+
+<br>
+
+[![Issues](https://img.shields.io/github/issues/meowrch/meowrch?color=ffb29b&labelColor=1C2325&style=for-the-badge)](https://github.com/meowrch/meowrch/issues)
+[![Stars](https://img.shields.io/github/stars/meowrch/meowrch?color=fab387&labelColor=1C2325&style=for-the-badge)](https://github.com/meowrch/meowrch/stargazers)
+[![License](https://img.shields.io/github/license/meowrch/meowrch?color=FCA2AA&labelColor=1C2325&style=for-the-badge)](./LICENSE)
+
+
+[![README RU](https://img.shields.io/badge/README-RU-blue?color=cba6f7&labelColor=1C2325&style=for-the-badge)](./README.ru.md)
+[![README ENG](https://img.shields.io/badge/README-ENG-blue?color=C9CBFF&labelColor=C9CBFF&style=for-the-badge)](./README.md)
+
+<br>
+
+[🚀 Quick Start](#-installation) • [📸 Gallery](#-visual-presentation) • [⚡ Features](#-why-meowrch) • [📖 Wiki](https://meowrch.github.io/en/) • [💬 Community](https://t.me/meowrch)
+
 </div>
 
-***
+---
 
-<br>
-<a href="https://youtu.be/KdGPDF4p5CA"><img src=".meta/assets/video-preview-youtube.png"></a>
-<br>
-<br>
-<br>
+## 🎯 Why another distro?
 
-<!-- INFORMATION -->
-<table align="right">
-	<tr>
-	    <td colspan="2" align="center">System Specifications</td>
-	</tr>
-	<tr>
-	    <th>Component</th>
-	    <th>Name</th>
-	</tr>
-	<tr>
-	    <td>OS</td>
-	    <td><a href="https://archlinux.org/">Arch Linux</a></td>
-	</tr>
-	<tr>
-	    <td>WM</td>
-	    <td><a href="https://github.com/baskerville/bspwm">BSPWM</a> | <a href="https://hyprland.org/">Hyprland</a></td>
-	</tr>
-	<tr>
-	    <td>Bar</td>
-	    <td><a href="https://github.com/polybar/polybar">Polybar</a> | <a href="https://github.com/Alexays/Waybar">Waybar</a> + <a href="https://github.com/meowrch/mewline">Mewline</a></td>
-	</tr>
-	<tr>
-	    <td>Compositor</td>
-	    <td><a href="https://github.com/yshui/picom">Picom</a> | Built-in</td>
-	</tr>
-	<tr>
-	    <td>Terminal</td>
-	    <td><a href="https://github.com/kovidgoyal/kitty">Kitty</a></td>
-	</tr>
-	<tr>
-	    <td>Widgets</td>
-	    <td><a href="https://github.com/davatorium/rofi">Rofi</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
-	</tr>
-	<tr>
-	    <td>Notify Daemon</td>
-	    <td><a href="https://github.com/dunst-project/dunst">Dunst</a> | <a href="https://github.com/ErikReider/SwayNotificationCenter">Swaync</a></td>
-	</tr>
-	<tr>
-	    <td>Shell</td>
-	    <td><a href="https://github.com/fish-shell/fish-shell">Fish</a> | <a href="https://www.zsh.org">Zsh</a></td>
-	</tr>
+<table>
+<tr>
+<td width="60%">
+
+Arch Linux is **freedom**. But freedom **requires time**.
+
+If you want Arch, but don't want to spend a week on **dotfiles** — Meowrch does it for you.
+
+CachyOS — performance through deep optimization.
+EndeavourOS - pure Arch with DE choice, minimal pre-configuration.
+Manjaro - simplicity and stability through delayed updates.
+
+**Meowrch** combines **everything:**
+- ⚡ **Maximum performance**: best optimizations from [ARU](https://github.com/ventureoo/ARU) and [CachyOS](https://cachyos.org/). [Learn more](https://meowrch.github.io/en/optimization/performance-advantages/)
+- 🎨 **Ready-to-use environment**: BSPWM/Hyprland with themes, smooth animations, functional **Dynamic Island**.
+- 🛠️ **10-minute installation**: from clean Arch to fully configured desktop.
+
+</td>
+<td width="40%">
+
+> [!NOTE]
+> **"Arch for those who value their time"**
+
+**By the numbers:**
+- 🎯 **10 minutes** to complete installation.
+- 🚀 **2 fully configured environments** BSPWM + Hyprland.
+- 🎨 **2 default themes** + **community** theme store.
+- ⚙️ **1Gb RAM** on system startup, thanks to [lightweight components](https://meowrch.github.io/en/introduction/component-selection-philosophy/).
+
+</td>
+</tr>
 </table>
-<div align="left">
-	<h3> 📝 About the Project</h2> 
-	<p>
-	Meowrch is a distribution based on Arch, optimized for maximum performance, ergonomics, and aesthetics.
-	</p>
-	<h3>🚀 Features</h2>
-	<p>
-	• Automatic system installation and configuration.<br>
-	• Deep system optimization at the level of <b><a src="https://cachyos.org/">CachyOS</a></b> <br>
-	• Extensive customization capabilities and <b><a href="https://github.com/meowrch/pawlette-themes">official theme store</a></b><br>
-	• Hotkeys are optimized to ensure maximum productivity.<br>
-	• Support for <b><a src="https://aur.chaotic.cx/">Chaotic AUR</a></b> for faster installation of popular packages.<br>
-	• Continuous and reliable support to ensure successful project operation<br>
-	</p>
+
+---
+
+## 🌟 Why Meowrch?
+
+<div align="center">
+
+| 💎 Feature | 🔥 What it gives you |
+|:---:|:---|
+| **🚀 Optimization** | System configured with [aggressive optimization flags](https://meowrch.github.io/en/optimization/performance-advantages/), community-tested. Performance on par with [CachyOS](https://cachyos.org/) |
+| **🎨 [Community](https://github.com/meowrch/pawlette-themes) theme store** | Change the entire system's appearance **with one command** |
+| **📦 Open-source development** | We support Linux development by creating our own components **useful to the global Linux community**. [**Learn more here**](https://github.com/meowrch/) |
+| **🛠️ Automation** | Installation **in 10 minutes**, full setup and optimization — **without manual config editing** |
+| **🎯 Ergonomics** | Hotkeys designed **down to the smallest detail** — work faster |
+| **🌊 Two environments** | BSPWM (X11) or Hyprland (Wayland) — **stability or modernity** |
+
 </div>
 
-<!-- IMAGES -->
-<h2>🌌 Visual Overview</h2>
+---
+
+## 📸 Visual presentation
+
 <table align="center">
   <tr>
-    <td colspan="4"><img src=".meta/assets/1.png"></td>
+    <td colspan="3">
+        <a href="https://youtu.be/KdGPDF4p5CA">
+            <img src=".meta/assets/video-preview-youtube.png" width="100%" alt="Meowrch video preview">
+        </a>
+    </td>
   </tr>
   <tr>
-    <td colspan="1"><img src=".meta/assets/2.png"></td>
-    <td colspan="1"><img src=".meta/assets/3.png"></td>
-    <td colspan="1"><img src=".meta/assets/4.png"></td>
+    <td><img src=".meta/assets/1.png" alt="Basic applications and widgets"></td>
+    <td><img src=".meta/assets/2.png" alt="Demonstration of desktop use case for music visualization."></td>
+    <td><img src=".meta/assets/3.png" alt="Demonstration of Adobe software (Photoshop, AfterEffects) functionality"></td>
   </tr>
   <tr>
-	<td colspan="1"><img src=".meta/assets/5.png"></td>
-	<td colspan="1"><img src=".meta/assets/6.png"></td>
-	<td colspan="1"><img src=".meta/assets/7.png"></td>
+    <td><img src=".meta/assets/4.png" alt="Demonstration of latest Steam games with complex protection technologies like Denuvo (Mafia: The old country example)"></td>
+    <td><img src=".meta/assets/5.png" alt="Demonstration of VSCode workflow"></td>
+    <td><img src=".meta/assets/6.png" alt="Demonstration of desktop wallpaper change animation via mewline dynamic island"></td>
   </tr>
 </table>
 
+---
 
-<!-- INSTALLATION -->
-## 🛠 Installation
-If you already have Arch Linux installed, follow these steps:
-### 1. Clone the repository
+## 🛠️ Installation
+
+> [!WARNING] The installer is designed for **clean Arch Linux**. \
+> If you already have a configured system, the installation **will overwrite** configurations. \
+> For testing, create a new user.
+> If you like it — switch to Meowrch completely
+
+### 📦 Quick start
+
 ```
-git clone --recurse-submodules --depth 1 https://github.com/meowrch/meowrch
-```
-### 2. Navigate to the project directory
-```
+# 1. Clone the repository
+git clone https://github.com/meowrch/meowrch --depth 1 --single-branch
 cd meowrch
-```
-### 3. Run the automatic installation
-```
+
+# 2. Run the installer
 sh install.sh
+
+# 3. Reboot
+reboot
 ```
 
-> [!important]
-> After installation, you **must** reboot to apply the changes.
+---
 
-> [!note]
-> Instructions for navigating the installer menu: \
-> • Select a menu item: Press Space to select the desired item. \
-> • Proceed to the next step: Press Enter to move to the next step.
+## 📋 What do you get after installation?
 
-<h2>💻 Support</h2>
+<table align="center">
+<tr>
+<th width="30%">Component</th>
+<th width="70%">Details</th>
+</tr>
+<tr>
+<td><b>🐧 Base OS</b></td>
+<td><a href="https://archlinux.org/">Arch Linux</a> + <a href="https://meowrch.github.io/en/optimization/performance-advantages/">aggressive optimization</a>
+</tr>
+<tr>
+<td><b>🪟 Window managers</b></td>
+<td><a href="https://github.com/baskerville/bspwm">BSPWM</a> (X11) | <a href="https://hyprland.org/">Hyprland</a> (Wayland)</td>
+</tr>
+<tr>
+<td><b>📊 Panels</b></td>
+<td><a href="https://github.com/polybar/polybar">Polybar</a> | <a href="https://github.com/Alexays/Waybar">Waybar</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
+</tr>
+<tr>
+<td><b>🎨 Customization</b></td>
+<td><a href="https://github.com/meowrch/pawlette">Pawlette</a> with pre-installed Catppuccin Mocha theme</td>
+</tr>
+<tr>
+<td><b>🖥️ Terminal</b></td>
+<td><a href="https://github.com/kovidgoyal/kitty">Kitty</a></td>
+</tr>
+<tr>
+<td><b>🐚 Shells</b></td>
+<td><a href="https://github.com/fish-shell/fish-shell">Fish</a> | <a href="https://www.zsh.org">Zsh</a></td>
+</tr>
+<tr>
+<td><b>🎯 Menus and widgets</b></td>
+<td><a href="https://github.com/davatorium/rofi">Rofi</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
+</tr>
+<tr>
+<td><b>🔔 Notifications</b></td>
+<td><a href="https://github.com/dunst-project/dunst">Dunst</a> | <a href="https://github.com/ErikReider/SwayNotificationCenter">Swaync</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
+</tr>
+<tr>
+<td><b>📦 Repositories</b></td>
+<td><a href="https://wiki.archlinux.org/title/Official_repositories">Arch Official</a> + <a href="https://aur.chaotic.cx/">Chaotic AUR</a></td>
+</tr>
+</table>
 
-<a href="https://meowrch.github.io/">
-	<img src=".meta/assets/wiki-banner.png"/>
+> [!NOTE]
+> **Why these components?**
+> We chose between performance, functionality, and stability.
+> [Learn more about component selection](https://meowrch.github.io/en/introduction/сomponent-selection-philosophy/)
+
+---
+
+## ⌨️ Hotkeys
+
+| Action                     | Combination    | Why is it convenient?                                                                                           |
+| -------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------- |
+| Open terminal              | Super + Enter  | Quick access to universal tool.                                                                                 |
+| Application selection      | Super + A      | Convenient way to choose the needed application.                                                                |
+| Color picker               | Super + C      | Pick color from screen for design/development.                                                                  |
+| Change wallpaper           | Super + W      | Rofi with preview. One button — new desktop look.                                                               |
+| Change theme               | Super + T      | New theme in 2 seconds. Without config editing.                                                                 |
+| Emoji                      | Super + .      | Like Windows 11, but faster.                                                                                    |
+| Disable keyboard shortcuts | Super + Escape | Can help when using virtual machines on Meowrch with configurations that also work through keyboard shortcuts. |
+
+
+> [!TIP] **Full list:** \
+> All available keyboard shortcuts can be found [here](https://meowrch.github.io/en/usage/hotkeys/#meowrch-hotkeys).
+
+---
+
+## 💬 Support and community
+
+<div align="center">
+
+<a href="https://meowrch.github.io/en/">
+<img src=".meta/assets/wiki-banner-en.png" width="80%" alt="Meowrch Wiki">
 </a>
 
-If you have questions or need help with the project, please visit our <a href="https://meowrch.github.io/">Wiki</a>. Here you will find useful guides and information that will help you better understand how to use our product.<br><br>
-If you encounter errors or problems that are not covered in our <a href="https://meowrch.github.io/">Wiki</a>, feel free to report them in the <a href="https://github.com/meowrch/meowrch/issues">Issues</a> section. 
+**[🌐 Official Wiki](https://meowrch.github.io/en/)** — guides, FAQ, troubleshooting
+
+<br>
+
+### 💬 Join the community
+
+<table align="center">
+<tr>
+<td align="center" width="33%">
+<h3>📢 Telegram</h3>
+<a href="https://t.me/meowrch">
+<img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram">
+</a>
 <br><br>
-We also invite you to visit our <a href="https://t.me/meowrch">Telegram</a>, where you can find <a href="https://t.me/meowrch/9">news</a> and <a href="https://t.me/meowrch/7">quick support</a>.
+News, updates and <a href="https://t.me/meowrch/7">quick support</a>
+</td>
+<td align="center" width="33%">
+<h3>🐛 Issues</h3>
+<a href="https://github.com/meowrch/meowrch/issues">
+<img src="https://img.shields.io/badge/GitHub-Issues-181717?style=for-the-badge&logo=github&logoColor=white" alt="Issues">
+</a>
 <br><br>
-
-<h2>💻 Hotkeys</h2>
-
-<h3 align="center">System Shortcuts</h3>
-<table align="center">
-    <tr>
-        <th>Action</th>
-        <th>Hyprland</th>
-		<th>Bspwm</th>
-    </tr>
-	<tr>
-        <td>Open terminal</td>
-		<td colspan="2" align="center">super + enter</td>
-    </tr>
-    <tr>
-        <td>Open file manager</td>
-		<td colspan="2" align="center">super + e</td>
-    </tr>
-	<tr>
-        <td>Open application menu</td>
-		<td colspan="2" align="center">super + d</td>
-    </tr>
-     <tr>
-        <td>Open power menu</td>
-		<td colspan="2" align="center">super + x</td>
-    </tr>
-	<tr>
-        <td>Open emoji picker</td>
-		<td colspan="2" align="center">super + .</td>
-    </tr>
-	<tr>
-        <td>Take a screenshot</td>
-		<td colspan="2" align="center">PrintScreen</td>
-    </tr>
-	<tr>
-        <td>Take a full screenshot</td>
-		<td colspan="2" align="center">super + PrintScreen</td>
-    </tr>
-	<tr>
-        <td>Change wallpaper</td>
-		<td colspan="2" align="center">super + w</td>
-    </tr>
-	<tr>
-        <td>Change theme</td>
-		<td colspan="2" align="center">super + t</td>
-    </tr>
-	<tr>
-        <td>Switch keyboard layout</td>
-		<td colspan="2" align="center">alt + shift</td>
-    </tr>
-     <tr>
-        <td>Pick color from screen</td>
-		<td colspan="2" align="center">super + c</td>
-    </tr>
-     <tr>
-        <td>Lock screen</td>
-        <td colspan="2" align="center">super + l</td>
-    </tr>
-	<tr>
-        <td>Open task manager (btop)</td>
-		<td colspan="2" align="center">ctrl + shift + esc</td>
-    </tr>
-	<tr>
-        <td>Pin window</td>
-		<td colspan="2" align="center">super + p</td>
-    </tr>
-	<tr>
-        <td>Clipboard manager</td>
-		<td colspan="2" align="center">super + v</td>
-    </tr>
-	<tr>
-        <td>Toggle bar</td>
-		<td colspan="2" align="center">super + b</td>
-    </tr>
-	<tr>
-        <td>Switch bar to mewline/waybar</td>
-		<td>super + shift + b</td>
-		<td>N/A</td>
-    </tr>
-</table>
-
-<h3 align="center">Window and Workspace Management</h3>
-<table align="center">
-    <tr>
-        <th>Action</th>
-        <th>Hyprland</th>
-		<th>Bspwm</th>
-    </tr>
-	<tr>
-        <td>Switch to another workspace</td>
-		<td>super + 1-9</td>
-		<td>super + 1-9</td>
-    </tr>
-	<tr>
-        <td>Switch to next workspace</td>
-		<td>super + ctrl + right</td>
-		<td>super + ctrl + right</td>
-    </tr>
-	<tr>
-        <td>Switch to previous workspace</td>
-		<td>super + ctrl + left</td>
-		<td>super + ctrl + left</td>
-    </tr>
-	<tr>
-        <td>Switch to first empty workspace</td>
-		<td>super + ctrl + down</td>
-		<td>super + ctrl + down</td>
-    </tr>
-	<tr>
-        <td>Scroll workspaces forward</td>
-		<td>super + mouse_down</td>
-		<td>super + mouse_down</td>
-    </tr>
-	<tr>
-        <td>Scroll workspaces backward</td>
-		<td>super + mouse_up</td>
-		<td>super + mouse_up</td>
-    </tr>
-	<tr>
-        <td>Switch to special workspace</td>
-		<td>super + s</td>
-		<td>N/A</td>
-    </tr>
-     <tr>
-        <td>Move active window to another workspace</td>
-		<td>super + shift + 1-9</td>
-		<td>super + shift + 1-9</td>
-    </tr>
-     <tr>
-        <td>Toggle active window to floating mode</td>
-		<td colspan="2" align="center">super + space</td>
-    </tr>
-	<tr>
-        <td>Toggle active window to fullscreen mode</td>
-		<td colspan="2" align="center">alt + enter</td>
-    </tr>
-    <tr>
-        <td>Close active window</td>
-		<td colspan="2" align="center">super + q</td>
-    </tr>
-	<tr>
-        <td>Kill active window</td>
-		<td colspan="2" align="center">super + k</td>
-    </tr>
-     <tr>
-        <td>Move window focus</td>
-		<td colspan="2" align="center">super + arrow keys</td>
-    </tr>
-	<tr>
-        <td>Resize window</td>
-		<td colspan="2" align="center">super + shift + arrow keys</td>
-    </tr>
-	<tr>
-        <td>Move window</td>
-		<td colspan="2" align="center">super + shift + ctrl + arrow keys</td>
-    </tr>
-</table>
-
-<h3 align="center">Launch Applications</h3>
-<table align="center">
-    <tr>
-        <th>Action</th>
-        <th>Hyprland</th>
-		<th>Bspwm</th>
-    </tr>
-	<tr>
-        <td>Open Firefox</td>
-		<td colspan="2" align="center">super + shift + f</td>
-    </tr>
-	<tr>
-        <td>Open VSCode</td>
-		<td colspan="2" align="center">super + shift + c</td>
-    </tr>
-	<tr>
-        <td>Open Telegram</td>
-		<td colspan="2" align="center">super + shift + t</td>
-    </tr>
-	<tr>
-        <td>Open Obsidian</td>
-		<td colspan="2" align="center">super + shift + o</td>
-    </tr>
-	<tr>
-        <td>Open pavucontrol</td>
-		<td colspan="2" align="center">super + shift + p</td>
-    </tr>
-</table>
-
-<h3 align="center">System Control</h3>
-<table align="center">
-    <tr>
-        <th>Action</th>
-        <th>Hyprland</th>
-		<th>Bspwm</th>
-    </tr>
-	<tr>
-        <td>Exit session</td>
-		<td colspan="2" align="center">super + delete</td>
-    </tr>
-    <tr>
-        <td>Restart window manager</td>
-		<td colspan="2" align="center">ctrl + shift + r</td>
-    </tr>
-	<tr>
-        <td>Disable/Enable hotkey tracking</td>
-		<td colspan="2" align="center">super + escape</td>
-    </tr>
-</table>
-
-## ⭐ Reviews
+Report a bug or suggest a feature
+</td>
+<td align="center" width="33%">
+<h3>⭐ Reviews</h3>
 <a href="https://meowrch.github.io/en/#reviews">
-	<img src=".meta/assets/reviews-banner.png"/>
+<img src="https://img.shields.io/badge/GitHub-Reviews-181717?style=for-the-badge&logo=github&logoColor=white" alt="Reviews">
+</a>
+<br><br>
+Share your impressions about the distro
+</td>
+</tr>
+</table>
+
+</div>
+
+---
+
+## ⭐ What users say?
+
+<div align="center">
+
+<a href="https://meowrch.github.io/en/#reviews">
+<img src=".meta/assets/reviews-banner-en.png" width="80%" alt="User Reviews">
 </a>
 
-We value **your opinion** and would be happy if you share your experience using **Meowrch**. Your reviews help us make the project better and inspire us to new achievements.
+> [!IMPORTANT] **📢 Your feedback matters!** \
+>  Share your experience on the **[website](https://meowrch.github.io/en/#reviews)**
 
-You can see what other users are saying and leave your review on **[our website](https://meowrch.github.io/en/#reviews)**, or directly on **[GitHub](https://github.com/meowrch/meowrch/discussions/categories/reviews)**.
+</div>
+
+---
+
+## ☕ Support the project
+
+<div align="center">
+
+**Like Meowrch?** Help develop the project! 🚀
+
+| 💎 Cryptocurrency | 📬 Address |
+|:---:|:---|
+| **TON** | `UQB9qNTcAazAbFoeobeDPMML9MG73DUCAFTpVanQnLk3BHg3` |
+| **Ethereum** | `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13` |
+| **Bitcoin** | `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn` |
+| **Tron** | `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs` |
+
+<br>
+
+*Every donation motivates to continue developing the project! ❤️*
+
+</div>
+
+---
+
+## 📊 Project statistics
 
 
-## ☕ Support the Project
-If you want to support my work, you can send a donation to the following cryptocurrency wallets:
+### ⭐ Star history
 
-| Cryptocurrency | Address                                        	|
-| -------------- | -------------------------------------------------- |
-| **TON**        | `UQB9qNTcAazAbFoeobeDPMML9MG73DUCAFTpVanQnLk3BHg3` |
-| **Ethereum**   | `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13`       |
-| **Bitcoin**    | `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn`       |
-| **Tron**       | `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs`               |
-
-## 📊 Statistics
 <a href="https://star-history.com/#meowrch/meowrch&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
- </picture>
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
+<source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
+<img alt="Star History Chart" src="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
+</picture>
 </a>
 
-![Alt](https://repobeats.axiom.co/api/embed/96a58cbd631f6100db2e77966316aa5cf0c21f47.svg "Repobeats analytics image")
+### 📈 Repository activity
+
+![Repobeats Analytics](https://repobeats.axiom.co/api/embed/96a58cbd631f6100db2e77966316aa5cf0c21f47.svg "Repobeats analytics image")
+
+
+---
+
+<div align="center">
+
+**Made with ❤️ for Linux community**
+
+</div>
