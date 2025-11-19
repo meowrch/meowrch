@@ -105,9 +105,10 @@ Manjaro - simplicity and stability through delayed updates.
 
 ## 🛠️ Installation
 
-> [!WARNING] The installer is designed for **clean Arch Linux**. \
+> [!WARNING] 
+> The installer is designed for **clean Arch Linux**. \
 > If you already have a configured system, the installation **will overwrite** configurations. \
-> For testing, create a new user.
+> For testing, create a new user. \
 > If you like it — switch to Meowrch completely
 
 ### 📦 Quick start
@@ -250,11 +251,15 @@ Share your impressions about the distro
 <a href="https://meowrch.github.io/en/#reviews">
 <img src=".meta/assets/reviews-banner-en.png" width="80%" alt="User Reviews">
 </a>
-
-> [!IMPORTANT] **📢 Your feedback matters!** \
->  Share your experience on the **[website](https://meowrch.github.io/en/#reviews)**
-
+<br>
+<br>
 </div>
+
+
+> [!IMPORTANT]
+> **📢 Your feedback matters!**  \
+> Share your experience on the [**website**](https://meowrch.github.io/en/#reviews)
+
 
 ---
 
