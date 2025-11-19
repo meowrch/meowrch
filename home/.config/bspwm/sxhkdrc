@@ -5,7 +5,7 @@
 
 ##==> SYSTEM BINDS
 ##############################################################################################
-super + {Return,e,w,t,p,v,d,x,l,c,b,period}
+super + {Return,e,w,t,p,v,a,x,l,c,b,period}
     {kitty, \
     nemo, \
     sh $XDG_BIN_HOME/rofi-menus/wallpaper-selector.sh, \
