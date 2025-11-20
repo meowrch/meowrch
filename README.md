@@ -25,40 +25,46 @@
 
 ---
 
-## 🎯 Why another distro?
+## 🎯 Why Another Rice?
 
-<table>
-<tr>
-<td width="60%">
+**Most ready-made rice setups for Arch solve only one problem:**
 
-Arch Linux is **freedom**. But freedom **requires time**.
+- 🎨 Either **beauty**, but the system eats RAM.
+- ⚡ Or **performance**, but the UI looks ugly.
+- 🛠️ Or **functionality**, but the code turns into "spaghetti" that you can't fix yourself.
 
-If you want Arch, but don't want to spend a week on **dotfiles** — Meowrch does it for you.
+### **Meowrch is a different approach:**
 
-CachyOS — performance through deep optimization.
-EndeavourOS - pure Arch with DE choice, minimal pre-configuration.
-Manjaro - simplicity and stability through delayed updates.
+We don't sacrifice one for the other. Instead, we create a system where each component is chosen based on the principle of **"maximum results with minimum resources"**.
 
-**Meowrch** combines **everything:**
-- ⚡ **Maximum performance**: best optimizations from [ARU](https://github.com/ventureoo/ARU) and [CachyOS](https://cachyos.org/). [Learn more](https://meowrch.github.io/en/optimization/performance-advantages/)
-- 🎨 **Ready-to-use environment**: BSPWM/Hyprland with themes, smooth animations, functional **Dynamic Island**.
-- 🛠️ **10-minute installation**: from clean Arch to fully configured desktop.
+**But most importantly** — we don't limit ourselves to beautiful configs.
 
-</td>
-<td width="40%">
+We create **our own tools** that solve **long-standing pain points of the entire Linux community**:
+<table> 
+  <tr> 
+  <td width="50%">
+    🏷️ Nemo Tags
+
+    For 10+ years the community requested a tagging system for Nemo.
+    Developers ignored it. We made it.
+
+    Now file organization like in macOS Finder is available to everyone.
+  </td> 
+  <td width="50%">
+    🩸 BlueVein
+
+    Dual-boot Windows/Linux = Bluetooth hell.
+    Switched OS? Reconnect your mouse, keyboard, headphones.
+    **Every. Single. Time.**
+
+    We solved this agonizing problem.
+  </td> 
+  </tr> 
+</table>
 
 > [!NOTE]
-> **"Arch for those who value their time"**
-
-**By the numbers:**
-- 🎯 **10 minutes** to complete installation.
-- 🚀 **2 fully configured environments** BSPWM + Hyprland.
-- 🎨 **2 default themes** + **community** theme store.
-- ⚙️ **1Gb RAM** on system startup, thanks to [lightweight components](https://meowrch.github.io/en/introduction/component-selection-philosophy/).
-
-</td>
-</tr>
-</table>
+> **All our tools are open-source** and work not only in Meowrch. \
+> We develop an ecosystem **for the entire Linux community**, not just "making it pretty for ourselves".
 
 ---
 
@@ -68,38 +74,76 @@ Manjaro - simplicity and stability through delayed updates.
 
 | 💎 Feature | 🔥 What it gives you |
 |:---:|:---|
-| **🚀 Optimization** | System configured with [aggressive optimization flags](https://meowrch.github.io/en/optimization/performance-advantages/), community-tested. Performance on par with [CachyOS](https://cachyos.org/) |
-| **🎨 [Community](https://github.com/meowrch/pawlette-themes) theme store** | Change the entire system's appearance **with one command** |
-| **📦 Open-source development** | We support Linux development by creating our own components **useful to the global Linux community**. [**Learn more here**](https://github.com/meowrch/) |
-| **🛠️ Automation** | Installation **in 10 minutes**, full setup and optimization — **without manual config editing** |
-| **🎯 Ergonomics** | Hotkeys designed **down to the smallest detail** — work faster |
+| **🚀 Optimization** | The system has the best optimizations from [ARU](https://github.com/ventureoo/ARU) and [CachyOS](https://cachyos.org/). [More details](https://meowrch.github.io/en/optimization/performance-advantages/) |
+| **🎨 Community [theme store](https://github.com/meowrch/pawlette-themes)** | Change the appearance of the entire system **with one command** |
+| **📦 Open-source development** | We support Linux development by creating our own components, **useful for the global Linux community**. [**More details here**](https://github.com/meowrch/) |
+| **🛠️ Automation** | Installation **in 10 minutes**, complete setup and optimization — **without manual config editing** |
+| **🎯 Ergonomics** | Hotkeys are thought out **down to the smallest detail** — work faster |
 | **🌊 Two environments** | BSPWM (X11) or Hyprland (Wayland) — **stability or modernity** |
-
+| **🪶 Lightweight** |  **1 GB RAM** at system startup — thanks to [lightweight components](https://meowrch.github.io/en/introduction/сomponent-selection-philosophy/) |
 </div>
 
 ---
 
-## 📸 Visual presentation
+## 📸 Visual Presentation
 
 <table align="center">
   <tr>
     <td colspan="3">
         <a href="https://youtu.be/KdGPDF4p5CA">
-            <img src=".meta/assets/video-preview-youtube.png" width="100%" alt="Meowrch video preview">
+            <img src=".meta/assets/video-preview-youtube.png" width="100%" alt="Meowrch Video Preview">
         </a>
     </td>
   </tr>
   <tr>
     <td><img src=".meta/assets/1.png" alt="Basic applications and widgets"></td>
-    <td><img src=".meta/assets/2.png" alt="Demonstration of desktop use case for music visualization."></td>
-    <td><img src=".meta/assets/3.png" alt="Demonstration of Adobe software (Photoshop, AfterEffects) functionality"></td>
+    <td><img src=".meta/assets/2.png" alt="Desktop music visualization use case demonstration."></td>
+    <td><img src=".meta/assets/3.png" alt="Adobe software functionality demonstration (Photoshop, AfterEffects)"></td>
   </tr>
   <tr>
-    <td><img src=".meta/assets/4.png" alt="Demonstration of latest Steam games with complex protection technologies like Denuvo (Mafia: The old country example)"></td>
-    <td><img src=".meta/assets/5.png" alt="Demonstration of VSCode workflow"></td>
-    <td><img src=".meta/assets/6.png" alt="Demonstration of desktop wallpaper change animation via mewline dynamic island"></td>
+    <td><img src=".meta/assets/4.png" alt="Latest Steam games functionality demonstration with complex protection technologies like Denuvo (using Mafia: The Old Country as example)"></td>
+    <td><img src=".meta/assets/5.png" alt="VSCode workflow demonstration"></td>
+    <td><img src=".meta/assets/6.png" alt="Desktop wallpaper change animation demonstration via mewline dynamic island"></td>
   </tr>
 </table>
+
+---
+
+## 🏝️ Meet Mewline — Dynamic Island for Linux
+
+### **Compact interface, maximum information:**
+
+- 🖥️ **System tray** — all your background applications
+- 🗂️ **Workspaces** — quick switching between desktops
+- 📅 **Date & Time** — always visible
+- 🔆 **Brightness** — screen brightness control
+- 🔊 **Volume** — sound control
+- 🔋 **Battery** — charge and charging status
+- ⚡ **Power** — power management menu
+- 📸 **OCR** — text recognition from selected screen area.
+
+### **Interactive system control center:**
+
+- 🎵 **Compact mode** — information about active window and playing music
+- 🔔 **Information menu** — calendar and notification history (Super+Alt+D)
+- 🚀 **App launcher** — application launcher (Super+Alt+A)
+- 🖼️ **Wallpapers** — wallpaper change with preview (Super+Alt+W)
+- 😊 **Emoji picker** — emoji selection (Super+Alt+.)
+- 📋 **Clipboard** — clipboard history (Super+Alt+V)
+- 🌐 **Network manager** — Wi-Fi and Ethernet (Super+Alt+N)
+- 🖥️ **Workspaces** — windows and workspaces manager (Super+Alt+Tab)
+- 🔵 **Bluetooth** — device management (Super+Alt+B)
+
+> [!NOTE]
+> Yes-yes. **All this is in one utility**. \
+> Instead of configuring Rofi + Waybar + Dunst + wlogout + network-manager-applet + clipboard manager — **one installation command**.
+
+
+<div align="center">
+
+**[📖 Full Mewline documentation](https://github.com/meowrch/mewline)** -  **[🐛 Report an issue](https://github.com/meowrch/mewline/issues)**
+
+</div>
 
 ---
 
@@ -107,11 +151,11 @@ Manjaro - simplicity and stability through delayed updates.
 
 > [!WARNING] 
 > The installer is designed for **clean Arch Linux**. \
-> If you already have a configured system, the installation **will overwrite** configurations. \
+> If you already have a configured system, installation **will overwrite** configurations. \
 > For testing, create a new user. \
 > If you like it — switch to Meowrch completely
 
-### 📦 Quick start
+### 📦 Quick Start
 
 ```
 # 1. Clone the repository
@@ -139,7 +183,7 @@ reboot
 <td><a href="https://archlinux.org/">Arch Linux</a> + <a href="https://meowrch.github.io/en/optimization/performance-advantages/">aggressive optimization</a>
 </tr>
 <tr>
-<td><b>🪟 Window managers</b></td>
+<td><b>🪟 Window Managers</b></td>
 <td><a href="https://github.com/baskerville/bspwm">BSPWM</a> (X11) | <a href="https://hyprland.org/">Hyprland</a> (Wayland)</td>
 </tr>
 <tr>
@@ -148,7 +192,7 @@ reboot
 </tr>
 <tr>
 <td><b>🎨 Customization</b></td>
-<td><a href="https://github.com/meowrch/pawlette">Pawlette</a> with pre-installed Catppuccin Mocha theme</td>
+<td><a href="https://github.com/meowrch/pawlette">Pawlette</a> with preinstalled Catppuccin Mocha theme</td>
 </tr>
 <tr>
 <td><b>🖥️ Terminal</b></td>
@@ -159,7 +203,7 @@ reboot
 <td><a href="https://github.com/fish-shell/fish-shell">Fish</a> | <a href="https://www.zsh.org">Zsh</a></td>
 </tr>
 <tr>
-<td><b>🎯 Menus and widgets</b></td>
+<td><b>🎯 Menus and Widgets</b></td>
 <td><a href="https://github.com/davatorium/rofi">Rofi</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
 </tr>
 <tr>
@@ -175,41 +219,41 @@ reboot
 > [!NOTE]
 > **Why these components?**
 > We chose between performance, functionality, and stability.
-> [Learn more about component selection](https://meowrch.github.io/en/introduction/сomponent-selection-philosophy/)
+> [More about component selection](https://meowrch.github.io/en/introduction/сomponent-selection-philosophy/)
 
 ---
 
 ## ⌨️ Hotkeys
 
-| Action                     | Combination    | Why is it convenient?                                                                                           |
-| -------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------- |
-| Open terminal              | Super + Enter  | Quick access to universal tool.                                                                                 |
-| Application selection      | Super + A      | Convenient way to choose the needed application.                                                                |
-| Color picker               | Super + C      | Pick color from screen for design/development.                                                                  |
-| Change wallpaper           | Super + W      | Rofi with preview. One button — new desktop look.                                                               |
-| Change theme               | Super + T      | New theme in 2 seconds. Without config editing.                                                                 |
-| Emoji                      | Super + .      | Like Windows 11, but faster.                                                                                    |
-| Disable keyboard shortcuts | Super + Escape | Can help when using virtual machines on Meowrch with configurations that also work through keyboard shortcuts. |
+| Action                | Combination    | Why is it convenient?                                                                               |
+| --------------------- | -------------- | --------------------------------------------------------------------------------------------------- |
+| Open terminal         | Super + Enter  | Quick access to a universal tool.                                                                   |
+| Application selection | Super + A      | Convenient way to select the needed application.                                                    |
+| Color picker          | Super + C      | Recognize color from screen for design/development.                                                 |
+| Change wallpaper      | Super + W      | Rofi with preview. One button — new desktop look.                                                   |
+| Change theme          | Super + T      | New theme in 2 seconds. Without editing configs.                                                    |
+| Emoji                 | Super + .      | Like in Windows 11, but faster.                                                                     |
+| Disable hotkeys       | Super + Escape | Can help when using virtual machines on Meowrch with configurations that also work through hotkeys. |
 
 
-> [!TIP] 
-> **All available keyboard shortcuts** can be found [**here**](https://meowrch.github.io/en/usage/hotkeys/#meowrch-hotkeys).
+> [!TIP]
+> **All available hotkeys** can be found [**here**](https://meowrch.github.io/en/usage/hotkeys/#meowrch-hotkeys).
 
 ---
 
-## 💬 Support and community
+## 💬 Support and Community
 
 <div align="center">
 
-<a href="https://meowrch.github.io/en/">
+<a href="https://meowrch.github.io/">
 <img src=".meta/assets/wiki-banner-en.png" width="80%" alt="Meowrch Wiki">
 </a>
 
-**[🌐 Official Wiki](https://meowrch.github.io/en/)** — guides, FAQ, troubleshooting
+**[🌐 Official Wiki](https://meowrch.github.io/)** — guides, FAQ, troubleshooting
 
 <br>
 
-### 💬 Join the community
+### 💬 Join the Community
 
 <table align="center">
 <tr>
@@ -235,7 +279,7 @@ Report a bug or suggest a feature
 <img src="https://img.shields.io/badge/GitHub-Reviews-181717?style=for-the-badge&logo=github&logoColor=white" alt="Reviews">
 </a>
 <br><br>
-Share your impressions about the distro
+Share your impressions about the distribution
 </td>
 </tr>
 </table>
@@ -244,7 +288,7 @@ Share your impressions about the distro
 
 ---
 
-## ⭐ What users say?
+## ⭐ What Users Say?
 
 <div align="center">
 
@@ -256,18 +300,17 @@ Share your impressions about the distro
 </div>
 
 
-> [!IMPORTANT]
-> **📢 Your feedback matters!**  \
-> Share your experience on the [**website**](https://meowrch.github.io/en/#reviews)
-
+> [!IMPORTANT] 
+> **📢 Your review matters!** \
+>  Share your experience on **[website](https://meowrch.github.io/en/#reviews)**
 
 ---
 
-## ☕ Support the project
+## ☕ Support the Project
 
 <div align="center">
 
-**Like Meowrch?** Help develop the project! 🚀
+**Like Meowrch?** Help the project development! 🚀
 
 | 💎 Cryptocurrency | 📬 Address |
 |:---:|:---|
@@ -284,10 +327,10 @@ Share your impressions about the distro
 
 ---
 
-## 📊 Project statistics
+## 📊 Project Statistics
 
 
-### ⭐ Star history
+### ⭐ Star History
 
 <a href="https://star-history.com/#meowrch/meowrch&Date">
 <picture>
@@ -297,7 +340,7 @@ Share your impressions about the distro
 </picture>
 </a>
 
-### 📈 Repository activity
+### 📈 Repository Activity
 
 ![Repobeats Analytics](https://repobeats.axiom.co/api/embed/96a58cbd631f6100db2e77966316aa5cf0c21f47.svg "Repobeats analytics image")
 
@@ -306,6 +349,6 @@ Share your impressions about the distro
 
 <div align="center">
 
-**Made with ❤️ for Linux community**
+**Made with ❤️ for the Linux community**
 
 </div>
