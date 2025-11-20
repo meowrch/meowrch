@@ -42,22 +42,24 @@ We don't sacrifice one for the other. Instead, we create a system where each com
 We create **our own tools** that solve **long-standing pain points of the entire Linux community**:
 <table> 
   <tr> 
-  <td width="50%">
-    🏷️ Nemo Tags
+  <td>
+🏷️ Nemo Tags
 
-    For 10+ years the community requested a tagging system for Nemo.
-    Developers ignored it. We made it.
+For 10+ years the community requested a tagging system for Nemo.
+Developers ignored it. We made it.
 
-    Now file organization like in macOS Finder is available to everyone.
+Now file organization like in macOS Finder is available to everyone.
   </td> 
-  <td width="50%">
-    🩸 BlueVein
+  </tr>
+  <tr> 
+  <td>
+🩸 BlueVein
 
-    Dual-boot Windows/Linux = Bluetooth hell.
-    Switched OS? Reconnect your mouse, keyboard, headphones.
-    **Every. Single. Time.**
+Dual-boot Windows/Linux = Bluetooth hell.
+Switched OS? Reconnect your mouse, keyboard, headphones.
+**Every. Single. Time.**
 
-    We solved this agonizing problem.
+We solved this agonizing problem.
   </td> 
   </tr> 
 </table>
