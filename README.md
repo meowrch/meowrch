@@ -192,8 +192,8 @@ reboot
 | Disable keyboard shortcuts | Super + Escape | Can help when using virtual machines on Meowrch with configurations that also work through keyboard shortcuts. |
 
 
-> [!TIP] **Full list:** \
-> All available keyboard shortcuts can be found [here](https://meowrch.github.io/en/usage/hotkeys/#meowrch-hotkeys).
+> [!TIP] 
+> **All available keyboard shortcuts** can be found [**here**](https://meowrch.github.io/en/usage/hotkeys/#meowrch-hotkeys).
 
 ---
 
