@@ -1,3 +1,3 @@
 
 super + Escape
-    pkill -USR1 -x sxhkd && sxhkd -c ~/.config/bspwm/sxhkdrc &
+    pkill -x sxhkd 2>/dev/null && sxhkd -c ~/.config/bspwm/sxhkdrc &
