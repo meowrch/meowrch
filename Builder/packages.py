@@ -42,7 +42,7 @@ BASE = Packages(
 		bspwm_packages=[
 			"xorg-server", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
 			"wmname", "polybar", "xorg-xrandr", "xsettingsd", "clipnotify",
-            "dunst",
+            "dunst", "xorg-xsetroot"
 		],
 		hyprland_packages=[
 			"hyprland", "waybar", "hyprlock", "swww", "wl-clipboard", 
