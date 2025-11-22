@@ -1,5 +1,0 @@
-[org/cinnamon/desktop/interface]
-can-change-accels=true
-
-[org/cinnamon/desktop/default-applications/terminal]
-exec='kitty'
