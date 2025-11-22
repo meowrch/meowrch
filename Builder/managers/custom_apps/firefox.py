@@ -1,5 +1,6 @@
 import glob
 import os
+import shutil
 import sqlite3
 import subprocess
 import time
@@ -7,8 +8,190 @@ import traceback
 import uuid
 
 from loguru import logger
+from pyvirtualdisplay import Display
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
 
 from .base import AppConfigurer
+
+
+class TampermonkeyInstaller:
+    def __init__(
+        self, script_url: str, headless: bool = True, display_size: tuple = (1920, 1080)
+    ):
+        self.script_url = script_url
+        self.use_xvfb = headless
+        self.display_size = display_size
+
+        self.driver = None
+        self.display = None
+        self.profile_path = None
+
+        # Флаги, показывающие, что у нас было до запуска
+        self._had_session_file = False
+        self._had_backup_dir = False
+
+    def _find_profile(self) -> str:
+        base_path = os.path.expanduser("~/.mozilla/firefox")
+        profiles = glob.glob(os.path.join(base_path, "*.default-release"))
+
+        if not profiles:
+            profiles = glob.glob(os.path.join(base_path, "*.default"))
+
+        return profiles[0] if profiles else None
+
+    def _manage_files(self, action: str):
+        if not self.profile_path:
+            return
+
+        # Основной файл сессии
+        session_file = os.path.join(self.profile_path, "sessionstore.jsonlz4")
+        session_backup = session_file + ".bak_selenium"
+
+        # Папка с авто-бэкапами сессии (Firefox любит восстанавливаться из неё)
+        backup_dir = os.path.join(self.profile_path, "sessionstore-backups")
+        backup_dir_copy = os.path.join(
+            self.profile_path, "sessionstore-backups-selenium-copy"
+        )
+
+        try:
+            if action == "backup":
+                # Бэкапим основной файл
+                if os.path.exists(session_file):
+                    shutil.copy2(session_file, session_backup)
+                    self._had_session_file = True
+                else:
+                    self._had_session_file = False
+
+                # Бэкапим папку бэкапов
+                if os.path.exists(backup_dir):
+                    if os.path.exists(backup_dir_copy):
+                        shutil.rmtree(backup_dir_copy)  # Чистим если остался мусор
+                    shutil.copytree(backup_dir, backup_dir_copy)
+                    self._had_backup_dir = True
+                else:
+                    self._had_backup_dir = False
+
+            elif action == "restore":
+                # Восстанавливаем основной файл
+                if self._had_session_file and os.path.exists(session_backup):
+                    shutil.copy2(session_backup, session_file)
+                    os.remove(session_backup)
+                elif not self._had_session_file and os.path.exists(session_file):
+                    os.remove(session_file)
+
+                if os.path.exists(backup_dir):
+                    shutil.rmtree(backup_dir)  # Удаляем всё, что насоздавал Selenium
+
+                # Возвращаем старую папку (если была)
+                if self._had_backup_dir and os.path.exists(backup_dir_copy):
+                    shutil.copytree(backup_dir_copy, backup_dir)
+                    shutil.rmtree(backup_dir_copy)
+        except Exception:
+            ...
+
+    def start_display(self):
+        if self.use_xvfb:
+            if shutil.which("Xvfb") is None:
+                raise FileNotFoundError(
+                    "The ‘xorg-server-xvfb’ package is not installed! Install it using pacman."
+                )
+
+            self.display = Display(visible=0, size=self.display_size)
+            self.display.start()
+
+    def stop_display(self):
+        if self.display:
+            self.display.stop()
+
+    def init_driver(self):
+        self.profile_path = self._find_profile()
+        self._manage_files("backup")
+
+        prefs = os.path.join(self.profile_path, "prefs.js")
+        if os.path.exists(prefs):
+            shutil.copy2(prefs, prefs + ".bak_selenium")
+
+        options = Options()
+        if self.profile_path:
+            options.add_argument("-profile")
+            options.add_argument(self.profile_path)
+
+        options.set_preference("network.proxy.type", 0)
+        options.set_capability("pageLoadStrategy", "normal")
+
+        self.driver = webdriver.Firefox(options=options)
+
+    def _click_install_button(self, timeout: int = 20):
+        start_time = time.time()
+        # Расширенный список XPath (на всякий случай)
+        xpath_query = (
+            "//*[@id='input_SW5zdGFsbF91bmRlZmluZWQ_bu'] | "
+            "//*[@id='input_UmVpbnN0YWxsX3VuZGVmaW5lZA_bu'] | "
+            "//input[@value='Установить'] | "
+            "//input[@value='Install'] | "
+            "//input[@value='Reinstall'] | "
+            "//input[contains(@class, 'btn') and contains(@value, 'nstall')]"
+        )
+
+        while time.time() - start_time < timeout:
+            if len(self.driver.window_handles) > 1:
+                self.driver.switch_to.window(self.driver.window_handles[-1])
+
+            # 1. Main frame
+            try:
+                btn = self.driver.find_element(By.XPATH, xpath_query)
+                btn.click()
+                return True
+            except Exception:
+                pass
+
+            # 2. Iframes
+            frames = self.driver.find_elements(By.TAG_NAME, "iframe")
+            for frame in frames:
+                try:
+                    self.driver.switch_to.frame(frame)
+                    btn = self.driver.find_element(By.XPATH, xpath_query)
+                    btn.click()
+                    return True
+                except Exception:
+                    self.driver.switch_to.default_content()
+            time.sleep(1)
+
+        return False
+
+    def run(self):
+        try:
+            self.start_display()
+            self.init_driver()
+
+            self.driver.get("about:blank")
+            time.sleep(2)
+
+            self.driver.execute_script(f"window.location.href = '{self.script_url}';")
+
+            if self._click_install_button():
+                time.sleep(5)
+        except Exception:
+            logger.error(f"❌ Error while installing VOT: {traceback.format_exc()}")
+
+        finally:
+            if self.driver:
+                self.driver.quit()
+                time.sleep(3)
+
+            # Восстанавливаем файлы после полного закрытия
+            self._manage_files("restore")
+
+            # Восстанавливаем prefs.js
+            prefs = os.path.join(self.profile_path, "prefs.js")
+            prefs_bak = prefs + ".bak_selenium"
+            if os.path.exists(prefs_bak):
+                shutil.copy2(prefs_bak, prefs)
+                os.remove(prefs_bak)
+
+            self.stop_display()
 
 
 class FirefoxConfigurer(AppConfigurer):
@@ -20,6 +203,12 @@ class FirefoxConfigurer(AppConfigurer):
         unpaywall: bool,
         tampermonkey: bool,
     ):
+        self.darkreader = darkreader
+        self.ublock = ublock
+        self.twp = twp
+        self.unpaywall = unpaywall
+        self.tampermonkey = tampermonkey
+
         self.plugins = [
             (darkreader, "addon@darkreader.org.xpi"),
             (ublock, "uBlock0@raymondhill.net.xpi"),
@@ -47,8 +236,28 @@ class FirefoxConfigurer(AppConfigurer):
         except Exception:
             logger.error(error_msg.format(err=traceback.format_exc()))
 
+        error_msg = "Error installing VOT for firefox: {err}"
+
+        if self.tampermonkey:
+            logger.info("Installing VOT for firefox...")
+            try:
+                URL = "https://raw.githubusercontent.com/ilyhalight/voice-over-translation/master/dist/vot.user.js"
+                TampermonkeyInstaller(URL).run()
+                logger.success("VOT has been successfully installed!")
+            except Exception:
+                logger.error(error_msg.format(err=traceback.format_exc()))
+
     def _init_firefox_profile(self) -> None:
-        subprocess.Popen(["timeout", "5", "firefox", "--headless", "--new-tab", "https://meowrch.github.io/"])
+        subprocess.Popen(
+            [
+                "timeout",
+                "5",
+                "firefox",
+                "--headless",
+                "--new-tab",
+                "https://meowrch.github.io/",
+            ]
+        )
         time.sleep(6)
 
     def _copy_profile(self) -> None:
@@ -375,7 +584,7 @@ INSERT OR REPLACE INTO moz_bookmarks
                     logger.success(
                         "Successfully added Meowrch Wiki to bookmarks toolbar"
                     )
-                    
+
                     # Verify the bookmark was added
                     cursor.execute(
                         "SELECT id, parent, title, guid FROM moz_bookmarks WHERE parent = ?",
@@ -383,7 +592,7 @@ INSERT OR REPLACE INTO moz_bookmarks
                     )
                     verification = cursor.fetchall()
                     logger.info(f"Toolbar bookmarks after addition: {verification}")
-                    
+
                 else:
                     logger.warning("Could not find bookmarks toolbar")
             else:

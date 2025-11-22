@@ -50,9 +50,9 @@ declare -a packages=(
 	"psutil"
 	"gputil"
 	"pyamdgpuinfo"
-	"pyyaml"
-	"pillow"
 	"colorama"
+    "pyvirtualdisplay"
+    "selenium"
 )
 
 for package in "${packages[@]}"; do
