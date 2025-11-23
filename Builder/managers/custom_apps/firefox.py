@@ -95,7 +95,7 @@ class TampermonkeyInstaller:
         if self.use_xvfb:
             if shutil.which("Xvfb") is None:
                 raise FileNotFoundError(
-                    "The ‘xorg-server-xvfb’ package is not installed! Install it using pacman."
+                    "The 'xorg-server-xvfb' package is not installed! Install it using pacman."
                 )
 
             self.display = Display(visible=0, size=self.display_size)
@@ -120,9 +120,101 @@ class TampermonkeyInstaller:
 
         options.set_preference("network.proxy.type", 0)
         options.set_capability("pageLoadStrategy", "normal")
+        
+        options.set_preference("extensions.autoDisableScopes", 0)
+        options.set_preference("xpinstall.signatures.required", False)
 
         self.driver = webdriver.Firefox(options=options)
 
+    def _enable_tampermonkey(self):
+        """Активация Tampermonkey через about:addons"""
+        logger.info("Checking Tampermonkey status...")
+        
+        try:
+            # Переход на страницу расширений
+            self.driver.get("about:addons")
+            time.sleep(3)
+            
+            # Сначала переключаемся на вкладку Extensions (если открылась другая)
+            click_extensions_script = """
+                // Ищем и кликаем на вкладку Extensions
+                let extensionsButton = document.querySelector('button[name="extension"]');
+                if (!extensionsButton) {
+                    // Альтернативный способ поиска
+                    let buttons = document.querySelectorAll('button[role="tab"]');
+                    for (let btn of buttons) {
+                        if (btn.textContent.includes('Extension') || btn.name === 'extension') {
+                            extensionsButton = btn;
+                            break;
+                        }
+                    }
+                }
+                
+                if (extensionsButton) {
+                    extensionsButton.click();
+                    return true;
+                }
+                return false;
+            """
+            
+            clicked = self.driver.execute_script(click_extensions_script)
+            if clicked:
+                logger.info("Switched to Extensions tab")
+                time.sleep(2)
+            
+            # Проверяем статус и активируем если нужно
+            script = """
+                let cards = document.querySelectorAll('addon-card');
+                let result = {found: false, wasDisabled: false, enabled: false};
+                
+                for (let card of cards) {
+                    let addonId = card.getAttribute('addon-id');
+                    if (addonId && (addonId.includes('tampermonkey') || addonId === 'firefox@tampermonkey.net')) {
+                        result.found = true;
+                        
+                        // Проверяем, отключено ли расширение
+                        let isDisabled = card.hasAttribute('disabled');
+                        result.wasDisabled = isDisabled;
+                        
+                        if (isDisabled) {
+                            // Ищем кнопку включения
+                            let toggleButton = card.querySelector('panel-item[action="toggle-disabled"]');
+                            if (toggleButton) {
+                                toggleButton.click();
+                                result.enabled = true;
+                            }
+                        } else {
+                            result.enabled = true;
+                        }
+                        break;
+                    }
+                }
+                
+                return result;
+            """
+            
+            result = self.driver.execute_script(script)
+            
+            if result['found']:
+                if result['wasDisabled']:
+                    if result['enabled']:
+                        logger.success("✓ Tampermonkey was disabled, successfully enabled!")
+                        time.sleep(3)  # Ждем 3 секунды после включения
+                        return True
+                    else:
+                        logger.warning("✗ Tampermonkey is disabled but couldn't enable it")
+                        return True
+                else:
+                    logger.success("✓ Tampermonkey is already enabled")
+                    return True
+            else:
+                logger.warning("✗ Tampermonkey not found in extensions")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error enabling Tampermonkey: {e}")
+            return False
+            
     def _click_install_button(self, timeout: int = 20):
         start_time = time.time()
         # Расширенный список XPath (на всякий случай)
@@ -165,32 +257,74 @@ class TampermonkeyInstaller:
         try:
             self.start_display()
             self.init_driver()
-
+    
+            # Даем время на загрузку расширений
+            logger.info("Waiting for extensions to load...")
+            time.sleep(5)
+    
+            # Активируем Tampermonkey если он отключен
+            needs_restart = self._enable_tampermonkey()
+            
+            if needs_restart:
+                logger.info("Tampermonkey was just enabled, restarting Firefox for initialization...")
+                
+                # Закрываем браузер
+                if self.driver:
+                    self.driver.quit()
+                    time.sleep(3)
+                
+                # Перезапускаем драйвер
+                logger.info("Reinitializing Firefox driver...")
+                options = Options()
+                if self.profile_path:
+                    options.add_argument("-profile")
+                    options.add_argument(self.profile_path)
+    
+                options.set_preference("network.proxy.type", 0)
+                options.set_capability("pageLoadStrategy", "normal")
+                
+                options.set_preference("extensions.autoDisableScopes", 0)
+                options.set_preference("xpinstall.signatures.required", False)
+    
+                self.driver = webdriver.Firefox(options=options)
+                
+                # Даем время на инициализацию Tampermonkey
+                logger.info("Waiting for Tampermonkey to initialize...")
+                time.sleep(5)
+    
+            # Переходим к установке скрипта
             self.driver.get("about:blank")
             time.sleep(2)
-
+    
+            logger.info(f"Installing VOT script from {self.script_url}...")
             self.driver.execute_script(f"window.location.href = '{self.script_url}';")
-
+    
             if self._click_install_button():
+                logger.success("✓ VOT script installed successfully!")
                 time.sleep(5)
-        except Exception:
-            logger.error(f"❌ Error while installing VOT: {traceback.format_exc()}")
-
+            else:
+                logger.warning("✗ Could not find install button for VOT script")
+                
+        except Exception as e:
+            logger.error(f"❌ Error while installing VOT: {e}")
+            logger.error(traceback.format_exc())
+    
         finally:
             if self.driver:
                 self.driver.quit()
                 time.sleep(3)
-
+    
             # Восстанавливаем файлы после полного закрытия
             self._manage_files("restore")
-
+    
             # Восстанавливаем prefs.js
-            prefs = os.path.join(self.profile_path, "prefs.js")
-            prefs_bak = prefs + ".bak_selenium"
-            if os.path.exists(prefs_bak):
-                shutil.copy2(prefs_bak, prefs)
-                os.remove(prefs_bak)
-
+            if self.profile_path:
+                prefs = os.path.join(self.profile_path, "prefs.js")
+                prefs_bak = prefs + ".bak_selenium"
+                if os.path.exists(prefs_bak):
+                    shutil.copy2(prefs_bak, prefs)
+                    os.remove(prefs_bak)
+    
             self.stop_display()
 
 
