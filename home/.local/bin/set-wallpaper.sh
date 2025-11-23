@@ -79,28 +79,33 @@ apply_feh() {
 }
 
 apply_current_wallpaper() {
-    [[ ! -L "$CURRENT_WALL_LINK" ]] && { 
-        echo "No current wallpaper found"
-        exit 1
-    }
-    
-    local current_wall
-    current_wall=$(readlink -f "$CURRENT_WALL_LINK") || {
-        echo "Failed to resolve current wallpaper link"
-        exit 1
-    }
-    
-    [[ ! -f "$current_wall" ]] && {
-        echo "Current wallpaper file not found: $current_wall"
-        exit 1
-    }
+    local target_wall=""
+
+    if [[ -L "$CURRENT_WALL_LINK" ]]; then
+        target_wall=$(readlink -f "$CURRENT_WALL_LINK")
+        
+        if [[ ! -f "$target_wall" ]]; then
+            target_wall=""
+        fi
+    fi
+
+    if [[ -z "$target_wall" ]]; then
+        echo "Current wallpaper link missing or broken. Selecting random..."
+        
+        target_wall=$(find "$WALLPAPERS_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) 2>/dev/null | shuf -n 1)
+        
+        if [[ -z "$target_wall" ]]; then
+            echo "No wallpapers found in $WALLPAPERS_DIR"
+            exit 1
+        fi
+    fi
     
     case "$SESSION_TYPE" in
-        "wayland") apply_swww "$current_wall" ;;
-        "x11")     apply_feh "$current_wall" ;;
+        "wayland") apply_swww "$target_wall" ;;
+        "x11")     apply_feh "$target_wall" ;;
         *)
-            command -v swww >/dev/null && apply_swww "$current_wall"
-            command -v feh >/dev/null && apply_feh "$current_wall"
+            command -v swww >/dev/null && apply_swww "$target_wall"
+            command -v feh >/dev/null && apply_feh "$target_wall"
             ;;
     esac
 }
