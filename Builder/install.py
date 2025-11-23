@@ -1,5 +1,9 @@
+import json
+import os
 import subprocess
 import traceback
+from datetime import datetime
+from pathlib import Path
 
 import inquirer
 from loguru import logger
@@ -11,8 +15,8 @@ from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
 from packages import BASE, CUSTOM, DRIVERS
 from question import Question
-from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
 from utils.config_backup import ConfigBackup
+from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
 
 
 class Builder:
@@ -25,70 +29,87 @@ class Builder:
         self.build_options: BuildOptions = Question.get_answers()
         logger.info(f"User Responses to Questions: {self.build_options}")
 
-        if self.build_options.make_backup:
-            logger.info(
-                "The process of creating a backup of configurations is started!"
-            )
-            FileSystemManager.make_backup()
-            logger.warning(
-                "A backup of all your configuration files is located "
-                'in the root of the meowrch at the path "./backup/"'
-            )
-            logger.warning("Check the backup before you start the installation")
-            input("Press Enter to continue with the installation: ")
-
-        FileSystemManager.create_default_folders()
-        FileSystemManager.copy_dotfiles(
-            exclude_bspwm=not self.build_options.install_bspwm,
-            exclude_hyprland=not self.build_options.install_hyprland,
-        )
-
-        # Backup all critical system configs before any modifications
-        ConfigBackup.backup_all()
-
-        # Включаем multilib и обновляем базу данных
-        PackageManager.update_pacman_conf(enable_multilib=True)
-        PackageManager.update_database()
+        # Проверка существующей установки
+        if self._check_existing_installation():
+            logger.warning("Meowrch is already installed for this user!")
+            if not inquirer.confirm("Continue anyway? This will update the installation."):
+                return
         
-        # Установка Chaotic AUR 
-        if self.build_options.use_chaotic_aur:
-            logger.info("Setting up Chaotic AUR...")
-            ChaoticAurManager.install()
+        # Создаём временный маркер начала установки
+        self._create_installation_marker()
+
+        try:
+            if self.build_options.make_backup:
+                logger.info(
+                    "The process of creating a backup of configurations is started!"
+                )
+                FileSystemManager.make_backup()
+                logger.warning(
+                    "A backup of all your configuration files is located "
+                    'in the root of the meowrch at the path "./backup/"'
+                )
+                logger.warning("Check the backup before you start the installation")
+                input("Press Enter to continue with the installation: ")
+
+            FileSystemManager.create_default_folders()
+            FileSystemManager.copy_dotfiles(
+                exclude_bspwm=not self.build_options.install_bspwm,
+                exclude_hyprland=not self.build_options.install_hyprland,
+            )
+
+            # Backup all critical system configs before any modifications
+            ConfigBackup.backup_all()
+
+            # Включаем multilib и обновляем базу данных
+            PackageManager.update_pacman_conf(enable_multilib=True)
+            PackageManager.update_database()
             
-        PackageManager.install_aur_helper(self.build_options.aur_helper)
+            # Установка Chaotic AUR 
+            if self.build_options.use_chaotic_aur:
+                logger.info("Setting up Chaotic AUR...")
+                ChaoticAurManager.install()
+                
+            PackageManager.install_aur_helper(self.build_options.aur_helper)
 
-        self.packages_installation()
+            self.packages_installation()
 
-        # Настройка модулей GPU для ранней загрузки (критично для Plymouth)
-        DriversManager.setup_gpu_modules_for_early_boot()
+            # Настройка модулей GPU для ранней загрузки (критично для Plymouth)
+            DriversManager.setup_gpu_modules_for_early_boot()
 
-        AppsManager.configure_grub()
-        AppsManager.configure_sddm()
-        AppsManager.configure_plymouth()
-        AppsManager.configure_firefox(
-            darkreader=self.build_options.ff_darkreader,
-            ublock=self.build_options.ff_ublock,
-            twp=self.build_options.ff_twp,
-            unpaywall=self.build_options.ff_unpaywall,
-            tampermonkey=self.build_options.ff_tampermonkey,
-        )
-        AppsManager.configure_code()
-        AppsManager.configure_pawlette()
+            AppsManager.configure_grub()
+            AppsManager.configure_sddm()
+            AppsManager.configure_plymouth()
+            AppsManager.configure_firefox(
+                darkreader=self.build_options.ff_darkreader,
+                ublock=self.build_options.ff_ublock,
+                twp=self.build_options.ff_twp,
+                unpaywall=self.build_options.ff_unpaywall,
+                tampermonkey=self.build_options.ff_tampermonkey,
+            )
+            AppsManager.configure_code()
+            AppsManager.configure_pawlette()
 
-        if self.build_options.install_hyprland:
-            AppsManager.configure_mewline()
+            if self.build_options.install_hyprland:
+                AppsManager.configure_mewline()
 
-        self.daemons_setting()
-        PostInstallation.apply(self.build_options.terminal_shell)
-        logger.warning(
-            "The script was unable to automatically install these packages."
-            "Try installing them manually."
-        )
-        logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
-        logger.warning("Aur: " + ", ".join(self.not_installed_packages.aur))
-        logger.success(
-            "Meowch has been successfully installed! Restart your PC to apply the changes."
-        )
+            self.daemons_setting()
+            PostInstallation.apply(self.build_options.terminal_shell)
+
+            self._write_installation_metadata("3.0.0")
+
+            logger.warning(
+                "The script was unable to automatically install these packages."
+                "Try installing them manually."
+            )
+            logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
+            logger.warning("Aur: " + ", ".join(self.not_installed_packages.aur))
+            logger.success(
+                "Meowrch has been successfully installed! Restart your PC to apply the changes."
+            )
+        except BaseException:
+            logger.error(f"Installation failed: {traceback.format_exc()}")
+            self._cleanup_failed_installation()
+            raise
 
         is_reboot = inquirer.confirm("Do you want to reboot?")
         if is_reboot:
@@ -171,6 +192,66 @@ class Builder:
 
         logger.success("The setting of the daemons is complete!")
 
+    def _write_installation_metadata(self, version: str) -> None:        
+        metadata = {
+            "version": version,
+            "installed_at": datetime.now().isoformat(),
+            "user": os.getenv("USER"),
+            "install_type": "full",
+            "dotfiles_applied": True
+        }
+        
+        base_dir = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}")
+        subprocess.run(["sudo", "mkdir", "-p", str(base_dir)], check=True)
+        
+        # Записываем версию
+        subprocess.run(
+            ["sudo", "tee", str(base_dir / "version")],
+            input=version.encode(),
+            stdout=subprocess.DEVNULL,
+            check=True
+        )
+        
+        # Записываем метаданные
+        subprocess.run(
+            ["sudo", "tee", str(base_dir / ".installed")],
+            input=json.dumps(metadata, indent=2).encode(),
+            stdout=subprocess.DEVNULL,
+            check=True
+        )
+        
+        # Устанавливаем права: только чтение для пользователя
+        subprocess.run(["sudo", "chmod", "444", str(base_dir / "version")], check=True)
+        subprocess.run(["sudo", "chmod", "444", str(base_dir / ".installed")], check=True)
+        
+        logger.success(f"Version metadata protected: {version}")
+
+    def _check_existing_installation(self) -> bool:
+        version_file = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}/version")
+        return version_file.exists()
+    
+    def _create_installation_marker(self) -> None:
+        base_dir = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}")
+        subprocess.run(["sudo", "mkdir", "-p", str(base_dir)], check=True)
+        
+        # Временный файл для отслеживания процесса
+        subprocess.run(
+            ["sudo", "tee", str(base_dir / ".installing")],
+            input=b"installation_in_progress",
+            stdout=subprocess.DEVNULL,
+            check=True
+        )
+    
+    def _cleanup_failed_installation(self) -> None:
+        base_dir = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}")
+        
+        # Удаляем временный маркер
+        subprocess.run(
+            ["sudo", "rm", "-f", str(base_dir / ".installing")],
+            check=False
+        )
+        
+        logger.warning("Installation markers cleaned up due to failure")
 
 if __name__ == "__main__":
     logger.add(
