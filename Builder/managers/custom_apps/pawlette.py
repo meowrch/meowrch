@@ -56,25 +56,10 @@ class PawletteConfigurer(AppConfigurer):
 
     def _install_available_themes(self) -> List[str]:
         error_msg = "Theme data parsing failed: {err}"
+        themes = ["catppuccin-mocha", "catppuccin-latte"]
         installed = []
 
         try:
-            result = subprocess.run(
-                ["pawlette", "get-available-themes"],
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-
-            try:
-                themes = self._parse_themes(result.stdout.strip())
-            except Exception:
-                logger.error(traceback.format_exc())
-                raise
-
-            if not isinstance(themes, dict):
-                raise ValueError("Expected dictionary of themes")
-
             error_msg = "Skipping theme {theme_name}: {err}"
             for theme_name in themes:
                 try:
