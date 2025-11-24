@@ -118,6 +118,13 @@ class PlymouthConfigurer:
             self.mkinitcpio_editor.add_hook("systemd", "start")
             logger.info("Replaced udev with systemd")
         
+        # We guarantee that the “base” hook is always the first one.
+        if "base" in current_hooks:
+            self.mkinitcpio_editor.remove_hook("base")
+            self.mkinitcpio_editor.add_hook("base", "start")
+        else:
+            self.mkinitcpio_editor.add_hook("base", "start")
+            
         # Check if plymouth already exists
         if "plymouth" in current_hooks:
             logger.info("Plymouth hook already exists in configuration")
@@ -125,7 +132,7 @@ class PlymouthConfigurer:
         
         # Define hooks that should be before plymouth
         before_plymouth_hooks = {
-            "systemd", "autodetect", "microcode", "modconf", 
+            "base", "systemd", "autodetect", "microcode", "modconf", 
             "kms", "keyboard", "keymap", "consolefont"
         }
         
@@ -167,7 +174,7 @@ class PlymouthConfigurer:
             else:
                 self.mkinitcpio_editor.add_hook("plymouth", "start")
                 logger.info("Added plymouth at start of hooks list")
-        
+
         logger.success("mkinitcpio settings configured successfully!")
 
 
