@@ -11,7 +11,10 @@
     //==> Modules Layout
     ///////////////////////////////////////////////////////////////
 	"modules-left": [
-		"custom/l_end","tray","custom/r_end","custom/l_end","hyprland/workspaces","custom/r_end","custom/l_end","wlr/taskbar","custom/r_end","custom/padd"
+		"custom/l_end","tray","custom/r_end",
+        "custom/l_end","hyprland/workspaces","custom/r_end",
+        "custom/l_end","wlr/taskbar","custom/r_end",
+        "custom/l_end","custom/media","custom/r_end","custom/padd"
 	],
 	"modules-center": [
 		"group/system-info"
@@ -80,7 +83,17 @@
 			"firefoxdeveloperedition": "firefox-developer-edition"
 		}
 	},
-
+    "custom/media": {
+        "format": "{text}",
+        "format-alt": "{}",
+        "max-length": 30,
+        "exec": "sh ${XDG_BIN_HOME:-$HOME/bin}/media.sh",
+        "interval": 1,
+        "rotate": 0,
+        "return-type": "json",
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next"
+    },
 
 
     //==> Middle Modules
