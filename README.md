@@ -74,15 +74,15 @@ We solved this agonizing problem.
 
 <div align="center">
 
-| 💎 Feature | 🔥 What it gives you |
+| Feature | What it gives you |
 |:---:|:---|
-| **🚀 Optimization** | The system has the best optimizations from [ARU](https://github.com/ventureoo/ARU) and [CachyOS](https://cachyos.org/). [More details](https://meowrch.github.io/en/optimization/performance-advantages/) |
-| **🎨 Community [theme store](https://github.com/meowrch/pawlette-themes)** | Change the appearance of the entire system **with one command** |
-| **📦 Open-source development** | We support Linux development by creating our own components, **useful for the global Linux community**. [**More details here**](https://github.com/meowrch/) |
-| **🛠️ Automation** | Installation **in 10 minutes**, complete setup and optimization — **without manual config editing** |
-| **🎯 Ergonomics** | Hotkeys are thought out **down to the smallest detail** — work faster |
-| **🌊 Two environments** | BSPWM (X11) or Hyprland (Wayland) — **stability or modernity** |
-| **🪶 Lightweight** |  **1 GB RAM** at system startup — thanks to [lightweight components](https://meowrch.github.io/en/introduction/сomponent-selection-philosophy/) |
+| **Optimization** | The system has the best optimizations from [ARU](https://github.com/ventureoo/ARU) and [CachyOS](https://cachyos.org/). [More details](https://meowrch.github.io/en/optimization/performance-advantages/) |
+| **Community [theme store](https://github.com/meowrch/pawlette-themes)** | Change the appearance of the entire system **with one command** |
+| **Open-source development** | We support Linux development by creating our own components, **useful for the global Linux community**. [**More details here**](https://github.com/meowrch/) |
+| **Automation** | Installation **in 10 minutes**, complete setup and optimization — **without manual config editing** |
+| **Ergonomics** | Hotkeys are thought out **down to the smallest detail** — work faster |
+| **Two environments** | BSPWM (X11) or Hyprland (Wayland) — **stability or modernity** |
+| **Lightweight** |  **1 GB RAM** at system startup — thanks to [lightweight components](https://meowrch.github.io/en/introduction/сomponent-selection-philosophy/) |
 </div>
 
 ---
@@ -128,7 +128,7 @@ We solved this agonizing problem.
 
 - 🎵 **Compact mode** — information about active window and playing music
 - 🔔 **Information menu** — calendar and notification history (Super+Alt+D)
-- 🚀 **App launcher** — application launcher (Super+Alt+A)
+- 📱 **App launcher** — application launcher (Super+Alt+A)
 - 🖼️ **Wallpapers** — wallpaper change with preview (Super+Alt+W)
 - 😊 **Emoji picker** — emoji selection (Super+Alt+.)
 - 📋 **Clipboard** — clipboard history (Super+Alt+V)
@@ -205,7 +205,7 @@ reboot
 <td><a href="https://github.com/fish-shell/fish-shell">Fish</a> | <a href="https://www.zsh.org">Zsh</a></td>
 </tr>
 <tr>
-<td><b>🎯 Menus and Widgets</b></td>
+<td><b>📱 Menus and Widgets</b></td>
 <td><a href="https://github.com/davatorium/rofi">Rofi</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
 </tr>
 <tr>
