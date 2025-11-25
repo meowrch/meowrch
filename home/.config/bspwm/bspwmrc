@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # ██████╗░░█████╗░  ███╗░░██╗░█████╗░████████╗  ███████╗██████╗░██╗████████╗
 # ██╔══██╗██╔══██╗  ████╗░██║██╔══██╗╚══██╔══╝  ██╔════╝██╔══██╗██║╚══██╔══╝
@@ -28,9 +28,9 @@ export XDG_BIN_HOME="${XDG_BIN_HOME:-$HOME/bin}"
 
 MODULES_DIR="$HOME/.config/bspwm/default"
 
-source "$MODULES_DIR/initial.sh"
-source "$MODULES_DIR/monitors.sh"
-source "$MODULES_DIR/appearance.sh"
-source "$MODULES_DIR/windowrules.sh"
-source "$MODULES_DIR/autostart.sh"
-source "$MODULES_DIR/clipboard.sh"
+. "$MODULES_DIR/initial.sh"
+. "$MODULES_DIR/monitors.sh"
+. "$MODULES_DIR/appearance.sh"
+. "$MODULES_DIR/windowrules.sh"
+. "$MODULES_DIR/autostart.sh"
+. "$MODULES_DIR/clipboard.sh"
