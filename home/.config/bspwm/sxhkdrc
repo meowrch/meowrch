@@ -71,7 +71,7 @@ super + Delete
 	bspc quit	
 
 ctrl + shift + r
-    bspc wm -r; pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config' -t 1500
+    bspc wm -r; notify-send 'sxhkd' 'Reloaded config' -t 1500
 
 super + Escape
     pkill -x sxhkd 2>/dev/null && sxhkd -c ~/.config/bspwm/sxhkdrc_disabled &

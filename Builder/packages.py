@@ -42,7 +42,7 @@ BASE = Packages(
 		bspwm_packages=[
 			"xorg-server", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
 			"wmname", "polybar", "xorg-xrandr", "xsettingsd", "clipnotify",
-            "dunst", "xorg-xsetroot"
+            "dunst", "xorg-xsetroot", "picom"
 		],
 		hyprland_packages=[
 			"hyprland", "waybar", "hyprlock", "swww", "wl-clipboard", 
@@ -74,7 +74,7 @@ BASE = Packages(
             ###########################################
             "ttf-meslo-nerd-font-powerlevel10k",
 		],
-		bspwm_packages=["xkb-switch", "i3lock-color", "picom-ftlabs-git"],
+		bspwm_packages=["xkb-switch", "i3lock-color"],
 		hyprland_packages=[
 			"hyprprop", "grimblast-git", "mewline"
 		]
