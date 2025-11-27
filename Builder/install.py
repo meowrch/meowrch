@@ -225,6 +225,12 @@ class Builder:
         subprocess.run(["sudo", "chmod", "444", str(base_dir / "version")], check=True)
         subprocess.run(["sudo", "chmod", "444", str(base_dir / ".installed")], check=True)
         
+        # Удаляем временный маркер установки
+        subprocess.run(
+            ["sudo", "rm", "-f", str(base_dir / ".installing")],
+            check=False
+        )
+    
         logger.success(f"Version metadata protected: {version}")
 
     def _check_existing_installation(self) -> bool:
