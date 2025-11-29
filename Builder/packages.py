@@ -14,7 +14,7 @@ BASE = Packages(
             ###########################################
             "pipewire-jack", "pipewire-alsa", "wireplumber", 
 			"python-pyalsa", "pavucontrol", "pamixer", "pipewire", 
-			"pipewire-pulse", "pipewire-audio",
+			"pipewire-pulse", "pipewire-audio","sof-firmware",
             
 			##==> CLI-Tools
 			###########################################
