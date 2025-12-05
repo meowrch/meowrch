@@ -92,6 +92,8 @@ disconnect_all_vpns() {
 toggle_vpn() {
     local VPN="$1"
     PID_FILE="$PID_DIR/$VPN.pid"
+    AUTH_FILE="$PID_DIR/$VPN.auth"
+    
     if [ -f "$PID_FILE" ]; then
         # Если уже подключены к этому VPN, отключаемся
         PID=$(cat "$PID_FILE")
@@ -105,10 +107,26 @@ toggle_vpn() {
             fi
         fi
         rm -f "$PID_FILE"
+        # Удаляем файл с credentials для безопасности
+        rm -f "$AUTH_FILE"
         notify-send "OpenVPN" "Disconnected from $VPN"
     else
-        PASSWORD=$(rofi -dmenu -password -p "Enter the sudo password:")
-gi
+        # Запрашиваем sudo password
+        SUDO_PASSWORD=$(rofi -dmenu -password -p "Enter the sudo password:")
+        if [ $? -ne 0 ]; then
+            notify-send "OpenVPN" "Connection canceled"
+            return
+        fi
+        
+        # Запрашиваем OpenVPN username
+        VPN_USERNAME=$(rofi -dmenu -p "Enter OpenVPN username:")
+        if [ $? -ne 0 ]; then
+            notify-send "OpenVPN" "Connection canceled"
+            return
+        fi
+        
+        # Запрашиваем OpenVPN password
+        VPN_PASSWORD=$(rofi -dmenu -password -p "Enter OpenVPN password:")
         if [ $? -ne 0 ]; then
             notify-send "OpenVPN" "Connection canceled"
             return
@@ -116,7 +134,12 @@ gi
         
         disconnect_all_vpns # Отключаем все активные VPN перед подключением к новому
 
-        echo $PASSWORD | sudo -S nohup openvpn --config "$VPN_DIR/$VPN" >/dev/null 2>&1 &
+        # Создаем временный файл с credentials
+        echo "$VPN_USERNAME" > "$AUTH_FILE"
+        echo "$VPN_PASSWORD" >> "$AUTH_FILE"
+        chmod 600 "$AUTH_FILE" # Устанавливаем права доступа только для владельца
+
+        echo $SUDO_PASSWORD | sudo -S nohup openvpn --config "$VPN_DIR/$VPN" --auth-user-pass "$AUTH_FILE" > /dev/null 2>&1 &
         PID=$!
         echo $PID > "$PID_FILE"
         notify-send "OpenVPN" "Connecting to $VPN initiated"
