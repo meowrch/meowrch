@@ -108,7 +108,7 @@ toggle_vpn() {
         notify-send "OpenVPN" "Disconnected from $VPN"
     else
         PASSWORD=$(rofi -dmenu -password -p "Enter the sudo password:")
-
+gi
         if [ $? -ne 0 ]; then
             notify-send "OpenVPN" "Connection canceled"
             return
