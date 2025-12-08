@@ -20,7 +20,7 @@ super + {Return,e,w,t,p,v,a,x,l,c,b,period}
     sh $XDG_BIN_HOME/rofi-menus/rofimoji.sh}
 
 ctrl + shift + Escape 
-	alacritty -e btop
+	kitty -e btop
 
 Print
     flameshot gui
