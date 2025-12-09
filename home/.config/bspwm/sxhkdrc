@@ -1,134 +1,348 @@
 
-# █▄▀ █▀▀ █▄█ █▄▄ █ █▄░█ █▀▄ █ █▄░█ █▀▀ █▀
-# █░█ ██▄ ░█░ █▄█ █ █░▀█ █▄▀ █ █░▀█ █▄█ ▄█
+# █▄▀ █▀▀ █▄█ █▄▄ █ █▄░█ █▀▄ █ █▄░█ █▀▀ █▀
+# █░█ ██▄ ░█░ █▄█ █ █░▀█ █▄▀ █ █░▀█ █▄█ ▄█
 
-
-##==> SYSTEM BINDS
-##############################################################################################
-super + {Return,e,w,t,p,v,a,x,l,c,b,period}
-    {kitty, \
-    nemo, \
-    sh $XDG_BIN_HOME/rofi-menus/wallpaper-selector.sh, \
-    sh $XDG_BIN_HOME/rofi-menus/theme-selector.sh, \
-    sh $XDG_BIN_HOME/window-pin.sh, \
-    sh $XDG_BIN_HOME/rofi-menus/clipboard-manager.sh, \
-    rofi -show drun, \
-    sh $XDG_BIN_HOME/rofi-menus/powermenu.sh, \
-    sh $XDG_BIN_HOME/screen-lock.sh, \
-    sh $XDG_BIN_HOME/color-picker.sh, \
-    sh $XDG_BIN_HOME/toggle-bar.sh, \
-    sh $XDG_BIN_HOME/rofi-menus/rofimoji.sh}
-
-ctrl + shift + Escape 
-	kitty -e btop
-
-Print
-    flameshot gui
-
-super + Print
-    flameshot full --clipboard
-
-alt + shift
-    xkb-switch -n
-##############################################################################################
 
 ##==> USER APPS
 ##############################################################################################
-super + shift + {c,f,t,o,p}
-	{code, \
-	firefox, \
-	Telegram, \
-	obsidian, \
-	pavucontrol}
+# Description: Open Visual Studio Code
+super + shift + c
+	code
+
+# Description: Open browser
+super + shift + f
+	firefox
+
+# Description: Open Telegram
+super + shift + t
+	Telegram
+
+# Description: Open Obsidian
+super + shift + o
+	obsidian
+
+# Description: Open audio control
+super + shift + p
+	pavucontrol
+
+# Description: Open CLI file manager
+super + shift + y
+	kitty -e yazi
+##############################################################################################
+
+##==> SYSTEM BINDS
+##############################################################################################
+# Description: Open terminal
+super + Return
+    kitty
+
+# Description: Open file manager
+super + e
+    nemo
+
+# Description: Select wallpaper
+super + w
+    sh $XDG_BIN_HOME/rofi-menus/wallpaper-selector.sh
+
+# Description: Select theme
+super + t
+    sh $XDG_BIN_HOME/rofi-menus/theme-selector.sh
+
+# Description: Pin window
+super + p
+    sh $XDG_BIN_HOME/window-pin.sh
+
+# Description: Open clipboard manager
+super + v
+    sh $XDG_BIN_HOME/rofi-menus/clipboard-manager.sh
+
+# Description: Open application launcher
+super + a
+    rofi -show drun
+
+# Description: Open power menu
+super + x
+    sh $XDG_BIN_HOME/rofi-menus/powermenu.sh
+
+# Description: Lock screen
+super + l
+    sh $XDG_BIN_HOME/screen-lock.sh
+
+# Description: Pick color
+super + c
+    sh $XDG_BIN_HOME/color-picker.sh
+
+# Description: Toggle status bar
+super + b
+    sh $XDG_BIN_HOME/toggle-bar.sh
+
+# Description: Open emoji picker
+super + period
+    sh $XDG_BIN_HOME/rofi-menus/rofimoji.sh
+
+# Description: Open system monitor
+ctrl + shift + Escape 
+	kitty -e btop
+
+# Description: Take screenshot GUI
+Print
+    flameshot gui
+
+# Description: Take fullscreen screenshot
+super + Print
+    flameshot full --clipboard
+
+# Description: Switch keyboard layout
+alt + shift
+    xkb-switch -n
 ##############################################################################################
 
 ##==> SYSTEM CONTROLS
 ##############################################################################################
 #--------------------------------------------------------------------------------------------## VOLUME
-XF86Audio{RaiseVolume,LowerVolume,Mute}
-    sh $XDG_BIN_HOME/volume.sh --device output --action {increase,decrease,toggle}
+# Description: Increase volume
+XF86AudioRaiseVolume
+    sh $XDG_BIN_HOME/volume.sh --device output --action increase
 
+# Description: Decrease volume
+XF86AudioLowerVolume
+    sh $XDG_BIN_HOME/volume.sh --device output --action decrease
+
+# Description: Toggle audio mute
+XF86AudioMute
+    sh $XDG_BIN_HOME/volume.sh --device output --action toggle
+
+# Description: Toggle microphone mute
 XF86AudioMicMute
 	sh $XDG_BIN_HOME/volume.sh --device input --action toggle
 #--------------------------------------------------------------------------------------------## PLAYER
-XF86Audio{Play,Pause,Next,Prev,Stop}
-	{playerctl play-pause, \
-	playerctl play-pause, \
-	playerctl next, \
-	playerctl previous, \
-	playerctl stop}
+# Description: Play or pause media
+XF86AudioPlay
+	playerctl play-pause
+
+# Description: Play or pause media
+XF86AudioPause
+	playerctl play-pause
+
+# Description: Next track
+XF86AudioNext
+	playerctl next
+
+# Description: Previous track
+XF86AudioPrev
+	playerctl previous
+
+# Description: Stop playback
+XF86AudioStop
+	playerctl stop
 #--------------------------------------------------------------------------------------------## BRIGHTNESS	
-XF86MonBrightness{Up,Down}
-	{sh $XDG_BIN_HOME/brightness.sh --up, \
-	sh $XDG_BIN_HOME/brightness.sh --down}				  
+# Description: Increase brightness
+XF86MonBrightnessUp
+	sh $XDG_BIN_HOME/brightness.sh --up
+
+# Description: Decrease brightness
+XF86MonBrightnessDown
+	sh $XDG_BIN_HOME/brightness.sh --down
 ##############################################################################################
 
 
 ##==> BSPWM
 ##############################################################################################
 #--------------------------------------------------------------------------------------------# Session actions
+# Description: Exit BSPWM
 super + Delete
 	bspc quit	
 
+# Description: Reload BSPWM config
 ctrl + shift + r
     bspc wm -r; notify-send 'sxhkd' 'Reloaded config' -t 1500
 
+# Description: Disable all keybinds
 super + Escape
     pkill -x sxhkd 2>/dev/null && sxhkd -c ~/.config/bspwm/sxhkdrc_disabled &
 
 #--------------------------------------------------------------------------------------------# Window actions
+# Description: Close window
 super + q
 	sh $XDG_BIN_HOME/window-close.sh
 
+# Description: Kill window
 super + k
 	sh $XDG_BIN_HOME/window-kill.sh
 
+# Description: Toggle floating mode
 super + space
-	bspc node -t "~"{floating,tiled}												 
-																							 	
-alt + Return 																				 
+	bspc node -t "~"{floating,tiled}
+
+# Description: Toggle fullscreen
+alt + Return
 	bspc node -t \~fullscreen
 #--------------------------------------------------------------------------------------------## Move/Change window focus
-super + {_,shift + }{Right,Left,Up,Down}
-	bspc node -{f,s} {
-		east, \
-		west, \
-		north, \
-		south}
+# Description: Focus window right
+super + Right
+	bspc node -f east
 
+# Description: Focus window left
+super + Left
+	bspc node -f west
+
+# Description: Focus window up
+super + Up
+	bspc node -f north
+
+# Description: Focus window down
+super + Down
+	bspc node -f south
+
+# Description: Swap window right
+super + shift + Right
+	bspc node -s east
+
+# Description: Swap window left
+super + shift + Left
+	bspc node -s west
+
+# Description: Swap window up
+super + shift + Up
+	bspc node -s north
+
+# Description: Swap window down
+super + shift + Down
+	bspc node -s south
+
+# Description: Switch to last window
 alt + Tab
 	bspc node -f last
 #--------------------------------------------------------------------------------------------## Switch workspaces
-super + {1-9,0}
-	bspc desktop -f {1-9,10}
-	
+# Description: Switch to workspace 1
+super + 1
+	bspc desktop -f 1
+
+# Description: Switch to workspace 2
+super + 2
+	bspc desktop -f 2
+
+# Description: Switch to workspace 3
+super + 3
+	bspc desktop -f 3
+
+# Description: Switch to workspace 4
+super + 4
+	bspc desktop -f 4
+
+# Description: Switch to workspace 5
+super + 5
+	bspc desktop -f 5
+
+# Description: Switch to workspace 6
+super + 6
+	bspc desktop -f 6
+
+# Description: Switch to workspace 7
+super + 7
+	bspc desktop -f 7
+
+# Description: Switch to workspace 8
+super + 8
+	bspc desktop -f 8
+
+# Description: Switch to workspace 9
+super + 9
+	bspc desktop -f 9
+
+# Description: Switch to workspace 10
+super + 0
+	bspc desktop -f 10
+
+# Description: Next workspace
 super + ctrl + Right
-	bspc desktop -f next	
-																							 
+	bspc desktop -f next
+
+# Description: Previous workspace
 super + ctrl + Left
 	bspc desktop -f prev
-																							 
+
+# Description: Scroll to next workspace
 super + button4
     bspc desktop -f next.local
-    																						 
+
+# Description: Scroll to previous workspace
 super + button5
     bspc desktop -f prev.local
 
+# Description: First empty workspace
 super + ctrl + Down
-	bspc desktop $(bspc query -D -d '.!occupied' | head -n 1) --focus						
+	bspc desktop $(bspc query -D -d '.!occupied' | head -n 1) --focus
 #--------------------------------------------------------------------------------------------## Resize windows
-super + shift + {Right,Left,Up,Down}
-	{bspc node -z right 30 0, \
-	bspc node -z left -30 0, \
-	bspc node -z top 0 -30, \
-	bspc node -z bottom 0 30}
+# Description: Resize window right
+super + shift + Right
+	bspc node -z right 30 0
+
+# Description: Resize window left
+super + shift + Left
+	bspc node -z left -30 0
+
+# Description: Resize window up
+super + shift + Up
+	bspc node -z top 0 -30
+
+# Description: Resize window down
+super + shift + Down
+	bspc node -z bottom 0 30
 #--------------------------------------------------------------------------------------------## Move focused window to a workspace
-super + shift + {1-9,0}
-    bspc node -d '^{1-9,10}'
+# Description: Move window to workspace 1
+super + shift + 1
+    bspc node -d '^1'
+
+# Description: Move window to workspace 2
+super + shift + 2
+    bspc node -d '^2'
+
+# Description: Move window to workspace 3
+super + shift + 3
+    bspc node -d '^3'
+
+# Description: Move window to workspace 4
+super + shift + 4
+    bspc node -d '^4'
+
+# Description: Move window to workspace 5
+super + shift + 5
+    bspc node -d '^5'
+
+# Description: Move window to workspace 6
+super + shift + 6
+    bspc node -d '^6'
+
+# Description: Move window to workspace 7
+super + shift + 7
+    bspc node -d '^7'
+
+# Description: Move window to workspace 8
+super + shift + 8
+    bspc node -d '^8'
+
+# Description: Move window to workspace 9
+super + shift + 9
+    bspc node -d '^9'
+
+# Description: Move window to workspace 10
+super + shift + 0
+    bspc node -d '^10'
 #--------------------------------------------------------------------------------------------## Move focused window around the current workspace
-super + shift + ctrl + {Left,Right,Up,Down}
-    {bspc node -s west, \
-    bspc node -s east, \
-    bspc node -s north, \
-    bspc node -s south}
+# Description: Move window left
+super + shift + ctrl + Left
+    bspc node -s west
+
+# Description: Move window right
+super + shift + ctrl + Right
+    bspc node -s east
+
+# Description: Move window up
+super + shift + ctrl + Up
+    bspc node -s north
+
+# Description: Move window down
+super + shift + ctrl + Down
+    bspc node -s south
 ##############################################################################################
