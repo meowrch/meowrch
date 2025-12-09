@@ -59,7 +59,7 @@ BASE = Packages(
 
 			##==> GUI
             ###########################################
-            "visual-studio-code-bin", "nemo-tags",
+            "visual-studio-code-bin", "nemo-tags", "hotkeyhub-bin",
             
             ##==> Кастомизация: Темы, иконки и курсор
             ###########################################

@@ -95,6 +95,10 @@ super + Print
 # Description: Switch keyboard layout
 alt + shift
     xkb-switch -n
+
+# Description: Hotkeys cheat sheet
+super + slash
+    hotkeyhub --sxhkd $HOME/.config/bspwm/sxhkdrc
 ##############################################################################################
 
 ##==> SYSTEM CONTROLS
