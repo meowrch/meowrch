@@ -9,7 +9,6 @@ import inquirer
 from loguru import logger
 from managers.apps_manager import AppsManager
 from managers.chaotic_aur_manager import ChaoticAurManager
-from managers.drivers_manager import DriversManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
@@ -74,7 +73,6 @@ class Builder:
             self.packages_installation()
 
             # Настройка модулей GPU для ранней загрузки (критично для Plymouth)
-            DriversManager.setup_gpu_modules_for_early_boot()
 
             AppsManager.configure_grub()
             AppsManager.configure_sddm()
