@@ -13,7 +13,7 @@ from managers.drivers_manager import DriversManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
-from packages import BASE, CUSTOM, DRIVERS
+from packages import BASE, CUSTOM
 from question import Question
 from utils.config_backup import ConfigBackup
 from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
@@ -157,14 +157,6 @@ class Builder:
             pacman.extend(["zsh", "zsh-syntax-highlighting", "zsh-autosuggestions", "zsh-history-substring-search"])
         else:
             pacman.append("fish")
-
-        # Drivers
-        if self.build_options.intel_driver:
-            pacman.extend(DRIVERS["intel"].pacman.common)
-        if self.build_options.nvidia_driver:
-            pacman.extend(DRIVERS["nvidia"].pacman.common)
-        if self.build_options.amd_driver:
-            pacman.extend(DRIVERS["amd"].pacman.common)
 
         # Deduplicate while preserving order
         pacman = list(dict.fromkeys(pacman))
