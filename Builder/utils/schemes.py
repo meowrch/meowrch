@@ -48,10 +48,6 @@ class BuildOptions:
     install_hyprland: bool
     aur_helper: AurHelper
     use_chaotic_aur: bool
-    install_drivers: bool
-    intel_driver: bool
-    nvidia_driver: bool
-    amd_driver: bool
     ff_darkreader: bool
     ff_ublock: bool
     ff_twp: bool

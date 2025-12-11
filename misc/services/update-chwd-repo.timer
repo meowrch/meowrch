@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily chwd repository update timer
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
