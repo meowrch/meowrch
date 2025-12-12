@@ -234,23 +234,11 @@ Server = file://{self.repo_path}
     def auto_configure_drivers(self) -> bool:
         """Automatic driver configuration using chwd"""
         logger.info("Automatic driver configuration")
-        try:
-            # First show available profiles
-            logger.info("Checking available driver profiles...")
-            result = self._run_sudo(
-                ["chwd", "-l"],
-                capture_output=True,
-                text=True,
-                check=True
-            )
-            
-            logger.info("Available profiles:")
-            print(result.stdout)
-            
+        try:            
             # Automatic driver installation for PCI devices
             logger.info("Automatic driver installation...")
             result = self._run_sudo(
-                ["chwd", "-a", "pci", "nonfree", "0300"],
+                ["chwd", "-a", "--force"],
                 capture_output=True,
                 text=True,
                 check=True
