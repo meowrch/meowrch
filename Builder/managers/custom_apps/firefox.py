@@ -217,7 +217,7 @@ class TampermonkeyInstaller:
             
     def _click_install_button(self, timeout: int = 20):
         start_time = time.time()
-        # Расширенный список XPath (на всякий случай)
+
         xpath_query = (
             "//*[@id='input_SW5zdGFsbF91bmRlZmluZWQ_bu'] | "
             "//*[@id='input_UmVpbnN0YWxsX3VuZGVmaW5lZA_bu'] | "
@@ -301,7 +301,7 @@ class TampermonkeyInstaller:
     
             if self._click_install_button():
                 logger.success("✓ VOT script installed successfully!")
-                time.sleep(5)
+                time.sleep(2)
             else:
                 logger.warning("✗ Could not find install button for VOT script")
                 
@@ -344,12 +344,12 @@ class FirefoxConfigurer(AppConfigurer):
         self.tampermonkey = tampermonkey
 
         self.plugins = [
-            (darkreader, "addon@darkreader.org.xpi"),
-            (ublock, "uBlock0@raymondhill.net.xpi"),
-            (twp, "{036a55b4-5e72-4d05-a06c-cba2dfcc134a}.xpi"),
-            (unpaywall, "{f209234a-76f0-4735-9920-eb62507a54cd}.xpi"),
-            (tampermonkey, "firefox@tampermonkey.net.xpi"),
-            (True, "ATBC@EasonWong.xpi"),  # Always enable Adaptive Tab Bar Color
+            (darkreader, "addon@darkreader.org.xpi", "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi"),
+            (ublock, "uBlock0@raymondhill.net.xpi", "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"),
+            (twp, "{036a55b4-5e72-4d05-a06c-cba2dfcc134a}.xpi", "https://addons.mozilla.org/firefox/downloads/latest/traduzir-paginas-web/latest.xpi"),
+            (unpaywall, "{f209234a-76f0-4735-9920-eb62507a54cd}.xpi", "https://addons.mozilla.org/firefox/downloads/latest/unpaywall/latest.xpi"),
+            (tampermonkey, "firefox@tampermonkey.net.xpi", "https://addons.mozilla.org/firefox/downloads/latest/tampermonkey/latest.xpi"),
+            (True, "ATBC@EasonWong.xpi", "https://addons.mozilla.org/firefox/downloads/latest/adaptive-tab-bar-colour/latest.xpi"),  # Always enable Adaptive Tab Bar Color
         ]
 
     def setup(self) -> None:
@@ -357,26 +357,25 @@ class FirefoxConfigurer(AppConfigurer):
         error_msg = "Error installing firefox: {err}"
         try:
             self._init_firefox_profile()
-            self._copy_profile()
+            self._configure_startup_preferences()
             self._fetch_latest_plugins()
-            self._install_firefox_gnome_theme()
+            self._force_extensions_initialization()
             self._configure_theme_preferences()
             self._create_meowrch_bookmark()
-            self._cleanup_plugins()
             self._init_firefox_profile()
             logger.success("Firefox has been successfully installed!")
         except subprocess.CalledProcessError as e:
             logger.error(error_msg.format(err=e.stderr))
         except Exception:
             logger.error(error_msg.format(err=traceback.format_exc()))
-
+    
         error_msg = "Error installing VOT for firefox: {err}"
-
+    
         if self.tampermonkey:
             logger.info("Installing VOT for firefox...")
             try:
                 URL = "https://raw.githubusercontent.com/ilyhalight/voice-over-translation/master/dist/vot.user.js"
-                TampermonkeyInstaller(URL).run()
+                TampermonkeyInstaller(URL, headless=False).run()
                 logger.success("VOT has been successfully installed!")
             except Exception:
                 logger.error(error_msg.format(err=traceback.format_exc()))
@@ -393,67 +392,186 @@ class FirefoxConfigurer(AppConfigurer):
             ]
         )
         time.sleep(6)
-
-    def _copy_profile(self) -> None:
-        # Profile initialization is handled by _init_firefox_profile
-        # We no longer copy from misc/apps/firefox as we install everything fresh
-        logger.info("Profile setup completed")
-
+    
     def _install_firefox_gnome_theme(self) -> None:
-        """Install Firefox GNOME Theme manually with auto-update system"""
-        logger.info("Installing Firefox GNOME Theme...")
-
-        # Get Firefox profile path
+            """Install Firefox GNOME Theme manually with auto-update system (как в firefox.py)"""
+            logger.info("Installing Firefox GNOME Theme...")
+    
+            path_profile_list = glob.glob(os.path.expanduser("~/.mozilla/firefox/*.default-release"))
+            if not path_profile_list:
+                path_profile_list = glob.glob(os.path.expanduser("~/.mozilla/firefox/*.default"))
+            if not path_profile_list:
+                logger.warning("Profile not found, skipping Firefox GNOME Theme installation")
+                return
+    
+            path_profile = path_profile_list[0]
+    
+            # Create chrome directory
+            chrome_dir = os.path.join(path_profile, "chrome")
+            os.makedirs(chrome_dir, exist_ok=True)
+    
+            # Clone or update the theme repository
+            theme_repo_path = os.path.join(chrome_dir, "firefox-gnome-theme")
+            if os.path.exists(theme_repo_path):
+                logger.info("Updating existing Firefox GNOME Theme...")
+                subprocess.run(["git", "pull"], cwd=theme_repo_path, check=True)
+            else:
+                logger.info("Cloning Firefox GNOME Theme repository...")
+                subprocess.run(
+                    [
+                        "git",
+                        "clone",
+                        "https://github.com/rafaelmardojai/firefox-gnome-theme.git",
+                        theme_repo_path,
+                    ],
+                    check=True,
+                )
+    
+            # Create userChrome.css
+            user_chrome_path = os.path.join(chrome_dir, "userChrome.css")
+            with open(user_chrome_path, "w") as f:
+                f.write('@import "firefox-gnome-theme/userChrome.css";')
+    
+            # Create userContent.css
+            user_content_path = os.path.join(chrome_dir, "userContent.css")
+            with open(user_content_path, "w") as f:
+                f.write('@import "firefox-gnome-theme/userContent.css";')
+    
+            # Set up auto-update system
+            self._setup_theme_auto_update(theme_repo_path)
+    
+    def _configure_startup_preferences(self) -> None:
+        """
+        Настраиваем preferences для обхода приветственных экранов
+        КРИТИЧНО: вызывать после создания профиля, но ДО первого запуска Firefox
+        """
         path_profile = glob.glob(
             os.path.expanduser("~/.mozilla/firefox/*.default-release")
-        )[0]
+        )
+        
+        if not path_profile:
+            path_profile = glob.glob(os.path.expanduser("~/.mozilla/firefox/*.default"))
+        
+        if not path_profile:
+            logger.warning("Profile not found, skipping startup preferences")
+            return
+        
+        path_profile = path_profile[0]
+        user_js_path = os.path.join(path_profile, "user.js")
+        
+        logger.info("Configuring startup preferences to bypass welcome screens...")
+        
+        # Preferences для обхода приветственных экранов
+        startup_prefs = [
+            "// ========== BYPASS FIREFOX WELCOME SCREENS ==========",
+            "",
+            "// Отключаем все приветственные экраны и туры",
+            'user_pref("browser.startup.homepage_override.mstone", "ignore");',
+            'user_pref("startup.homepage_welcome_url", "");',
+            'user_pref("startup.homepage_welcome_url.additional", "");',
+            'user_pref("startup.homepage_override_url", "");',
+            'user_pref("browser.aboutwelcome.enabled", false);',
+            'user_pref("trailhead.firstrun.didSeeAboutWelcome", true);',
+            'user_pref("browser.messaging-system.whatsNewPanel.enabled", false);',
+            "",
+            "// Отключаем все уведомления о новых фичах",
+            'user_pref("browser.startup.firstrunSkipsHomepage", true);',
+            'user_pref("browser.newtabpage.introShown", true);',
+            'user_pref("browser.usedOnWindows10.introURL", "");',
+            "",
+            "// ========== EXTENSIONS CRITICAL SETTINGS ==========",
+            "",
+            "// КРИТИЧНО: Автоматически включаем все расширения",
+            'user_pref("extensions.autoDisableScopes", 0);',
+            'user_pref("extensions.enabledScopes", 15);',
+            'user_pref("extensions.startupScanScopes", 0);',
+            "",
+            "// Отключаем подтверждение установки расширений",
+            'user_pref("xpinstall.signatures.required", false);',
+            'user_pref("extensions.langpacks.signatures.required", false);',
+            'user_pref("xpinstall.whitelist.required", false);',
+            "",
+            "// КРИТИЧНО: Разрешаем установку расширений из любых источников",
+            'user_pref("extensions.installDistroAddons", true);',
+            'user_pref("extensions.legacy.enabled", true);',
+            "",
+            "// Ускоряем загрузку расширений при старте",
+            'user_pref("extensions.webextensions.backgroundServiceWorkerEnabled", true);',
+            'user_pref("extensions.webextensions.keepStorageOnUninstall", false);',
+            'user_pref("extensions.webextensions.keepUuidOnUninstall", false);',
+            "",
+        ]
+        
+        # Записываем preferences в начало файла
+        existing_content = ""
+        if os.path.exists(user_js_path):
+            with open(user_js_path, "r") as f:
+                existing_content = f.read()
+        
+        with open(user_js_path, "w") as f:
+            for pref in startup_prefs:
+                f.write(pref + "\n")
+            f.write("\n")
+            if existing_content:
+                f.write(existing_content)
+        
+        logger.success("Startup preferences configured successfully")
 
-        # Create chrome directory
-        chrome_dir = os.path.join(path_profile, "chrome")
-        os.makedirs(chrome_dir, exist_ok=True)
-
-        # Clone or update the theme repository
-        theme_repo_path = os.path.join(chrome_dir, "firefox-gnome-theme")
-
-        if os.path.exists(theme_repo_path):
-            # Update existing theme
-            logger.info("Updating existing Firefox GNOME Theme...")
-            subprocess.run(["git", "pull"], cwd=theme_repo_path, check=True)
-        else:
-            # Clone theme repository
-            logger.info("Cloning Firefox GNOME Theme repository...")
-            subprocess.run(
+    def _force_extensions_initialization(self) -> None:
+        """
+        Принудительно инициализируем расширения через прямой запуск Firefox
+        Это критично, чтобы расширения "распаковались" и активировались
+        """
+        logger.info("Force initializing extensions...")
+        
+        path_profile = glob.glob(
+            os.path.expanduser("~/.mozilla/firefox/*.default-release")
+        )
+        
+        if not path_profile:
+            path_profile = glob.glob(os.path.expanduser("~/.mozilla/firefox/*.default"))
+        
+        if not path_profile:
+            logger.warning("Profile not found, skipping extensions initialization")
+            return
+        
+        path_profile = path_profile[0]
+        
+        # Создаём extensions.json если его нет (Firefox создаст его при запуске)
+        extensions_json_path = os.path.join(path_profile, "extensions.json")
+        
+        if not os.path.exists(extensions_json_path):
+            logger.info("extensions.json doesn't exist yet - Firefox will create it")
+        
+        logger.info("Starting Firefox for 3 seconds to initialize extensions...")
+        
+        try:
+            process = subprocess.Popen(
                 [
-                    "git",
-                    "clone",
-                    "https://github.com/rafaelmardojai/firefox-gnome-theme.git",
-                    theme_repo_path,
+                    "timeout", "3",
+                    "firefox",
+                    "--headless",
+                    "--profile", path_profile,
+                    "--new-tab", "about:blank"
                 ],
-                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
             )
-
-        # Create userChrome.css
-        user_chrome_path = os.path.join(chrome_dir, "userChrome.css")
-        with open(user_chrome_path, "w") as f:
-            f.write('@import "firefox-gnome-theme/userChrome.css";\n')
-
-        # Create userContent.css
-        user_content_path = os.path.join(chrome_dir, "userContent.css")
-        with open(user_content_path, "w") as f:
-            f.write('@import "firefox-gnome-theme/userContent.css";\n')
-
-        # Set up auto-update system
-        self._setup_theme_auto_update(theme_repo_path)
+            process.wait()
+            logger.success("Extensions initialized successfully")
+            time.sleep(2)
+        except Exception as e:
+            logger.warning(f"Extension initialization warning: {e}")
 
     def _configure_theme_preferences(self) -> None:
         """Configure Firefox preferences for theme and custom settings"""
         path_profile = glob.glob(
             os.path.expanduser("~/.mozilla/firefox/*.default-release")
         )[0]
-
+    
         # Create or update user.js with theme preferences
         user_js_path = os.path.join(path_profile, "user.js")
-
+    
         # Theme and custom preferences
         preferences = [
             "// Firefox GNOME Theme preferences",
@@ -468,11 +586,6 @@ class FirefoxConfigurer(AppConfigurer):
             'user_pref("gnomeTheme.tabAlignLeft", true);                      // Align tabs to left',
             'user_pref("gnomeTheme.normalWidthTabs", true);                   // Use normal width tabs',
             "",
-            "// Extension preferences - Auto-enable ATBC",
-            'user_pref("extensions.autoDisableScopes", 0);  // Auto-enable all extensions',
-            'user_pref("extensions.enabledScopes", 15);  // Enable extensions in all scopes',
-            'user_pref("xpinstall.signatures.required", false);  // Allow unsigned extensions',
-            "",
             "// Startup settings - restore sessions",
             'user_pref("browser.startup.page", 3);  // Restore previous session',
             'user_pref("browser.sessionstore.resume_from_crash", true);',
@@ -484,16 +597,15 @@ class FirefoxConfigurer(AppConfigurer):
             'user_pref("extensions.ui.dictionary.hidden", true);',
             'user_pref("extensions.ui.locale.hidden", true);',
             'user_pref("extensions.update.autoUpdateDefault", false);',
-            "// Note: Tampermonkey welcome tab cannot be disabled programmatically",
             "",
         ]
-
+    
         # Read existing user.js if it exists
         existing_prefs = []
         if os.path.exists(user_js_path):
             with open(user_js_path, "r") as f:
                 existing_prefs = f.readlines()
-
+    
         # Remove old theme preferences
         filtered_prefs = []
         skip_keys = [
@@ -504,11 +616,9 @@ class FirefoxConfigurer(AppConfigurer):
             "browser.uidensity",
             "gnomeTheme.",
             "browser.startup.homepage",
-            "browser.startup.page",
             "extensions.webextensions.uuids",
-            "browser.sessionstore.resume_from_crash",
         ]
-
+    
         for line in existing_prefs:
             line_stripped = line.strip()
             if line_stripped.startswith("user_pref("):
@@ -517,17 +627,17 @@ class FirefoxConfigurer(AppConfigurer):
                     filtered_prefs.append(line)
             elif not line_stripped.startswith("//"):
                 filtered_prefs.append(line)
-
+    
         # Write updated user.js
         with open(user_js_path, "w") as f:
             # Write existing non-theme preferences
             for line in filtered_prefs:
                 f.write(line)
-
+    
             # Write new theme preferences
             for pref in preferences:
                 f.write(pref + "\n")
-
+    
         logger.info("Firefox theme preferences configured")
 
     def _setup_theme_auto_update(self, theme_repo_path: str) -> None:
@@ -586,14 +696,6 @@ fi
     def _fetch_latest_plugins(self) -> None:
         """Download latest versions of the plugins from official sources"""
         logger.info("Fetching latest plugins...")
-        plugin_urls = {
-            "addon@darkreader.org.xpi": "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi",
-            "uBlock0@raymondhill.net.xpi": "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi",
-            "{036a55b4-5e72-4d05-a06c-cba2dfcc134a}.xpi": "https://addons.mozilla.org/firefox/downloads/latest/traduzir-paginas-web/latest.xpi",
-            "{f209234a-76f0-4735-9920-eb62507a54cd}.xpi": "https://addons.mozilla.org/firefox/downloads/latest/unpaywall/latest.xpi",
-            "firefox@tampermonkey.net.xpi": "https://addons.mozilla.org/firefox/downloads/latest/tampermonkey/latest.xpi",
-            "ATBC@EasonWong.xpi": "https://addons.mozilla.org/firefox/downloads/latest/adaptive-tab-bar-colour/latest.xpi",
-        }
 
         path_profile = glob.glob(
             os.path.expanduser("~/.mozilla/firefox/*.default-release")
@@ -603,7 +705,11 @@ fi
         # Ensure extensions directory exists
         os.makedirs(extension_dir, exist_ok=True)
 
-        for plugin_file, url in plugin_urls.items():
+        for is_enable, plugin_file, url in self.plugins:
+            if not is_enable:
+                logger.info(f"Skipping {plugin_file} (disabled)")
+                continue
+    
             try:
                 logger.info(f"Downloading {plugin_file}...")
                 plugin_path = os.path.join(extension_dir, plugin_file)
@@ -747,14 +853,3 @@ INSERT OR REPLACE INTO moz_bookmarks
             f.write('user_pref("browser.toolbars.bookmarks.visibility", "always");\n')
 
         logger.info("Meowrch Wiki bookmark configuration completed")
-
-    def _cleanup_plugins(self) -> None:
-        path_profile = glob.glob(
-            os.path.expanduser("~/.mozilla/firefox/*.default-release")
-        )[0]
-        for enabled, plugin_file in self.plugins:
-            if not enabled:
-                try:
-                    os.remove(os.path.join(path_profile, "extensions", plugin_file))
-                except Exception:
-                    pass
