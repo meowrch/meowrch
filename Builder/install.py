@@ -9,11 +9,11 @@ import inquirer
 from loguru import logger
 from managers.apps_manager import AppsManager
 from managers.chaotic_aur_manager import ChaoticAurManager
-from managers.drivers_manager import DriversManager
+from managers.drivers_manager import ChdwManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
-from packages import BASE, CUSTOM, DRIVERS
+from packages import BASE, CUSTOM
 from question import Question
 from utils.config_backup import ConfigBackup
 from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
@@ -30,13 +30,13 @@ class Builder:
         logger.info(f"User Responses to Questions: {self.build_options}")
 
         # Проверка существующей установки
-        if self._check_existing_installation():
-            logger.warning("Meowrch is already installed for this user!")
-            if not inquirer.confirm("Continue anyway? This will update the installation."):
-                return
+        # if self._check_existing_installation():
+        #     logger.warning("Meowrch is already installed for this user!")
+        #     if not inquirer.confirm("Continue anyway? This will update the installation."):
+        #         return
         
-        # Создаём временный маркер начала установки
-        self._create_installation_marker()
+        # # Создаём временный маркер начала установки
+        # self._create_installation_marker()
 
         try:
             if self.build_options.make_backup:
@@ -51,62 +51,62 @@ class Builder:
                 logger.warning("Check the backup before you start the installation")
                 input("Press Enter to continue with the installation: ")
 
-            FileSystemManager.create_default_folders()
-            FileSystemManager.copy_dotfiles(
-                exclude_bspwm=not self.build_options.install_bspwm,
-                exclude_hyprland=not self.build_options.install_hyprland,
-            )
+            # FileSystemManager.create_default_folders()
+            # FileSystemManager.copy_dotfiles(
+            #     exclude_bspwm=not self.build_options.install_bspwm,
+            #     exclude_hyprland=not self.build_options.install_hyprland,
+            # )
 
-            # Backup all critical system configs before any modifications
-            ConfigBackup.backup_all()
+            # # Backup all critical system configs before any modifications
+            # ConfigBackup.backup_all()
 
-            # Включаем multilib и обновляем базу данных
-            PackageManager.update_pacman_conf(enable_multilib=True)
-            PackageManager.update_database()
+            # # Включаем multilib и обновляем базу данных
+            # PackageManager.update_pacman_conf(enable_multilib=True)
+            # PackageManager.update_database()
             
-            # Установка Chaotic AUR 
-            if self.build_options.use_chaotic_aur:
-                logger.info("Setting up Chaotic AUR...")
-                ChaoticAurManager.install()
+            # # Установка Chaotic AUR 
+            # if self.build_options.use_chaotic_aur:
+            #     logger.info("Setting up Chaotic AUR...")
+            #     ChaoticAurManager.install()
                 
-            PackageManager.install_aur_helper(self.build_options.aur_helper)
+            # PackageManager.install_aur_helper(self.build_options.aur_helper)
 
-            self.packages_installation()
+            # self.packages_installation()
 
-            # Настройка модулей GPU для ранней загрузки (критично для Plymouth)
-            DriversManager.setup_gpu_modules_for_early_boot()
+            # Установка драйверов через chwd
+            ChdwManager().install()
 
-            AppsManager.configure_grub()
-            AppsManager.configure_sddm()
-            AppsManager.configure_plymouth()
-            AppsManager.configure_firefox(
-                darkreader=self.build_options.ff_darkreader,
-                ublock=self.build_options.ff_ublock,
-                twp=self.build_options.ff_twp,
-                unpaywall=self.build_options.ff_unpaywall,
-                tampermonkey=self.build_options.ff_tampermonkey,
-            )
-            AppsManager.configure_code()
+            # AppsManager.configure_grub()
+            # AppsManager.configure_sddm()
+            # AppsManager.configure_plymouth()
+            # AppsManager.configure_firefox(
+            #     darkreader=self.build_options.ff_darkreader,
+            #     ublock=self.build_options.ff_ublock,
+            #     twp=self.build_options.ff_twp,
+            #     unpaywall=self.build_options.ff_unpaywall,
+            #     tampermonkey=self.build_options.ff_tampermonkey,
+            # )
+            # AppsManager.configure_code()
 
-            if self.build_options.install_hyprland:
-                AppsManager.configure_mewline()
+            # if self.build_options.install_hyprland:
+            #     AppsManager.configure_mewline()
                 
-            AppsManager.configure_pawlette()
+            # AppsManager.configure_pawlette()
 
-            self.daemons_setting()
-            PostInstallation.apply(self.build_options.terminal_shell)
+            # self.daemons_setting()
+            # PostInstallation.apply(self.build_options.terminal_shell)
 
-            self._write_installation_metadata("3.0.0")
+            # self._write_installation_metadata("3.0.0")
 
-            logger.warning(
-                "The script was unable to automatically install these packages."
-                "Try installing them manually."
-            )
-            logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
-            logger.warning("Aur: " + ", ".join(self.not_installed_packages.aur))
-            logger.success(
-                "Meowrch has been successfully installed! Restart your PC to apply the changes."
-            )
+            # logger.warning(
+            #     "The script was unable to automatically install these packages."
+            #     "Try installing them manually."
+            # )
+            # logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
+            # logger.warning("Aur: " + ", ".join(self.not_installed_packages.aur))
+            # logger.success(
+            #     "Meowrch has been successfully installed! Restart your PC to apply the changes."
+            # )
         except BaseException:
             logger.error(f"Installation failed: {traceback.format_exc()}")
             self._cleanup_failed_installation()
@@ -157,14 +157,6 @@ class Builder:
             pacman.extend(["zsh", "zsh-syntax-highlighting", "zsh-autosuggestions", "zsh-history-substring-search"])
         else:
             pacman.append("fish")
-
-        # Drivers
-        if self.build_options.intel_driver:
-            pacman.extend(DRIVERS["intel"].pacman.common)
-        if self.build_options.nvidia_driver:
-            pacman.extend(DRIVERS["nvidia"].pacman.common)
-        if self.build_options.amd_driver:
-            pacman.extend(DRIVERS["amd"].pacman.common)
 
         # Deduplicate while preserving order
         pacman = list(dict.fromkeys(pacman))

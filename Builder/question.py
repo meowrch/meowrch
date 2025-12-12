@@ -4,7 +4,6 @@ import inquirer
 from colorama import Fore
 from inquirer import Checkbox as QuestionCheckbox
 from inquirer import List as QuestionList
-from managers.drivers_manager import DriversManager
 from packages import CUSTOM
 from utils.banner import clear_and_banner
 from utils.schemes import BuildOptions, AurHelper, TerminalShell
@@ -30,7 +29,7 @@ class Question:
 
             category_question = inquirer.List(
                 "category",
-                message="8) Select a category of packages and choose the ones you want",
+                message="7) Select a category of packages and choose the ones you want",
                 choices=list(
                     category
                     + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
@@ -83,7 +82,6 @@ class Question:
 
     @staticmethod
     def get_answers():
-        drivers = DriversManager.auto_detection()
         answers: Question.answers_type = {}
         firefox_choices = [
             f"Dark Reader | {Fore.YELLOW}Changes light themes to dark themes on all sites",
@@ -124,22 +122,15 @@ class Question:
                 carousel=True,
             ),
             QuestionCheckbox(
-                name="install_drivers",
-                message="5) What drivers do you want to install?",
-                choices=["Nvidia", "Intel", "AMD"],
-                default=drivers,
-                carousel=True,
-            ),
-            QuestionCheckbox(
                 name="ff_plugins",
-                message="6) Would you like to add useful plugins for firefox?",
+                message="5) Would you like to add useful plugins for firefox?",
                 choices=firefox_choices,
                 default=firefox_choices,
                 carousel=True,
             ),
             QuestionList(
                 name="install_shell",
-                message="7) Which terminal shell do you prefer?",
+                message="6) Which terminal shell do you prefer?",
                 choices=["fish", "zsh"],
                 default="fish",
                 carousel=True,
@@ -176,10 +167,6 @@ class Question:
             install_hyprland="hyprland" in answers["install_wm"],
             aur_helper=aur_helper,
             use_chaotic_aur=answers["use_chaotic_aur"] == "Yes",
-            install_drivers=len(answers["install_drivers"]) > 0,
-            intel_driver="Intel" in answers["install_drivers"],
-            nvidia_driver="Nvidia" in answers["install_drivers"],
-            amd_driver="AMD" in answers["install_drivers"],
             ff_darkreader="Dark Reader" in answers["ff_plugins"],
             ff_ublock="uBlock Origin" in answers["ff_plugins"],
             ff_twp="TWP" in answers["ff_plugins"],
