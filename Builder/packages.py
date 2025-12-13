@@ -8,7 +8,7 @@ BASE = Packages(
 			"base-devel", "git", "networkmanager", "libnotify", "bluez", 
             "bluez-utils", "playerctl", "upower", "brightnessctl", 
 			"udiskie", "xdg-desktop-portal-gtk", "xdg-desktop-portal",
-            "mkinitcpio", "xorg-server-xvfb",
+            "mkinitcpio", "xorg-server-xvfb", "gobject-introspection",
 
 			##==> Звук
             ###########################################

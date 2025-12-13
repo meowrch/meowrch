@@ -4,14 +4,16 @@ import traceback
 from loguru import logger
 
 from .base import AppConfigurer
+from ..package_manager import PackageManager
 
 
 class MewlineConfigurer(AppConfigurer):
     def setup(self) -> None:
-        try:
-            self._create_hotkeys()
-        except Exception:
-            logger.error(f"Mewline main setup error: {traceback.format_exc()}")
+        if PackageManager.check_package_installed("mewline"):
+            try:
+                self._create_hotkeys()
+            except Exception:
+                logger.error(f"Mewline main setup error: {traceback.format_exc()}")
 
     def _create_hotkeys(self) -> None:
         """Логика создания горячих клавиш для mewline"""
