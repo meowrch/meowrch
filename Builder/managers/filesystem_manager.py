@@ -140,7 +140,7 @@ class FileSystemManager:
         error_msg = "[!] Error while making {path} executable: {err}"
         for path in [home / ".config", home / ".local" / "bin"]:
             try:
-                subprocess.run(["sudo", "chmod", "-R", "700", str(path)], check=True)
+                subprocess.run(["sudo", "chmod", "-R", "755", str(path)], check=True)
             except subprocess.CalledProcessError as e:
                 logger.error(error_msg.format(path=path, err=e.stderr))
             except Exception:
