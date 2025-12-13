@@ -51,62 +51,62 @@ class Builder:
                 logger.warning("Check the backup before you start the installation")
                 input("Press Enter to continue with the installation: ")
 
-            # FileSystemManager.create_default_folders()
-            # FileSystemManager.copy_dotfiles(
-            #     exclude_bspwm=not self.build_options.install_bspwm,
-            #     exclude_hyprland=not self.build_options.install_hyprland,
-            # )
+            FileSystemManager.create_default_folders()
+            FileSystemManager.copy_dotfiles(
+                exclude_bspwm=not self.build_options.install_bspwm,
+                exclude_hyprland=not self.build_options.install_hyprland,
+            )
 
-            # # Backup all critical system configs before any modifications
-            # ConfigBackup.backup_all()
+            # Backup all critical system configs before any modifications
+            ConfigBackup.backup_all()
 
-            # # Включаем multilib и обновляем базу данных
-            # PackageManager.update_pacman_conf(enable_multilib=True)
-            # PackageManager.update_database()
+            # Включаем multilib и обновляем базу данных
+            PackageManager.update_pacman_conf(enable_multilib=True)
+            PackageManager.update_database()
             
-            # # Установка Chaotic AUR 
-            # if self.build_options.use_chaotic_aur:
-            #     logger.info("Setting up Chaotic AUR...")
-            #     ChaoticAurManager.install()
+            # Установка Chaotic AUR 
+            if self.build_options.use_chaotic_aur:
+                logger.info("Setting up Chaotic AUR...")
+                ChaoticAurManager.install()
                 
-            # PackageManager.install_aur_helper(self.build_options.aur_helper)
+            PackageManager.install_aur_helper(self.build_options.aur_helper)
 
-            # self.packages_installation()
+            self.packages_installation()
 
             # Установка драйверов через chwd
             ChdwManager().install()
 
-            # AppsManager.configure_grub()
-            # AppsManager.configure_sddm()
-            # AppsManager.configure_plymouth()
-            # AppsManager.configure_firefox(
-            #     darkreader=self.build_options.ff_darkreader,
-            #     ublock=self.build_options.ff_ublock,
-            #     twp=self.build_options.ff_twp,
-            #     unpaywall=self.build_options.ff_unpaywall,
-            #     tampermonkey=self.build_options.ff_tampermonkey,
-            # )
-            # AppsManager.configure_code()
+            AppsManager.configure_grub()
+            AppsManager.configure_sddm()
+            AppsManager.configure_plymouth()
+            AppsManager.configure_firefox(
+                darkreader=self.build_options.ff_darkreader,
+                ublock=self.build_options.ff_ublock,
+                twp=self.build_options.ff_twp,
+                unpaywall=self.build_options.ff_unpaywall,
+                tampermonkey=self.build_options.ff_tampermonkey,
+            )
+            AppsManager.configure_code()
 
-            # if self.build_options.install_hyprland:
-            #     AppsManager.configure_mewline()
+            if self.build_options.install_hyprland:
+                AppsManager.configure_mewline()
                 
-            # AppsManager.configure_pawlette()
+            AppsManager.configure_pawlette()
 
-            # self.daemons_setting()
-            # PostInstallation.apply(self.build_options.terminal_shell)
+            self.daemons_setting()
+            PostInstallation.apply(self.build_options.terminal_shell)
 
-            # self._write_installation_metadata("3.0.0")
+            self._write_installation_metadata("3.0.0")
 
-            # logger.warning(
-            #     "The script was unable to automatically install these packages."
-            #     "Try installing them manually."
-            # )
-            # logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
-            # logger.warning("Aur: " + ", ".join(self.not_installed_packages.aur))
-            # logger.success(
-            #     "Meowrch has been successfully installed! Restart your PC to apply the changes."
-            # )
+            logger.warning(
+                "The script was unable to automatically install these packages."
+                "Try installing them manually."
+            )
+            logger.warning("Pacman: " + ", ".join(self.not_installed_packages.pacman))
+            logger.warning("Aur: " + ", ".join(self.not_installed_packages.aur))
+            logger.success(
+                "Meowrch has been successfully installed! Restart your PC to apply the changes."
+            )
         except BaseException:
             logger.error(f"Installation failed: {traceback.format_exc()}")
             self._cleanup_failed_installation()
