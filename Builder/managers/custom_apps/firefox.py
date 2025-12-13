@@ -375,7 +375,7 @@ class FirefoxConfigurer(AppConfigurer):
             logger.info("Installing VOT for firefox...")
             try:
                 URL = "https://raw.githubusercontent.com/ilyhalight/voice-over-translation/master/dist/vot.user.js"
-                TampermonkeyInstaller(URL, headless=False).run()
+                TampermonkeyInstaller(URL, headless=True).run()
                 logger.success("VOT has been successfully installed!")
             except Exception:
                 logger.error(error_msg.format(err=traceback.format_exc()))
