@@ -30,13 +30,13 @@ class Builder:
         logger.info(f"User Responses to Questions: {self.build_options}")
 
         # Проверка существующей установки
-        # if self._check_existing_installation():
-        #     logger.warning("Meowrch is already installed for this user!")
-        #     if not inquirer.confirm("Continue anyway? This will update the installation."):
-        #         return
+        if self._check_existing_installation():
+            logger.warning("Meowrch is already installed for this user!")
+            if not inquirer.confirm("Continue anyway? This will update the installation."):
+                return
         
-        # # Создаём временный маркер начала установки
-        # self._create_installation_marker()
+        # Создаём временный маркер начала установки
+        self._create_installation_marker()
 
         try:
             if self.build_options.make_backup:

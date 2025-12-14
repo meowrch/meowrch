@@ -149,7 +149,7 @@ class PostInstallation:
         error_msg = "Error setting random wallpaper: {err}"
         if wallpaper_selector.exists():
             try:
-                subprocess.run(["sh", str(wallpaper_selector), "--random"])
+                subprocess.run([f"XDG_BIN_HOME={str(Path.home())}/.local/bin", "sh", str(wallpaper_selector), "--random"])
             except subprocess.CalledProcessError as e:
                 logger.error(error_msg.format(err=e.stderr))
             except Exception:
