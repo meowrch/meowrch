@@ -113,31 +113,6 @@ class PackageManager:
         PackageManager._install_aur_helper(aur_helper.value, url)
 
     @staticmethod
-    def install_i3lock_color() -> bool:
-        dir_name = "i3lock-color"
-        target_path = f"/tmp/{dir_name}"
-
-        try:
-            PackageManager.install_packages(["git", "base-devel"])
-
-            if os.path.exists(target_path):
-                subprocess.run(["sudo", "rm", "-rf", target_path], check=True)
-
-            cloned = PackageManager.clone_repository(
-                "https://github.com/Raymo111/i3lock-color.git", target_path
-            )
-
-            if not cloned:
-                return False
-
-            subprocess.run(
-                ["sh", "./install-i3lock-color.sh"], cwd=target_path, check=True
-            )
-            return True
-        except Exception:
-            return False
-
-    @staticmethod
     def install_package(
         package: str, aur: AurHelper = None, error_retries: int = 3
     ) -> bool:
@@ -158,11 +133,7 @@ class PackageManager:
             try:
                 if aur is not None:
                     aur_cmd = aur.value.replace("-bin", "")
-                    
-                    subprocess.run(
-                        [aur_cmd, "-S", "--noconfirm", "--needed", package],
-                        check=True,
-                    )
+                    subprocess.run(["PKEXEC_UID=99999", aur_cmd, "-S", "--noconfirm", "--needed", package], check=True)
                 else:
                     subprocess.run(
                         ["sudo", "pacman", "-S", "--noconfirm", "--needed", package],
