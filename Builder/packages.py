@@ -3,18 +3,19 @@ from utils.schemes import DistributionPackages, PackageInfo, Packages
 BASE = Packages(
 	pacman=DistributionPackages(
 		common=[  
-			##==> Базовые инструменты и демоны
+			##==> Base tools and daemons
 			###########################################
 			"base-devel", "git", "networkmanager", "libnotify", "bluez", 
             "bluez-utils", "playerctl", "upower", "brightnessctl", 
 			"udiskie", "xdg-desktop-portal-gtk", "xdg-desktop-portal",
             "mkinitcpio", "xorg-server-xvfb", "gobject-introspection",
+            "power-profiles-daemon",
 
-			##==> Звук
+			##==> Audio
             ###########################################
             "pipewire-jack", "pipewire-alsa", "wireplumber", 
 			"python-pyalsa", "pavucontrol", "pamixer", "pipewire", 
-			"pipewire-pulse", "pipewire-audio",
+			"pipewire-pulse", "pipewire-audio", "sof-firmware",
             
 			##==> CLI-Tools
 			###########################################
@@ -32,7 +33,7 @@ BASE = Packages(
             "redshift", "zenity", "polkit-gnome", "gnome-disk-utility","rofimoji",
             "flameshot", "rofi", "qalculate-gtk",
             
-			##==> Шрифты
+			##==> Fonts
             ###########################################
             "ttf-hack-nerd", "noto-fonts", "noto-fonts-cjk", 
 			"noto-fonts-emoji", "noto-fonts-extra", "ttf-iosevka-nerd", 
@@ -61,7 +62,7 @@ BASE = Packages(
             ###########################################
             "visual-studio-code-bin", "nemo-tags", "hotkeyhub-bin",
             
-            ##==> Кастомизация: Темы, иконки и курсор
+            ##==> Customization: Themes, icons and cursors
             ###########################################
             "bibata-cursor-theme-bin", "tela-circle-icon-theme-dracula",
             "pawlette",
@@ -70,7 +71,7 @@ BASE = Packages(
             ###########################################
             "cava", "pokemon-colorscripts",
             
-            ##==> Шрифты
+            ##==> Fonts
             ###########################################
             "ttf-meslo-nerd-font-powerlevel10k",
 		],
@@ -81,36 +82,6 @@ BASE = Packages(
 	)
 )
 
-DRIVERS = {
-	"intel": Packages(
-		pacman=DistributionPackages(
-			common=[
-				"lib32-mesa", "vulkan-intel", "lib32-vulkan-intel", 
-				"vulkan-icd-loader", "lib32-vulkan-icd-loader", 
-				"intel-media-driver", "libva-intel-driver", 
-				"xf86-video-intel"
-			]
-		)
-	),
-	"amd": Packages(
-		pacman=DistributionPackages(
-			common=[
-				"lib32-mesa", "vulkan-radeon", "lib32-vulkan-radeon", 
-				"vulkan-icd-loader", "lib32-vulkan-icd-loader"
-			]
-		)
-	),
-	"nvidia": Packages(
-		pacman=DistributionPackages(
-			common=[
-				"nvidia-dkms", "nvidia-utils", "lib32-nvidia-utils",
-				"nvidia-settings", "vulkan-icd-loader", "opencl-nvidia",
-				"lib32-vulkan-icd-loader", "lib32-opencl-nvidia",
-				"libxnvctrl", "libva-nvidia-driver"
-			]
-		)
-	)
-}
 
 CUSTOM = {
     "useful": {
