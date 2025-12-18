@@ -9,12 +9,15 @@
 # The program was created by DIMFLIX
 # Github: https://github.com/DIMFLIX
 
-FLAG_FILE="/tmp/battery_low.flag"
-LOW_BATTERY_THRESHOLD=15
+FLAG_DIR="/tmp/battery_flags"
+BATTERY_THRESHOLDS=(15 10 5 2)
 CHARGING_ICONS=("󰢟 " "󰢜 " "󰂆 " "󰂇 " "󰂈 " "󰢝 " "󰂉 " "󰢞 " "󰂊 " "󰂋 " "󰂅 ")
 SESSION_TYPE="$XDG_SESSION_TYPE"
 DISCHARGED_COLOR=""
 CHARGED_COLOR=""
+
+# Создаем директорию для флагов, если её нет
+mkdir -p "$FLAG_DIR"
 
 has_battery() {
     local battery_path=$(upower -e | grep 'BAT')
@@ -52,13 +55,13 @@ print_status() {
     done
 
     if [ "$charging_status" == "charging" ]; then
-        icon="${CHARGING_ICONS[9]}" # Иконка для 100%
+        icon="${CHARGING_ICONS[9]}"
         color=$CHARGED_COLOR
     elif [ "$charging_status" == "fully-charged" ]; then
         icon="󰁹 "
         color=$CHARGED_COLOR
     else
-        if [ "$charge" -le "$LOW_BATTERY_THRESHOLD" ]; then
+        if [ "$charge" -le "15" ]; then
             color=$DISCHARGED_COLOR
         else
             color=$CHARGED_COLOR
@@ -84,22 +87,61 @@ print_status() {
         output="${icon}${charge}%"
     fi
 
-	if [[ -n "$color" ]]; then
-	    if [[ "$SESSION_TYPE" == "wayland" ]]; then
-	        echo "<span color=\"$color\">$output</span>"
-	    elif [[ "$SESSION_TYPE" == "x11" ]]; then
-	        echo "%{F$color}$output%{F-}"
-	    fi
-	else
-	    echo "$output"
-	fi
+    if [[ -n "$color" ]]; then
+        if [[ "$SESSION_TYPE" == "wayland" ]]; then
+            echo "<span color=\"$color\">$output</span>"
+        elif [[ "$SESSION_TYPE" == "x11" ]]; then
+            echo "%{F$color}$output%{F-}"
+        fi
+    else
+        echo "$output"
+    fi
+}
+
+check_battery_notifications() {
+    local battery_charge=$(get_battery_charge)
+    local charging_status=$(is_charging)
+    
+    # Если началась зарядка, удаляем все флаги
+    if [ "$charging_status" == "charging" ]; then
+        rm -f "$FLAG_DIR"/*.flag 2>/dev/null
+        return
+    fi
+    
+    # Проверяем каждый порог
+    for threshold in "${BATTERY_THRESHOLDS[@]}"; do
+        local flag_file="$FLAG_DIR/battery_${threshold}.flag"
+        
+        if [ "$battery_charge" -le "$threshold" ]; then
+            # Если флаг не существует, отправляем уведомление
+            if [ ! -f "$flag_file" ]; then
+                local urgency="critical"
+                local timeout=10000
+                
+                # Для 5% или 2% делаем чтобы уведомление не закрывалось
+                if [ "$threshold" -eq 5 ] || [ "$threshold" -eq 2 ]; then
+                    timeout=0 
+                fi
+                
+                notify-send "Low battery charge" \
+                    "The battery charge level is $battery_charge%, connect the charger." \
+                    -u "$urgency" \
+                    -t "$timeout"
+                
+                touch "$flag_file"
+            fi
+        else
+            # Если заряд выше порога, удаляем соответствующий флаг
+            rm -f "$flag_file" 2>/dev/null
+        fi
+    done
 }
 
 main() {
-	local status_mode=false
-	local notify_mode=false
-	local icon_only=false
-	
+    local status_mode=false
+    local notify_mode=false
+    local icon_only=false
+    
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
             --status)
@@ -107,7 +149,7 @@ main() {
                 shift
                 ;;
             --notify)
-            	notify_mode=true
+                notify_mode=true
                 shift
                 ;;
             --charged-color)
@@ -141,26 +183,8 @@ main() {
         notify_battery_time
     fi
 
-    # Получаем текущий заряд батареи и статус зарядки
-    BATTERY_CHARGE=$(get_battery_charge)
-    CHARGING_STATUS=$(is_charging)
-    
-    # Если началась зарядка, удаляем флаг, чтобы сбросить предупреждение
-    if [ "$CHARGING_STATUS" == "charging" ] && [ -f "$FLAG_FILE" ]; then
-        rm "$FLAG_FILE"
-    fi
-    
-    # Отправка уведомления при низком уровне заряда
-    if [ "$BATTERY_CHARGE" -le "$LOW_BATTERY_THRESHOLD" ]; then
-        if [ ! -f "$FLAG_FILE" ] && [ "$CHARGING_STATUS" != "charging" ]; then
-            notify-send "Low battery charge" "The battery charge level is $BATTERY_CHARGE%, connect the charger." -u critical
-            touch "$FLAG_FILE"
-        fi
-    elif [ "$BATTERY_CHARGE" -gt "$LOW_BATTERY_THRESHOLD" ]; then
-        if [ -f "$FLAG_FILE" ]; then
-            rm "$FLAG_FILE"
-        fi
-    fi
+    # Проверяем уведомления о низком заряде
+    check_battery_notifications
 }
 
 if has_battery; then
@@ -198,17 +222,17 @@ else
         color="$DISCHARGED_COLOR"
         
         if ! $icon_only; then
-			if [[ -n "$color" ]]; then
-	            case "$SESSION_TYPE" in
-	                "wayland") echo "<span color='$color'>$output</span>" ;;
-	                "x11")     echo "%{F$color}$output%{F-}" ;;
-	                *)         echo "$output" ;;
-	            esac
-	        else
-	            echo "$output"
-	        fi
-       else
-           echo "$output"
-       fi
+            if [[ -n "$color" ]]; then
+                case "$SESSION_TYPE" in
+                    "wayland") echo "<span color='$color'>$output</span>" ;;
+                    "x11")     echo "%{F$color}$output%{F-}" ;;
+                    *)         echo "$output" ;;
+                esac
+            else
+                echo "$output"
+            fi
+        else
+            echo "$output"
+        fi
     fi
 fi
