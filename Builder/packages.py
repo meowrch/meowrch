@@ -21,7 +21,7 @@ BASE = Packages(
 			###########################################
             "jq", "fastfetch", "lsd", "bat", "micro", "sudo",
             "btop", "yazi", "starship", "openssh", "sshfs", 
-            "wget", "neovim", "tmux", "ffmpeg", "cliphist", "udiskie", 
+            "wget", "neovim", "tmux", "ffmpeg", "cliphist",
             "tree", "bash-completion",
 
 			##==> GUI 
