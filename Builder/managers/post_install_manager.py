@@ -17,7 +17,6 @@ class PostInstallation:
         PostInstallation._add_to_gamemode_group()
         PostInstallation._ensure_en_us_locale()
         PostInstallation._fix_kitty_desktop_icon()
-        PostInstallation._set_wallpaper()
         logger.info("The post-installation configuration is complete!")
 
     @staticmethod
@@ -142,21 +141,3 @@ class PostInstallation:
         except Exception as e:
             logger.error(f"Error updating kitty.desktop icon path: {e}")
             logger.error(traceback.format_exc())
-    
-    @staticmethod
-    def _set_wallpaper() -> None:
-        wallpaper_selector = Path.home() / ".local/bin/rofi-menus/wallpaper-selector.sh"
-
-        env = os.environ.copy()
-        env["XDG_BIN_HOME"] = str(Path.home() / ".local" / "bin")
-
-        error_msg = "Error setting random wallpaper: {err}"
-
-        if wallpaper_selector.exists():
-            try:
-                subprocess.run(["sh", str(wallpaper_selector), "--random"], env=env)
-            except subprocess.CalledProcessError as e:
-                logger.error(error_msg.format(err=e.stderr))
-            except Exception:
-                logger.error(error_msg.format(err=traceback.format_exc()))
-                return False
