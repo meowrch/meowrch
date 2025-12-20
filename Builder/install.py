@@ -84,7 +84,7 @@ class Builder:
                 ublock=self.build_options.ff_ublock,
                 twp=self.build_options.ff_twp,
                 unpaywall=self.build_options.ff_unpaywall,
-                tampermonkey=self.build_options.ff_tampermonkey,
+                vot=self.build_options.ff_vot,
             )
             AppsManager.configure_code()
 

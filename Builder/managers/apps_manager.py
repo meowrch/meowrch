@@ -26,14 +26,14 @@ class AppsManager:
         ublock: bool,
         twp: bool,
         unpaywall: bool,
-        tampermonkey: bool,
+        vot: bool,
     ) -> None:
         FirefoxConfigurer(
             darkreader=darkreader,
             ublock=ublock,
             twp=twp,
             unpaywall=unpaywall,
-            tampermonkey=tampermonkey,
+            vot=vot,
         ).setup()
 
     @staticmethod

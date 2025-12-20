@@ -88,8 +88,7 @@ class Question:
             f"uBlock Origin | {Fore.YELLOW}Blocks ads",
             f"TWP | {Fore.YELLOW}Translator for text and whole pages",
             f"Unpaywall | {Fore.YELLOW}View paid article content",
-            f"Tamper Monkey | {Fore.YELLOW}Custom Script Manager. {Fore.RED}"
-                "(Used by me to translate videos in real time)"
+            f"Voice Over Translation | {Fore.YELLOW}Adds voice translation for videos from YaBrowser."
         ]
 
         quests: List[Union[QuestionCheckbox, QuestionList]] = [
@@ -171,6 +170,6 @@ class Question:
             ff_ublock="uBlock Origin" in answers["ff_plugins"],
             ff_twp="TWP" in answers["ff_plugins"],
             ff_unpaywall="Unpaywall" in answers["ff_plugins"],
-            ff_tampermonkey="Tamper Monkey" in answers["ff_plugins"],
+            ff_vot="Voice Over Translation" in answers["ff_plugins"],
             terminal_shell=terminal_shell
         )

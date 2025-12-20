@@ -52,5 +52,5 @@ class BuildOptions:
     ff_ublock: bool
     ff_twp: bool
     ff_unpaywall: bool
-    ff_tampermonkey: bool
+    ff_vot: bool
     terminal_shell: TerminalShell

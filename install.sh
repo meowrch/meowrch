@@ -51,8 +51,6 @@ declare -a packages=(
 	"gputil"
 	"pyamdgpuinfo"
 	"colorama"
-    "pyvirtualdisplay"
-    "selenium"
 )
 
 for package in "${packages[@]}"; do
