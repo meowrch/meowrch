@@ -146,10 +146,15 @@ class PostInstallation:
     @staticmethod
     def _set_wallpaper() -> None:
         wallpaper_selector = Path.home() / ".local/bin/rofi-menus/wallpaper-selector.sh"
+
+        env = os.environ.copy()
+        env["XDG_BIN_HOME"] = str(Path.home() / ".local" / "bin")
+
         error_msg = "Error setting random wallpaper: {err}"
+
         if wallpaper_selector.exists():
             try:
-                subprocess.run([f"XDG_BIN_HOME={str(Path.home())}/.local/bin", "sh", str(wallpaper_selector), "--random"])
+                subprocess.run(["sh", str(wallpaper_selector), "--random"], env=env)
             except subprocess.CalledProcessError as e:
                 logger.error(error_msg.format(err=e.stderr))
             except Exception:
