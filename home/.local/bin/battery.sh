@@ -10,7 +10,7 @@
 # Github: https://github.com/DIMFLIX
 
 FLAG_DIR="/tmp/battery_flags"
-BATTERY_THRESHOLDS=(15 10 5 2)
+BATTERY_THRESHOLDS=(15 10 5 3)
 CHARGING_ICONS=("󰢟 " "󰢜 " "󰂆 " "󰂇 " "󰂈 " "󰢝 " "󰂉 " "󰢞 " "󰂊 " "󰂋 " "󰂅 ")
 SESSION_TYPE="$XDG_SESSION_TYPE"
 DISCHARGED_COLOR=""
@@ -101,6 +101,7 @@ print_status() {
 check_battery_notifications() {
     local battery_charge=$(get_battery_charge)
     local charging_status=$(is_charging)
+    local lock_file="$FLAG_DIR/.battery.lock"
     
     # Если началась зарядка, удаляем все флаги
     if [ "$charging_status" == "charging" ]; then
@@ -113,23 +114,34 @@ check_battery_notifications() {
         local flag_file="$FLAG_DIR/battery_${threshold}.flag"
         
         if [ "$battery_charge" -le "$threshold" ]; then
-            # Если флаг не существует, отправляем уведомление
-            if [ ! -f "$flag_file" ]; then
-                local urgency="critical"
-                local timeout=10000
+            # Используем flock для атомарной проверки и создания флага
+            (
+                flock -n 200 || exit 1
                 
-                # Для 5% или 2% делаем чтобы уведомление не закрывалось
-                if [ "$threshold" -eq 5 ] || [ "$threshold" -eq 2 ]; then
-                    timeout=0 
+                # Повторная проверка внутри lock
+                if [ ! -f "$flag_file" ]; then
+                    local urgency="critical"
+                    local timeout=10000
+                    
+                    # Для 5% делаем чтобы уведомление не закрывалось
+                    if [ "$threshold" -eq 5 ]; then
+                        timeout=0 
+                    fi
+
+                    touch "$flag_file"
+
+                    # Для 3% делаем чтобы ноутбук уходил в сон
+                    if [ "$threshold" -eq 3 ]; then
+                        sh ${XDG_BIN_HOME:-$HOME/bin}/screen-lock.sh --suspend
+                        exit 0
+                    fi 
+                    
+                    notify-send "Low battery charge" \
+                        "The battery charge level is $battery_charge%, connect the charger." \
+                        -u "$urgency" \
+                        -t "$timeout"
                 fi
-                
-                notify-send "Low battery charge" \
-                    "The battery charge level is $battery_charge%, connect the charger." \
-                    -u "$urgency" \
-                    -t "$timeout"
-                
-                touch "$flag_file"
-            fi
+            ) 200>"$lock_file"
         else
             # Если заряд выше порога, удаляем соответствующий флаг
             rm -f "$flag_file" 2>/dev/null
