@@ -167,7 +167,6 @@ class Builder:
         logger.info("The daemons are starting to run...")
 
         daemons = {
-            "disable": ["sddm.service"],
             "enable": ["NetworkManager", "bluetooth.service"],
             "start": ["bluetooth.service"]
         }

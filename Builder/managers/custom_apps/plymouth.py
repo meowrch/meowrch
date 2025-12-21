@@ -183,7 +183,6 @@ class PlymouthConfigurer:
         # Copy service files
         logger.info("The process of setup the services for plymouth has begun...")
         service_files = [
-            ("sddm-plymouth.service", "/etc/systemd/system/"),
             ("plymouth-wait-for-animation.service", "/etc/systemd/system/"),
         ]
 
@@ -197,8 +196,6 @@ class PlymouthConfigurer:
             self._run_sudo(["cp", str(src), str(dest)])
 
         # Manage services
-        self._run_sudo(["systemctl", "disable", "sddm.service"])
-        self._run_sudo(["systemctl", "enable", "sddm-plymouth.service"])
         self._run_sudo(["systemctl", "enable", "plymouth-wait-for-animation.service"])
         logger.success("All services for plymouth successfully enabled! ")
 
