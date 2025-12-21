@@ -8,6 +8,7 @@ PartOf=graphical-session.target
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/bin/true
+Environment="DISPLAY=:0"
 # This is a dummy service to ensure graphical-session.target starts correctly
 # It helps prevent UWSM from waiting for graphical.target
 
