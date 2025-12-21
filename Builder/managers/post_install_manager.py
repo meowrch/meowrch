@@ -17,6 +17,7 @@ class PostInstallation:
         PostInstallation._add_to_gamemode_group()
         PostInstallation._ensure_en_us_locale()
         PostInstallation._fix_kitty_desktop_icon()
+        PostInstallation._set_default_terminal()
         logger.info("The post-installation configuration is complete!")
 
     @staticmethod
@@ -141,3 +142,17 @@ class PostInstallation:
         except Exception as e:
             logger.error(f"Error updating kitty.desktop icon path: {e}")
             logger.error(traceback.format_exc())
+
+    @staticmethod
+    def _set_default_terminal() -> None:
+        error_msg = "Error changing terminal: {err}"
+
+        try:
+            subprocess.run(
+                ["gsettings", "set", "org.cinnamon.desktop.default-applications.terminal", "exec", "kitty"], check=True
+            )
+            logger.success("The terminal is changed to kitty!")
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
+        except Exception:
+            logger.error(error_msg.format(err=traceback.format_exc()))
