@@ -7,17 +7,19 @@ from pathlib import Path
 from loguru import logger
 from packages import CUSTOM
 from utils.schemes import TerminalShell
+from utils.schemes import BuildOptions
 
 
 class PostInstallation:
     @staticmethod
-    def apply(terminal_shell: TerminalShell = TerminalShell.FISH):
+    def apply(build_options: BuildOptions):
         logger.info("The post-installation configuration is starting...")
-        PostInstallation._set_terminal_shell(terminal_shell)
+        PostInstallation._set_terminal_shell(build_options.terminal_shell)
         PostInstallation._add_to_gamemode_group()
         PostInstallation._ensure_en_us_locale()
         PostInstallation._fix_kitty_desktop_icon()
         PostInstallation._set_default_terminal()
+        PostInstallation._grant_permissions_for_configs()
         logger.info("The post-installation configuration is complete!")
 
     @staticmethod
@@ -152,6 +154,20 @@ class PostInstallation:
                 ["gsettings", "set", "org.cinnamon.desktop.default-applications.terminal", "exec", "kitty"], check=True
             )
             logger.success("The terminal is changed to kitty!")
+        except subprocess.CalledProcessError as e:
+            logger.error(error_msg.format(err=e.stderr))
+        except Exception:
+            logger.error(error_msg.format(err=traceback.format_exc()))
+
+    @staticmethod
+    def _grant_permissions_for_configs() -> None:
+        error_msg = "Error granting correct permissions for configs and scripts: {err}"
+
+        try:
+            subprocess.run(
+                ["chmod", "-R", "700", "~/.config/", "~/.local/bin/"], check=True
+            )
+            logger.success("The correct permissions have been granted for the configs and scripts!")
         except subprocess.CalledProcessError as e:
             logger.error(error_msg.format(err=e.stderr))
         except Exception:

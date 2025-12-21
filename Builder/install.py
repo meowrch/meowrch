@@ -94,7 +94,7 @@ class Builder:
             AppsManager.configure_pawlette()
 
             self.daemons_setting()
-            PostInstallation.apply(self.build_options.terminal_shell)
+            PostInstallation.apply(self.build_options)
 
             self._write_installation_metadata("3.0.0")
 
