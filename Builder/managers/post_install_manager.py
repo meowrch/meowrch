@@ -163,9 +163,12 @@ class PostInstallation:
     def _grant_permissions_for_configs() -> None:
         error_msg = "Error granting correct permissions for configs and scripts: {err}"
 
+        config_path = os.path.expanduser("~/.config/")
+        bin_path = os.path.expanduser("~/.local/bin/")
+
         try:
             subprocess.run(
-                ["chmod", "-R", "700", "~/.config/", "~/.local/bin/"], check=True
+                ["chmod", "-R", "700", config_path, bin_path], check=True
             )
             logger.success("The correct permissions have been granted for the configs and scripts!")
         except subprocess.CalledProcessError as e:
