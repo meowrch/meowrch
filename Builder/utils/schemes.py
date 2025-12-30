@@ -1,11 +1,17 @@
 from dataclasses import dataclass, field
-from typing import List
 from enum import Enum
+from typing import List
 
 
 class AurHelper(Enum):
     YAY = "yay"
     PARU = "paru"
+    YAY_BIN = "yay-bin"
+
+
+class TerminalShell(Enum):
+    FISH = "fish"
+    ZSH = "zsh"
 
 
 @dataclass
@@ -41,14 +47,10 @@ class BuildOptions:
     install_bspwm: bool
     install_hyprland: bool
     aur_helper: AurHelper
-    enable_multilib: bool
-    update_arch_database: bool
-    install_drivers: bool
-    intel_driver: bool
-    nvidia_driver: bool
-    amd_driver: bool
+    use_chaotic_aur: bool
     ff_darkreader: bool
     ff_ublock: bool
     ff_twp: bool
     ff_unpaywall: bool
-    ff_tampermonkey: bool
+    ff_vot: bool
+    terminal_shell: TerminalShell

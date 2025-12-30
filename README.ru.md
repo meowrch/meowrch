@@ -1,265 +1,356 @@
-
 <div align="center">
-	<img src=".meta/logo.png" width="300px">
-	<h1> Meowrch ≽ܫ≼</h1>
-	<a href="https://github.com/meowrch/meowrch/issues">
-		<img src="https://img.shields.io/github/issues/meowrch/meowrch?color=ffb29b&labelColor=1C2325&style=for-the-badge">
-	</a>
-	<a href="https://github.com/meowrch/meowrch/stargazers">
-		<img src="https://img.shields.io/github/stars/meowrch/meowrch?color=fab387&labelColor=1C2325&style=for-the-badge">
-	</a>
-	<a href="./LICENSE">
-		<img src="https://img.shields.io/github/license/meowrch/meowrch?color=FCA2AA&labelColor=1C2325&style=for-the-badge">
-	</a>
-	<br>
-	<br>
-	<a href="./README.ru.md">
-		<img src="https://img.shields.io/badge/README-RU-blue?color=cba6f7&labelColor=cba6f7&style=for-the-badge">
-	</a>
-	<a href="./README.md">
-		<img src="https://img.shields.io/badge/README-ENG-blue?color=C9CBFF&labelColor=1C2325&style=for-the-badge">
-	</a>
-</div>
 
-***
+<img src=".meta/logo.png" width="280px" alt="Meowrch Logo">
+
+# ≽ܫ≼ Meowrch
+
+### *Arch Linux. Переосмысленный.*
+**Где производительность встречается с эстетикой**
 
 <br>
-<a href="https://youtu.be/KdGPDF4p5CA"><img src=".meta/assets/video-preview-youtube.png"></a>
 
-<!-- INFORMATION -->
-<table align="right">
-	<tr>
-	    <td colspan="2" align="center">Системные параметры</td>
-	</tr>
-	<tr>
-	    <th>Компонент</th>
-	    <th>Название</th>
-	</tr>
-	<tr>
-	    <td>OS</td>
-	    <td><a href="https://archlinux.org/">Arch Linux</a></td>
-	</tr>
-	<tr>
-	    <td>WM</td>
-	    <td><a href="https://github.com/baskerville/bspwm">BSPWM</a> | <a href="https://hyprland.org/">Hyprland</a></td>
-	</tr>
-	<tr>
-	    <td>Bar</td>
-	    <td><a href="https://github.com/polybar/polybar">Polybar</a> | <a href="https://github.com/Alexays/Waybar">Waybar</a></td>
-	</tr>
-	<tr>
-	    <td>Compositor</td>
-	    <td><a href="https://github.com/yshui/picom">Picom</a> | Built-in</td>
-	</tr>
-	<tr>
-	    <td>Terminal</td>
-	    <td><a href="https://github.com/kovidgoyal/kitty">Kitty</a></td>
-	</tr>
-	<tr>
-	    <td>App Launcher</td>
-	    <td><a href="https://github.com/davatorium/rofi">Rofi</a></td>
-	</tr>
-	<tr>
-	    <td>Notify Daemon</td>
-	    <td><a href="https://github.com/dunst-project/dunst">Dunst</a></td>
-	</tr>
-	<tr>
-	    <td>Shell</td>
-	    <td><a href="https://github.com/fish-shell/fish-shell">Fish</a></td>
-	</tr>
-</table>
-<div align="left">
-	<h3> 📝 О проекте</h2> 
-	<p>
-	Meowrch - сборка, основанная на Arch, заточенная под максимальную производительность, эргономичность и красоту.
-	</p>
-	<h3>🚀 Особенности</h2>
-	<p>
-	• Система полностью настроена для повседневного комфортного использования.<br>
-	• Широкие возможности кастомизации и <a href="https://github.com/meowrch/meowrch-themes">пользовательский магазин тем</a><br>
-	• Горячие клавиши заточены под обеспечение максимальной производительности.<br>
-	• Автоматическая установка и настройка системы. <br>
-	• Современный дизайн. <br>
-	• Обеспечение непрерывной и надежной поддержки для успешного функционирования проекта<br>
-	</p>
+[![Issues](https://img.shields.io/github/issues/meowrch/meowrch?color=ffb29b&labelColor=1C2325&style=for-the-badge)](https://github.com/meowrch/meowrch/issues)
+[![Stars](https://img.shields.io/github/stars/meowrch/meowrch?color=fab387&labelColor=1C2325&style=for-the-badge)](https://github.com/meowrch/meowrch/stargazers)
+[![License](https://img.shields.io/github/license/meowrch/meowrch?color=FCA2AA&labelColor=1C2325&style=for-the-badge)](./LICENSE)
+
+
+[![README RU](https://img.shields.io/badge/README-RU-blue?color=cba6f7&labelColor=cba6f7&style=for-the-badge)](./README.ru.md)
+[![README ENG](https://img.shields.io/badge/README-ENG-blue?color=C9CBFF&labelColor=1C2325&style=for-the-badge)](./README.md)
+
+<br>
+
+[🚀 Быстрый старт](#-установка) • [📸 Галерея](#-визуальная-презентация) • [⚡ Возможности](#-почему-meowrch) • [📖 Wiki](https://meowrch.github.io/) • [💬 Сообщество](https://t.me/meowrch)
+
 </div>
 
-> [!WARNING]
-> ДАННАЯ КОНФИГУРАЦИЯ ПРЕДНАЗНАЧЕНА ДЛЯ МОНИТОРОВ С РАЗРЕШЕНИЕМ 1920X1080,
-> НЕКОТОРЫЕ ФУНКЦИИ ОБОЛОЧКИ МОГУТ РАБОТАТЬ НЕПРАВИЛЬНО.
-> В ЭТОМ СЛУЧАЕ ВАМ НЕОБХОДИМО ВНЕСТИ ИЗМЕНЕНИЯ ВРУЧНУЮ.
-> ЕСЛИ ВЫ ОБНАРУЖИТЕ ОШИБКИ В ОБОЛОЧКЕ, ПОЖАЛУЙСТА, СООБЩИТЕ О ПРОБЛЕМЕ.
+---
 
+## 🎯 Зачем ещё один Rice?
 
-<!-- IMAGES -->
+**Большинство готовых rice'ов для Arch решают только одну проблему:**
+
+- 🎨 Либо **красота**, но система жрёт RAM.
+- ⚡ Либо **производительность**, но UI выглядит убого.
+- 🛠️ Либо **функциональность**, но код превращается в "спагетти", которые самостоятельно не поправить.
+
+### **Meowrch — это другой подход:**
+
+Мы не жертвуем одним ради другого. Вместо этого создаём систему, где каждый компонент выбран по принципу **"максимум результата при минимуме ресурсов"**.
+
+**Но главное** — мы не ограничиваемся красивыми конфигами.
+
+Мы создаём **собственные инструменты**, которые решают **многолетние боли всего Linux-сообщества**:
+<table> 
+  <tr> 
+  <td>
+🏷️ Nemo Tags
+
+10+ лет сообщество просило систему тегов для Nemo.
+Разработчики игнорировали. Мы сделали.
+
+Теперь организация файлов как в macOS Finder — доступна каждому.
+  </td> 
+  </tr> 
+  <tr> 
+  <td>
+🩸 BlueVein
+
+Dual-boot Windows/Linux = ад с Bluetooth.
+Переключил ОС? Заново подключай мышь, клавиатуру, наушники.
+**Каждый. Раз.**
+
+Мы решили эту терзающую проблему.
+  </td> 
+  </tr> 
+</table>
+
+> [!NOTE]
+> **Все наши инструменты — open-source** и работают не только в Meowrch. \
+> Мы развиваем экосистему **для всего Linux-сообщества**, а не просто "делаем красиво для себя".
+
+---
+
+## 🌟 Почему Meowrch?
+
+<div align="center">
+
+| Особенность | Что это дает вам |
+|:---:|:---|
+| **Оптимизация** | Система имеет лучшие оптимизации из [ARU](https://github.com/ventureoo/ARU) и [CachyOS](https://cachyos.org/). [Подробнее](https://meowrch.github.io/ru/optimization/performance-advantages/) |
+| **Магазин тем [сообщества](https://github.com/meowrch/pawlette-themes)** | Меняй внешний вид всей системы **одной командой** |
+| **Open-source разработка** | Мы поддерживаем развитие Linux, разрабатывая собственные компоненты, **полезные мировому сообществу Linux**. [**Подробнее тут**](https://github.com/meowrch/) |
+| **Автоматизация** | Установка **за 10 минут**, полная настройка и оптимизация — **без ручной правки конфигов** |
+| **Эргономика** | Горячие клавиши продуманы **до мелочей** — работай быстрее |
+| **Два окружения** | BSPWM (X11) или Hyprland (Wayland) — **стабильность или современность** |
+| **Легковесность** |  **1 GB RAM** при старте системы — благодаря [легковесным компонентам](https://meowrch.github.io/ru/introduction/сomponent-selection-philosophy/) |
+</div>
+
+---
+
+## 📸 Визуальная презентация
+
 <table align="center">
   <tr>
-    <td colspan="4"><img src=".meta/assets/1.png"></td>
+    <td colspan="3">
+        <a href="https://youtu.be/ZZnBopmVzz4">
+            <img src=".meta/assets/video-preview-youtube.png" width="100%" alt="Видео-превью Meowrch">
+        </a>
+    </td>
   </tr>
   <tr>
-    <td colspan="1"><img src=".meta/assets/2.png"></td>
-    <td colspan="1"><img src=".meta/assets/3.png"></td>
-    <td colspan="1"><img src=".meta/assets/4.png"></td>
+    <td><img src=".meta/assets/1.png" alt="Базовые приложения и виджеты"></td>
+    <td><img src=".meta/assets/2.png" alt="Демонстрация кейса использования рабочего стола под визуализацию музыки."></td>
+    <td><img src=".meta/assets/3.png" alt="Демонстрация работоспособности программного обеспечения компании Adobe (Photoshop, AfterEffects)"></td>
   </tr>
   <tr>
-	<td colspan="1"><img src=".meta/assets/5.png"></td>
-	<td colspan="1"><img src=".meta/assets/6.png"></td>
-	<td colspan="1"><img src=".meta/assets/7.png"></td>
+    <td><img src=".meta/assets/4.png" alt="Демонстрация работоспособности игровых новинок в Steam при наличии сложных технологий защиты, таких как Denuvo (на примере игры Mafia: The old country)"></td>
+    <td><img src=".meta/assets/5.png" alt="Демонстрация рабочего процесса в VSCode"></td>
+    <td><img src=".meta/assets/6.png" alt="Демонстрация анимации смены обоев рабочего стола через динамический остров mewline"></td>
   </tr>
 </table>
 
+---
 
-<!-- INSTALLATION -->
-## 🛠 Установка
-Если у вас уже установлен Linux Arch, то выполняем следующие действия:
-### 1. Клонируем репозиторий
+## 🏝️ Знакомьтесь: Mewline — Dynamic Island для Linux
+
+### **Компактный интерфейс, максимум информации:**
+
+- 🖥️ **System tray** — все твои фоновые приложения
+- 🗂️ **Workspaces** — быстрое переключение между рабочими столами
+- 📅 **Date & Time** — всегда на виду
+- 🔆 **Brightness** — контроль яркости экрана
+- 🔊 **Volume** — управление звуком
+- 🔋 **Battery** — заряд и статус зарядки
+- ⚡ **Power** — меню управления питанием
+- 📸 **OCR** — распознавание текста с выделенной области на экране.
+
+### **Интерактивный центр управления системой:**
+
+- 🎵 **Compact mode** — информация об активном окне и играющей музыке
+- 🔔 **Information menu** — календарь и история уведомлений (Super+Alt+D)
+- 📱 **App launcher** — запуск приложений (Super+Alt+A)
+- 🖼️ **Wallpapers** — смена обоев с превью (Super+Alt+W)
+- 😊 **Emoji picker** — выбор эмодзи (Super+Alt+.)
+- 📋 **Clipboard** — история буфера обмена (Super+Alt+V)
+- 🌐 **Network manager** — Wi-Fi и Ethernet (Super+Alt+N)
+- 🖥️ **Workspaces** — менеджер окон и воркспейсов (Super+Alt+Tab)
+- 🔵 **Bluetooth** — управление устройствами (Super+Alt+B)
+
+> [!NOTE]
+> Да-да. **Это всё — в одной утилите**. \
+> Вместо настройки Rofi + Waybar + Dunst + wlogout + network-manager-applet + clipboard manager — **одна команда установки**.
+
+
+<div align="center">
+
+**[📖 Полная документация Mewline](https://github.com/meowrch/mewline)** -  **[🐛 Сообщить о проблеме](https://github.com/meowrch/mewline/issues)**
+
+</div>
+
+---
+
+## 🛠️ Установка
+
+> [!WARNING] 
+> Установщик предназначен для **чистого Arch Linux**. \
+> Если у вас уже настроенная система, установка **перезапишет** конфигурации. \
+> Для тестирования создайте нового пользователя. \
+> Если вам понравится — переходите на Meowrch полностью
+
+### 📦 Быстрый старт
+
 ```
-git clone https://github.com/meowrch/meowrch.git
-```
-### 2. Переходим в каталог с проектом
-```
+# 1. Клонируем репозиторий
+git clone https://github.com/meowrch/meowrch --depth 1 --single-branch
 cd meowrch
-```
-### 3. Запускаем автоматическую установку
-```
+
+# 2. Запускаем установщик
 sh install.sh
+
+# 3. Перезагружаемся
+reboot
 ```
 
-> [!important]
-> После установки вам нужно **обязательно** перезагрузиться для применения изменений.
+---
 
+## 📋 Что вы получаете после установки?
 
-> [!note]
-> Инструкции по навигации в меню установщика: \
-> • Выбор элемента в меню: Для выбора нужного элемента нажмите Пробел. \
-> • Переход к следующему шагу: Чтобы перейти к следующему шагу, нажмите Enter.
-
-<h2>💻 Помощь</h2>
-Если у вас возникли вопросы или вам нужна помощь с проектом, пожалуйста, посетите нашу <a href="https://github.com/meowrch/meowrch/wiki">Wiki</a>. Здесь вы найдете полезные руководства и информацию, которая поможет вам лучше понять, как использовать наш продукт.<br><br>
-Если вы столкнулись с ошибками или проблемами, которых нет на нашей <a href="https://github.com/meowrch/meowrch/wiki">Wiki</a>, не стесняйтесь сообщить об этом в разделе <a href="https://github.com/meowrch/meowrch/issues">Issues</a>. 
-<br><br>
-Так-же предлагаем посетить наш <a href="https://t.me/meowrch">Telegram</a>, в котором вы найдёте <a href="https://t.me/meowrch/9">новости</a>, <a href="https://t.me/meowrch/22">отзывы</a> и <a href="https://t.me/meowrch/7">быструю поддержку</a>.
-<br><br>
-Ваши отзывы помогут нам улучшить проект и сделать его еще более удобным для пользователей.
-
-
-<h2>💻 Горячие клавиши</h2>
 <table align="center">
-	<tr>
-		<td colspan="3" align="center">Сочетания клавиш</td>
-	</tr>
-    <tr>
-        <th>Название действия</th>
-        <th>Hyprland</th>
-		<th>Bspwm</th>
-    </tr>
-	<tr>
-        <td>Открыть терминал</td>
-		<td colspan="2" align="center">super + enter</td>
-    </tr>
-    <tr>
-        <td>Открыть меню приложений</td>
-		<td colspan="2" align="center">super + d</td>
-    </tr>
-	<tr>
-        <td>Открыть файловый менеджер</td>
-		<td colspan="2" align="center">super + e</td>
-    </tr>
-	<tr>
-        <td>Открыть Firefox</td>
-		<td colspan="2" align="center">super + shift + f</td>
-    </tr>
-	<tr>
-        <td>Открыть VSCode</td>
-		<td colspan="2" align="center">super + shift + c</td>
-    </tr>
-	<tr>
-        <td>Открыть диспетчер задач (btop)</td>
-		<td colspan="2" align="center">ctrl + shift + esc</td>
-    </tr>
-	<tr>
-        <td>Открыть выбор емоджи</td>
-		<td colspan="2" align="center">super + .</td>
-    </tr>
-    <tr>
-        <td>Открыть меню включения / выключения компьютера</td>
-		<td colspan="2" align="center">super + x</td>
-    </tr>
-	<tr>
-        <td>Сделать скриншот</td>
-		<td colspan="2" align="center">PrintScreen</td>
-    </tr>
-	<tr>
-        <td>Сменить обои</td>
-		<td colspan="2" align="center">super + w</td>
-    </tr>
-	<tr>
-        <td>Сменить тему</td>
-		<td colspan="2" align="center">super + t</td>
-    </tr>
-	<tr>
-        <td>Сменить раскладку</td>
-		<td colspan="2" align="center">shift + alt</td>
-    </tr>
-    <tr>
-        <td>Распознать цвет на экране</td>
-		<td colspan="2" align="center">super + c</td>
-    </tr>
-    <tr>
-        <td>Заблокировать экран</td>
-        <td colspan="2" align="center">super + l</td>
-    </tr>
-	<tr>
-        <td>Переключиться на другую рабочую область</td>
-		<td colspan="2" align="center">super + 1-10</td>
-    </tr>
-	<tr>
-        <td>Переключиться на скрытую рабочую область</td>
-		<td>super + s</td>
-		<td>N/A</td>
-    </tr>
-    <tr>
-        <td>Перенести активное окно на другую рабочую область</td>
-		<td colspan="2" align="center">super + shift + 1-10</td>
-    </tr>
-    <tr>
-        <td>Перевести активное окно в плавающий режим</td>
-		<td colspan="2" align="center">super + space</td>
-    </tr>
-	<tr>
-        <td>Перевести активное окно в полноразмерный режим</td>
-		<td colspan="2" align="center">alt + enter</td>
-    </tr>
-    <tr>
-        <td>Закрыть активное окно</td>
-		<td colspan="2" align="center">super + q</td>
-    </tr>
-    <tr>
-        <td>Перезапустить оконный менеджер</td>
-		<td colspan="2" align="center">ctrl + shift + r</td>
-    </tr>
-	<tr>
-		<td>Вся конфигурация находится в: </td>
-		<td>~/.config/hypr/keybindings.conf</td>
-		<td>~/.config/bspwm/sxhkdrc</td>
-	</tr>
+<tr>
+<th width="30%">Компонент</th>
+<th width="70%">Детали</th>
+</tr>
+<tr>
+<td><b>🐧 Базовая ОС</b></td>
+<td><a href="https://archlinux.org/">Arch Linux</a> + <a href="https://meowrch.github.io/ru/optimization/performance-advantages/">агрессивная оптимизация</a>
+</tr>
+<tr>
+<td><b>🪟 Оконные менеджеры</b></td>
+<td><a href="https://github.com/baskerville/bspwm">BSPWM</a> (X11) | <a href="https://hyprland.org/">Hyprland</a> (Wayland)</td>
+</tr>
+<tr>
+<td><b>📊 Панели</b></td>
+<td><a href="https://github.com/polybar/polybar">Polybar</a> | <a href="https://github.com/Alexays/Waybar">Waybar</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
+</tr>
+<tr>
+<td><b>🎨 Кастомизация</b></td>
+<td><a href="https://github.com/meowrch/pawlette">Pawlette</a> с предустановленной темой Catppuccin Mocha</td>
+</tr>
+<tr>
+<td><b>🖥️ Терминал</b></td>
+<td><a href="https://github.com/kovidgoyal/kitty">Kitty</a></td>
+</tr>
+<tr>
+<td><b>🐚 Оболочки</b></td>
+<td><a href="https://github.com/fish-shell/fish-shell">Fish</a> | <a href="https://www.zsh.org">Zsh</a></td>
+</tr>
+<tr>
+<td><b>📱 Меню и виджеты</b></td>
+<td><a href="https://github.com/davatorium/rofi">Rofi</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
+</tr>
+<tr>
+<td><b>🔔 Уведомления</b></td>
+<td><a href="https://github.com/dunst-project/dunst">Dunst</a> | <a href="https://github.com/ErikReider/SwayNotificationCenter">Swaync</a> | <a href="https://github.com/meowrch/mewline">Mewline</a></td>
+</tr>
+<tr>
+<td><b>📦 Репозитории</b></td>
+<td><a href="https://wiki.archlinux.org/title/Official_repositories">Arch Official</a> + <a href="https://aur.chaotic.cx/">Chaotic AUR</a></td>
+</tr>
 </table>
+
+> [!NOTE]
+> **Почему эти компоненты?**
+> Мы выбирали между производительностью, функциональностью и стабильностью.
+> [Подробнее о выборе компонентов](https://meowrch.github.io/ru/introduction/сomponent-selection-philosophy/)
+
+---
+
+## ⌨️ Горячие клавиши
+
+| Действие                   | Комбинация     | Почему это удобно?                                                                                                              |
+| -------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Открыть терминал           | Super + Enter  | Быстрый доступ к универсальному инструменту.                                                                                    |
+| Выбор приложения           | Super + A      | Удобный вариант выбора нужного приложения.                                                                                      |
+| Цветовая пипетка           | Super + C      | Распознай цвет с экрана для дизайна/разработки.                                                                                 |
+| Сменить обои               | Super + W      | Rofi с превью. Одна кнопка — новый вид рабочего стола.                                                                          |
+| Сменить тему               | Super + T      | Новая тема за 2 секунды. Без редактирования конфигов.                                                                           |
+| Эмодзи                     | Super + .      | Как в Windows 11, но быстрее.                                                                                                   |
+| Отключить сочетания клавиш | Super + Escape | Может помочь в случаях использования виртуальных машин на Meowrch, с конфигурациями, работающими так-же через сочетания клавиш. |
+
+
+> [!TIP]
+> **Все доступные сочетания клавиш** вы можете найти [**здесь**](https://meowrch.github.io/ru/usage/hotkeys/#meowrch-hotkeys).
+
+---
+
+## 💬 Поддержка и сообщество
+
+<div align="center">
+
+<a href="https://meowrch.github.io/">
+<img src=".meta/assets/wiki-banner-ru.png" width="80%" alt="Meowrch Wiki">
+</a>
+
+**[🌐 Официальная Wiki](https://meowrch.github.io/)** — гайды, FAQ, устранение проблем
+
+<br>
+
+### 💬 Присоединяйтесь к сообществу
+
+<table align="center">
+<tr>
+<td align="center" width="33%">
+<h3>📢 Telegram</h3>
+<a href="https://t.me/meowrch">
+<img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram">
+</a>
+<br><br>
+Новости, обновления и <a href="https://t.me/meowrch/7">быстрая поддержка</a>
+</td>
+<td align="center" width="33%">
+<h3>🐛 Issues</h3>
+<a href="https://github.com/meowrch/meowrch/issues">
+<img src="https://img.shields.io/badge/GitHub-Issues-181717?style=for-the-badge&logo=github&logoColor=white" alt="Issues">
+</a>
+<br><br>
+Сообщить о баге или предложить фичу
+</td>
+<td align="center" width="33%">
+<h3>⭐ Reviews</h3>
+<a href="https://meowrch.github.io/ru/#reviews">
+<img src="https://img.shields.io/badge/GitHub-Reviews-181717?style=for-the-badge&logo=github&logoColor=white" alt="Reviews">
+</a>
+<br><br>
+Поделиться впечатлениями о дистрибутиве
+</td>
+</tr>
+</table>
+
+</div>
+
+---
+
+## ⭐ Что говорят пользователи?
+
+<div align="center">
+
+<a href="https://meowrch.github.io/ru/#reviews">
+<img src=".meta/assets/reviews-banner-ru.png" width="80%" alt="User Reviews">
+</a>
+<br>
+<br>
+</div>
+
+
+> [!IMPORTANT] 
+> **📢 Ваш отзыв важен!** \
+>  Поделитесь опытом на **[сайте](https://meowrch.github.io/ru/#reviews)**
+
+---
 
 ## ☕ Поддержать проект
-Если вы хотите поддержать мою работу, вы можете отправить пожертвование на следующие криптовалютные кошельки:
 
-| Криптовалюта | Адрес                                        		|
-| ------------ | -------------------------------------------------- |
-| **TON**      | `UQB9qNTcAazAbFoeobeDPMML9MG73DUCAFTpVanQnLk3BHg3` |
-| **Ethereum** | `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13`       |
-| **Bitcoin**  | `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn`       |
-| **Tron**     | `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs`               |
+<div align="center">
 
-## 📊 История звезд
+**Нравится Meowrch?** Помогите развитию проекта! 🚀
+
+| 💎 Криптовалюта | 📬 Адрес |
+|:---:|:---|
+| **TON** | `UQB9qNTcAazAbFoeobeDPMML9MG73DUCAFTpVanQnLk3BHg3` |
+| **Ethereum** | `0x56e8bf8Ec07b6F2d6aEdA7Bd8814DB5A72164b13` |
+| **Bitcoin** | `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn` |
+| **Tron** | `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs` |
+
+<br>
+
+*Каждый донат мотивирует продолжать развивать проект! ❤️*
+
+</div>
+
+---
+
+## 📊 Статистика проекта
+
+
+### ⭐ История звезд
+
 <a href="https://star-history.com/#meowrch/meowrch&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
- </picture>
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
+<source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
+<img alt="Star History Chart" src="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
+</picture>
 </a>
+
+### 📈 Активность репозитория
+
+![Repobeats Analytics](https://repobeats.axiom.co/api/embed/96a58cbd631f6100db2e77966316aa5cf0c21f47.svg "Repobeats analytics image")
+
+
+---
+
+<div align="center">
+
+**Сделано с ❤️ для Linux сообщества**
+
+</div>

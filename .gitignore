@@ -102,6 +102,7 @@ fabric.properties
 
 # Built Visual Studio Code Extensions
 *.vsix
+!misc/meowrch-theme-1.1.1.vsix
 
 ### PyCharm template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -368,7 +369,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/ # Commented out to allow systemd lib dirs in AUR packages
 lib64/
 parts/
 sdist/
@@ -538,6 +539,10 @@ cython_debug/
 #.idea/
 
 
-##==> Meowrch ignores
+##=> Meowrch ignores
 ########################################
 backup/
+
+# Allow lib directories in AUR packages
+!aur-packages/*/usr/lib/
+!aur-packages/*/usr/lib/**

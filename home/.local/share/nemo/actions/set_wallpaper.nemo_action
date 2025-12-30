@@ -3,7 +3,7 @@
 Active=true
 Name=Set as wallpaper
 Comment=Set current image as wallpaper
-Exec=sh -c "python ~/.config/meowrch/meowrch.py --action set-wallpaper --path %F"
+Exec=sh -c "${XDG_BIN_HOME:-$HOME/bin}/set-wallpaper.sh %F"
 Icon-Name=image
 Selection=single;
 Mimetypes=image/*;

@@ -1,0 +1,11 @@
+[Unit]
+Description=Firefox GNOME Theme Auto-Update Timer
+Requires=firefox-theme-update.service
+
+[Timer]
+OnBootSec=2min
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -4,10 +4,9 @@ import inquirer
 from colorama import Fore
 from inquirer import Checkbox as QuestionCheckbox
 from inquirer import List as QuestionList
-from managers.drivers_manager import DriversManager
 from packages import CUSTOM
 from utils.banner import clear_and_banner
-from utils.schemes import BuildOptions, AurHelper
+from utils.schemes import BuildOptions, AurHelper, TerminalShell
 
 
 class Question:
@@ -30,7 +29,7 @@ class Question:
 
             category_question = inquirer.List(
                 "category",
-                message="8) Select a category of packages and choose the ones you want",
+                message="7) Select a category of packages and choose the ones you want",
                 choices=list(
                     category
                     + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
@@ -83,15 +82,13 @@ class Question:
 
     @staticmethod
     def get_answers():
-        drivers = DriversManager.auto_detection()
         answers: Question.answers_type = {}
         firefox_choices = [
             f"Dark Reader | {Fore.YELLOW}Changes light themes to dark themes on all sites",
             f"uBlock Origin | {Fore.YELLOW}Blocks ads",
             f"TWP | {Fore.YELLOW}Translator for text and whole pages",
             f"Unpaywall | {Fore.YELLOW}View paid article content",
-            f"Tamper Monkey | {Fore.YELLOW}Custom Script Manager. {Fore.RED}"
-                "(Used by me to translate videos in real time)"
+            f"Voice Over Translation | {Fore.YELLOW}Adds voice translation for videos from YaBrowser."
         ]
 
         quests: List[Union[QuestionCheckbox, QuestionList]] = [
@@ -112,36 +109,29 @@ class Question:
             QuestionList(
                 name="aur_helper",
                 message="3) What kind of AUR helper do you want to have?",
-                choices=["yay", "paru"],
-                default="paru",
+                choices=["yay", "paru", "yay-bin"],
+                default="yay-bin",
                 carousel=True,
             ),
             QuestionList(
-                name="enable_multilib",
-                message="4) Should I enable the multilib repository?",
+                name="use_chaotic_aur",
+                message="4) Use Chaotic AUR for faster AUR package installation?",
                 choices=["Yes", "No"],
                 default="Yes",
-                carousel=True,
-            ),
-            QuestionList(
-                name="update_arch_database",
-                message="5) Update Arch DataBase?",
-                choices=["Yes", "No"],
-                default="Yes",
-                carousel=True,
-            ),
-            QuestionCheckbox(
-                name="install_drivers",
-                message="6) What drivers do you want to install?",
-                choices=["Nvidia", "Intel", "AMD"],
-                default=drivers,
                 carousel=True,
             ),
             QuestionCheckbox(
                 name="ff_plugins",
-                message="7) Would you like to add useful plugins for firefox?",
+                message="5) Would you like to add useful plugins for firefox?",
                 choices=firefox_choices,
                 default=firefox_choices,
+                carousel=True,
+            ),
+            QuestionList(
+                name="install_shell",
+                message="6) Which terminal shell do you prefer?",
+                choices=["fish", "zsh"],
+                default="fish",
                 carousel=True,
             ),
         ]
@@ -158,23 +148,28 @@ class Question:
 
         if answers["aur_helper"] == "paru":
             aur_helper = AurHelper.PARU
+        elif answers["aur_helper"] == "paru-bin":
+            aur_helper = AurHelper.PARU_BIN
+        elif answers["aur_helper"] == "yay-bin":
+            aur_helper = AurHelper.YAY_BIN
         else:
             aur_helper = AurHelper.YAY
+
+        if answers["install_shell"] == "zsh":
+            terminal_shell = TerminalShell.ZSH
+        else:
+            terminal_shell = TerminalShell.FISH
 
         return BuildOptions(
             make_backup=answers["make_backup"] == "Yes",
             install_bspwm="bspwm" in answers["install_wm"],
             install_hyprland="hyprland" in answers["install_wm"],
             aur_helper=aur_helper,
-            enable_multilib=answers["enable_multilib"] == "Yes",
-            update_arch_database=answers["update_arch_database"] == "Yes",
-            install_drivers=len(answers["install_drivers"]) > 0,
-            intel_driver="Intel" in answers["install_drivers"],
-            nvidia_driver="Nvidia" in answers["install_drivers"],
-            amd_driver="AMD" in answers["install_drivers"],
+            use_chaotic_aur=answers["use_chaotic_aur"] == "Yes",
             ff_darkreader="Dark Reader" in answers["ff_plugins"],
             ff_ublock="uBlock Origin" in answers["ff_plugins"],
             ff_twp="TWP" in answers["ff_plugins"],
             ff_unpaywall="Unpaywall" in answers["ff_plugins"],
-            ff_tampermonkey="Tamper Monkey" in answers["ff_plugins"]
+            ff_vot="Voice Over Translation" in answers["ff_plugins"],
+            terminal_shell=terminal_shell
         )

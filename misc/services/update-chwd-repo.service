@@ -1,0 +1,9 @@
+[Unit]
+Description=Update chwd local repository from CachyOS
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/update-chwd-repo
+StandardOutput=journal
+StandardError=journal
