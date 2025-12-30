@@ -92,7 +92,7 @@ Dual-boot Windows/Linux = ад с Bluetooth.
 <table align="center">
   <tr>
     <td colspan="3">
-        <a href="https://youtu.be/KdGPDF4p5CA">
+        <a href="https://youtu.be/ZZnBopmVzz4">
             <img src=".meta/assets/video-preview-youtube.png" width="100%" alt="Видео-превью Meowrch">
         </a>
     </td>
