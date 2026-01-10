@@ -602,13 +602,20 @@ background-color: transparent;
   padding: 8px;
   padding-bottom: 15px;
   margin-bottom: 5px;
+  border-radius: 12px;
 }
 
 .widget-mpris > box {
   padding: 0px;
   margin: -5px 0px -10px 0px;
   border-radius: 12px;
-  background: rgba(24, 24, 37, 0.80);
+  background: transparent;
+  box-shadow: none;
+}
+
+.widget-mpris carousel .widget-mpris-player {  
+  border-radius: 12px;
+  margin: 7px 10px 7px 10px;
 }
 
 .widget-mpris > box > button:nth-child(1) {
@@ -627,7 +634,6 @@ background-color: transparent;
 
 .widget-mpris-album-art {
   all: unset;
-  border-radius: 8px;
 }
 
 .widget-mpris > box > carousel > widget > box > box:nth-child(2) {
@@ -646,13 +652,11 @@ carouselindicatordots {
   color: #eeeeee;
   font-weight: bold;
   font-size: 1.25rem;
-  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 }
 
 .widget-mpris-subtitle {
   color: #eeeeee;
   font-size: 1rem;
-  text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
 }
 
 .widget-mpris-player {
@@ -694,8 +698,8 @@ carouselindicatordots {
 }
 
 .widget-volume > box {
-  background: alpha(@mantle, .80);
-  border-radius: 4px;
+  background: alpha(@mantle, .30);
+  border-radius: 7px;
   margin: 5px 10px 5px 10px;
   min-height: 50px;
 }
@@ -711,31 +715,31 @@ carouselindicatordots {
   box-shadow: none;
   padding: 0px;
   font-size: 24px;
-  background: @surface0;
-  background-color: @surface0;
+  background: transparent;
+  background-color: transparent;
   border-radius: 4px;
 }
 
 .widget-volume > box > button:hover {
-  background: @surface0;
-  background-color: @surface0;
+  background: transparent;
+  background-color: transparent;
 }
 
 .widget-volume > box > button:active {
-  background: @surface0;
-  background-color: @surface0;
+  background: transparent;
+  background-color: transparent;
 }
 
 .widget-volume > box > button:focus {
-  background: @surface0;
-  background-color: @surface0;
+  background: transparent;
+  background-color: transparent;
   box-shadow: none;
   outline: none;
 }
 
 .widget-volume > box > button:checked {
-  background: @surface0;
-  background-color: @surface0;
+  background: transparent;
+  background-color: transparent;
 }
 
 /* Arrow icon size in volume button */
@@ -743,15 +747,19 @@ carouselindicatordots {
   font-size: 24px;
   min-width: 24px;
   min-height: 24px;
+  background: transparent;
+  background-color: transparent;
 }
 
 .widget-volume > box > button label {
   font-size: 24px;
+  background: transparent;
+  background-color: transparent;
 }
 
 .widget-volume > revealer > list {
-  background: alpha(@mantle, .80);
-  border-radius: 4px;
+  background: alpha(@mantle, .30);
+  border-radius: 7px;
   margin-top: 5px;
   padding: 0px;
 }
