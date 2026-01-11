@@ -64,7 +64,6 @@ class FileSystemManager:
             ".gnome2",
             ".local/share/nemo",
             ".bashrc",
-            ".env",
             ".Xresources",
             ".xinitrc",
             ".icons/default/index.theme",
@@ -124,7 +123,6 @@ class FileSystemManager:
             dirs_exist_ok=True,
         )
         shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
-        shutil.copy(src=Path("./home/.env"), dst=home / ".env")
         shutil.copy(src=Path("./home/.face.icon"), dst=home / ".face.icon")
 
         if not exclude_bspwm:

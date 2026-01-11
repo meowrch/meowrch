@@ -1,6 +1,5 @@
 #!/bin/sh
 
-dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP
 xrdb merge $HOME/.Xresources
 xsettingsd &
 dunst &

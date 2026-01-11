@@ -12,14 +12,13 @@
 # █▀▀ █░░█ ░█▄█░ ▀█▀ █▄▄▀ █░░█ █░░█ █░▀░█ █▀▀ █░░█ ░░█░░ 
 # ▀▀▀ ▀░░▀ ░░▀░░ ▀▀▀ ▀░▀▀ ▀▀▀▀ ▀░░▀ ▀░░░▀ ▀▀▀ ▀░░▀ ░░▀░░
 
-if [ -f ~/.env ]; then
-    shenv() { export "$1=$2"; }
-    . ~/.env
-    unset -f shenv
-fi
-
 export XDG_CURRENT_DESKTOP="bspwm"
-export XDG_BIN_HOME="${XDG_BIN_HOME:-$HOME/bin}"
+
+set -a
+eval "$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)"
+set +a
+
+dbus-update-activation-environment --systemd --all
 
 
 # █▀▀ █▀▀█ █░░█ █▀▀█ █▀▀ █▀▀ 
