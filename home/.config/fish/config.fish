@@ -1,8 +1,13 @@
 #####################################
-##==> Variables
+##==> Environment
 #####################################
-function shenv; set -gx $argv; end
-source ~/.env
+for line in (/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
+    set -l parts (string split -m 1 '=' -- $line)
+    if test (count $parts) -eq 2
+        set -l value (string trim -c '"' -- $parts[2])
+        set -gx $parts[1] $value
+    end
+end
 
 #####################################
 ##==> Aliases

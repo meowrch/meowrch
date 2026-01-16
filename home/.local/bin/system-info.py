@@ -1,9 +1,21 @@
+import subprocess
 import os
 import json
-import psutil
-import GPUtil
+
+try:
+	import psutil
+	import GPUtil
+	import pyamdgpuinfo
+except ImportError:
+	python_packages = ["psutil", "gputil", "pyamdgpuinfo"]
+
+	for p in python_packages:
+		try:
+			subprocess.run(["pip", "install", p, "--break-system-packages"], check=False)
+		except Exception:
+			...
+
 import argparse
-import pyamdgpuinfo
 import configparser
 from os.path import expandvars
 from dataclasses import dataclass

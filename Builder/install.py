@@ -96,7 +96,7 @@ class Builder:
             self.daemons_setting()
             PostInstallation.apply(self.build_options)
 
-            self._write_installation_metadata("3.0.0")
+            self._write_installation_metadata("3.0.1")
 
             logger.warning(
                 "The script was unable to automatically install these packages."

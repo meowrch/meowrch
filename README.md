@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src=".meta/logo.png" width="280px" alt="Meowrch Logo">
+<a href="https://meowrch.github.io/"><img src=".meta/logo.png" width="280px" alt="Meowrch Logo"></a>
 
 # ≽ܫ≼ Meowrch
 
@@ -29,9 +29,9 @@
 
 **Most ready-made rice setups for Arch solve only one problem:**
 
-- 🎨 Either **beauty**, but the system eats RAM.
-- ⚡ Or **performance**, but the UI looks ugly.
-- 🛠️ Or **functionality**, but the code turns into "spaghetti" that you can't fix yourself.
+- Either **beauty**, but the system eats RAM.
+- Or **performance**, but the UI looks ugly.
+- Or **functionality**, but the code turns into "spaghetti" that you can't fix yourself.
 
 ### **Meowrch is a different approach:**
 
@@ -111,30 +111,30 @@ We solved this agonizing problem.
 
 ---
 
-## 🏝️ Meet Mewline — Dynamic Island for Linux
+## 🏝️ Meet [Mewline](https://github.com/meowrch/mewline) — Dynamic Island for Linux
 
 ### **Compact interface, maximum information:**
 
-- 🖥️ **System tray** — all your background applications
-- 🗂️ **Workspaces** — quick switching between desktops
-- 📅 **Date & Time** — always visible
-- 🔆 **Brightness** — screen brightness control
-- 🔊 **Volume** — sound control
-- 🔋 **Battery** — charge and charging status
-- ⚡ **Power** — power management menu
-- 📸 **OCR** — text recognition from selected screen area.
+- **System tray** — all your background applications
+- **Workspaces** — quick switching between desktops
+- **Date & Time** — always visible
+- **Brightness** — screen brightness control
+- **Volume** — sound control
+- **Battery** — charge and charging status
+- **Power** — power management menu
+- **OCR** — text recognition from selected screen area.
 
 ### **Interactive system control center:**
 
-- 🎵 **Compact mode** — information about active window and playing music
-- 🔔 **Information menu** — calendar and notification history (Super+Alt+D)
-- 📱 **App launcher** — application launcher (Super+Alt+A)
-- 🖼️ **Wallpapers** — wallpaper change with preview (Super+Alt+W)
-- 😊 **Emoji picker** — emoji selection (Super+Alt+.)
-- 📋 **Clipboard** — clipboard history (Super+Alt+V)
-- 🌐 **Network manager** — Wi-Fi and Ethernet (Super+Alt+N)
-- 🖥️ **Workspaces** — windows and workspaces manager (Super+Alt+Tab)
-- 🔵 **Bluetooth** — device management (Super+Alt+B)
+- **Compact mode** — information about active window and playing music
+- **Information menu** — calendar and notification history (Super+Alt+D)
+- **App launcher** — application launcher (Super+Alt+A)
+- **Wallpapers** — wallpaper change with preview (Super+Alt+W)
+- **Emoji picker** — emoji selection (Super+Alt+.)
+- **Clipboard** — clipboard history (Super+Alt+V)
+- **Network manager** — Wi-Fi and Ethernet (Super+Alt+N)
+- **Workspaces** — windows and workspaces manager (Super+Alt+Tab)
+- **Bluetooth** — device management (Super+Alt+B)
 
 > [!NOTE]
 > Yes-yes. **All this is in one utility**. \
@@ -312,8 +312,6 @@ Share your impressions about the distribution
 
 <div align="center">
 
-**Like Meowrch?** Help the project development! 🚀
-
 | 💎 Cryptocurrency | 📬 Address |
 |:---:|:---|
 | **TON** | `UQB9qNTcAazAbFoeobeDPMML9MG73DUCAFTpVanQnLk3BHg3` |
@@ -321,18 +319,11 @@ Share your impressions about the distribution
 | **Bitcoin** | `bc1qt5urnw7esunf0v7e9az0jhatxrdd0smem98gdn` |
 | **Tron** | `TBTZ5RRMfGQQ8Vpf8i5N8DZhNxSum2rzAs` |
 
-<br>
-
-*Every donation motivates to continue developing the project! ❤️*
-
 </div>
 
 ---
 
 ## 📊 Project Statistics
-
-
-### ⭐ Star History
 
 <a href="https://star-history.com/#meowrch/meowrch&Date">
 <picture>
@@ -341,11 +332,6 @@ Share your impressions about the distribution
 <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
 </picture>
 </a>
-
-### 📈 Repository Activity
-
-![Repobeats Analytics](https://repobeats.axiom.co/api/embed/96a58cbd631f6100db2e77966316aa5cf0c21f47.svg "Repobeats analytics image")
-
 
 ---
 
