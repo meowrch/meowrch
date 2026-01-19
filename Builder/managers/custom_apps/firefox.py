@@ -28,6 +28,58 @@ class FirefoxConfigurer(AppConfigurer):
             (vot, "voice-over-translation@meowrch.xpi", "https://github.com/meowrch/voice-over-translation/releases/latest/download/voice-over-translation@meowrch.xpi"),
             (True, "ATBC@EasonWong.xpi", "https://addons.mozilla.org/firefox/downloads/latest/adaptive-tab-bar-colour/latest.xpi"),  # Always enable Adaptive Tab Bar Color
         ]
+        self._firefox_base_path = None  # Кешируем путь после первого определения
+
+    def _get_firefox_profile_base_path(self) -> str:
+        """
+        Определяет базовый путь к директории профилей Firefox.
+        Проверяет оба пути: новый XDG (~/.config/mozilla) и старый (~/.mozilla).
+        
+        Returns:
+            str: Путь к директории firefox (например, "~/.config/mozilla/firefox" или "~/.mozilla/firefox")
+        """
+        if self._firefox_base_path:
+            return self._firefox_base_path
+        
+        # Сначала проверяем новый XDG путь
+        xdg_path = os.path.expanduser("~/.config/mozilla/firefox")
+        legacy_path = os.path.expanduser("~/.mozilla/firefox")
+        
+        # Проверяем, какой путь существует и содержит профили
+        for path in [xdg_path, legacy_path]:
+            if os.path.exists(path):
+                # Проверяем, есть ли там профили
+                profiles = glob.glob(os.path.join(path, "*.default-release")) or \
+                          glob.glob(os.path.join(path, "*.default"))
+                if profiles:
+                    logger.info(f"Found Firefox profile directory at: {path}")
+                    self._firefox_base_path = path
+                    return path
+        
+        # Если ничего не найдено, используем XDG путь (новый стандарт)
+        logger.warning(f"No existing Firefox profiles found, using default XDG path: {xdg_path}")
+        self._firefox_base_path = xdg_path
+        return xdg_path
+
+    def _get_firefox_profile_path(self) -> str | None:
+        """
+        Получает полный путь к активному профилю Firefox.
+        
+        Returns:
+            str | None: Полный путь к профилю или None, если профиль не найден
+        """
+        base_path = self._get_firefox_profile_base_path()
+        
+        # Ищем профиль default-release, затем default
+        path_profile = glob.glob(os.path.join(base_path, "*.default-release"))
+        if not path_profile:
+            path_profile = glob.glob(os.path.join(base_path, "*.default"))
+        
+        if not path_profile:
+            logger.warning("Profile not found")
+            return None
+        
+        return path_profile[0]
 
     def setup(self) -> None:
         logger.info("Start installing Firefox")
@@ -62,69 +114,58 @@ class FirefoxConfigurer(AppConfigurer):
         time.sleep(6)
     
     def _install_firefox_gnome_theme(self) -> None:
-            """Install Firefox GNOME Theme manually with auto-update system (как в firefox.py)"""
-            logger.info("Installing Firefox GNOME Theme...")
-    
-            path_profile_list = glob.glob(os.path.expanduser("~/.mozilla/firefox/*.default-release"))
-            if not path_profile_list:
-                path_profile_list = glob.glob(os.path.expanduser("~/.mozilla/firefox/*.default"))
-            if not path_profile_list:
-                logger.warning("Profile not found, skipping Firefox GNOME Theme installation")
-                return
-    
-            path_profile = path_profile_list[0]
-    
-            # Create chrome directory
-            chrome_dir = os.path.join(path_profile, "chrome")
-            os.makedirs(chrome_dir, exist_ok=True)
-    
-            # Clone or update the theme repository
-            theme_repo_path = os.path.join(chrome_dir, "firefox-gnome-theme")
-            if os.path.exists(theme_repo_path):
-                logger.info("Updating existing Firefox GNOME Theme...")
-                subprocess.run(["git", "pull"], cwd=theme_repo_path, check=True)
-            else:
-                logger.info("Cloning Firefox GNOME Theme repository...")
-                subprocess.run(
-                    [
-                        "git",
-                        "clone",
-                        "https://github.com/rafaelmardojai/firefox-gnome-theme.git",
-                        theme_repo_path,
-                    ],
-                    check=True,
-                )
-    
-            # Create userChrome.css
-            user_chrome_path = os.path.join(chrome_dir, "userChrome.css")
-            with open(user_chrome_path, "w") as f:
-                f.write('@import "firefox-gnome-theme/userChrome.css";')
-    
-            # Create userContent.css
-            user_content_path = os.path.join(chrome_dir, "userContent.css")
-            with open(user_content_path, "w") as f:
-                f.write('@import "firefox-gnome-theme/userContent.css";')
-    
-            # Set up auto-update system
-            self._setup_theme_auto_update(theme_repo_path)
+        """Install Firefox GNOME Theme manually with auto-update system"""
+        logger.info("Installing Firefox GNOME Theme...")
+
+        path_profile = self._get_firefox_profile_path()
+        if not path_profile:
+            logger.warning("Profile not found, skipping Firefox GNOME Theme installation")
+            return
+
+        # Create chrome directory
+        chrome_dir = os.path.join(path_profile, "chrome")
+        os.makedirs(chrome_dir, exist_ok=True)
+
+        # Clone or update the theme repository
+        theme_repo_path = os.path.join(chrome_dir, "firefox-gnome-theme")
+        if os.path.exists(theme_repo_path):
+            logger.info("Updating existing Firefox GNOME Theme...")
+            subprocess.run(["git", "pull"], cwd=theme_repo_path, check=True)
+        else:
+            logger.info("Cloning Firefox GNOME Theme repository...")
+            subprocess.run(
+                [
+                    "git",
+                    "clone",
+                    "https://github.com/rafaelmardojai/firefox-gnome-theme.git",
+                    theme_repo_path,
+                ],
+                check=True,
+            )
+
+        # Create userChrome.css
+        user_chrome_path = os.path.join(chrome_dir, "userChrome.css")
+        with open(user_chrome_path, "w") as f:
+            f.write('@import "firefox-gnome-theme/userChrome.css";')
+
+        # Create userContent.css
+        user_content_path = os.path.join(chrome_dir, "userContent.css")
+        with open(user_content_path, "w") as f:
+            f.write('@import "firefox-gnome-theme/userContent.css";')
+
+        # Set up auto-update system
+        self._setup_theme_auto_update(theme_repo_path)
     
     def _configure_startup_preferences(self) -> None:
         """
         Настраиваем preferences для обхода приветственных экранов
         КРИТИЧНО: вызывать после создания профиля, но ДО первого запуска Firefox
         """
-        path_profile = glob.glob(
-            os.path.expanduser("~/.mozilla/firefox/*.default-release")
-        )
-        
-        if not path_profile:
-            path_profile = glob.glob(os.path.expanduser("~/.mozilla/firefox/*.default"))
-        
+        path_profile = self._get_firefox_profile_path()
         if not path_profile:
             logger.warning("Profile not found, skipping startup preferences")
             return
         
-        path_profile = path_profile[0]
         user_js_path = os.path.join(path_profile, "user.js")
         
         logger.info("Configuring startup preferences to bypass welcome screens...")
@@ -192,18 +233,10 @@ class FirefoxConfigurer(AppConfigurer):
         """
         logger.info("Force initializing extensions...")
         
-        path_profile = glob.glob(
-            os.path.expanduser("~/.mozilla/firefox/*.default-release")
-        )
-        
-        if not path_profile:
-            path_profile = glob.glob(os.path.expanduser("~/.mozilla/firefox/*.default"))
-        
+        path_profile = self._get_firefox_profile_path()
         if not path_profile:
             logger.warning("Profile not found, skipping extensions initialization")
             return
-        
-        path_profile = path_profile[0]
         
         # Создаём extensions.json если его нет (Firefox создаст его при запуске)
         extensions_json_path = os.path.join(path_profile, "extensions.json")
@@ -233,9 +266,10 @@ class FirefoxConfigurer(AppConfigurer):
 
     def _configure_theme_preferences(self) -> None:
         """Configure Firefox preferences for theme and custom settings"""
-        path_profile = glob.glob(
-            os.path.expanduser("~/.mozilla/firefox/*.default-release")
-        )[0]
+        path_profile = self._get_firefox_profile_path()
+        if not path_profile:
+            logger.warning("Profile not found, skipping theme preferences")
+            return
     
         # Create or update user.js with theme preferences
         user_js_path = os.path.join(path_profile, "user.js")
@@ -365,9 +399,11 @@ fi
         """Download latest versions of the plugins from official sources"""
         logger.info("Fetching latest plugins...")
 
-        path_profile = glob.glob(
-            os.path.expanduser("~/.mozilla/firefox/*.default-release")
-        )[0]
+        path_profile = self._get_firefox_profile_path()
+        if not path_profile:
+            logger.warning("Profile not found, skipping plugins installation")
+            return
+            
         extension_dir = os.path.join(path_profile, "extensions")
 
         # Ensure extensions directory exists
@@ -400,9 +436,10 @@ fi
 
     def _create_meowrch_bookmark(self) -> None:
         """Create Meowrch Wiki bookmark by adding to places.sqlite database"""
-        path_profile = glob.glob(
-            os.path.expanduser("~/.mozilla/firefox/*.default-release")
-        )[0]
+        path_profile = self._get_firefox_profile_path()
+        if not path_profile:
+            logger.warning("Profile not found, skipping bookmark creation")
+            return
 
         # Path to places.sqlite database
         places_db_path = os.path.join(path_profile, "places.sqlite")
