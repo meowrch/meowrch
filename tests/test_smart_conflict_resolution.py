@@ -212,6 +212,64 @@ def test_rules_directly():
         print(f"  Ограничения: {', '.join(suggestion['constraints'])}")
 
 
+def test_required_modules_for_encrypt_hooks():
+    """Проверить обязательные модули для LUKS и systemd шифрования"""
+    print("\n🔐 Тест обязательных модулей шифрования")
+    print("=" * 40)
+
+    rules = MkinitcpioRules()
+
+    hooks_encrypt = ["base", "systemd", "block", "encrypt", "filesystems"]
+    modules_encrypt = rules.get_required_modules_for_hooks(hooks_encrypt)
+    print(f"encrypt -> modules: {modules_encrypt}")
+
+    assert "dm_mod" in modules_encrypt
+    assert "dm_crypt" in modules_encrypt
+    assert "aes" in modules_encrypt
+    assert "xts" in modules_encrypt
+
+    hooks_sd = ["base", "systemd", "block", "sd-encrypt", "filesystems"]
+    modules_sd = rules.get_required_modules_for_hooks(hooks_sd)
+    print(f"sd-encrypt -> modules: {modules_sd}")
+
+    assert "dm_mod" in modules_sd
+    assert "dm_crypt" in modules_sd
+
+
+def test_editor_adds_required_modules_for_encrypt():
+    """Проверить что редактор добавляет модули для encrypt hook"""
+    print("\n🧩 Тест добавления модулей в mkinitcpio.conf")
+    print("=" * 50)
+
+    test_file = create_test_mkinitcpio_file("base systemd block encrypt filesystems fsck")
+
+    try:
+        editor = MkinitcpioConfigEditor(test_file)
+
+        def mock_run_sudo(command, input=None):
+            if command[0] == "cat":
+                return test_file.read_text()
+            elif command[0] == "cp":
+                shutil.copy(command[1], command[2])
+                return ""
+            return ""
+
+        editor._run_sudo = mock_run_sudo
+
+        changed = editor.ensure_required_modules_for_hooks()
+        assert changed is True
+
+        modules = editor.list_modules()
+        print(f"MODULES after update: {modules}")
+
+        assert "dm_mod" in modules
+        assert "dm_crypt" in modules
+        assert "aes" in modules
+        assert "xts" in modules
+    finally:
+        test_file.unlink()
+
+
 if __name__ == "__main__":
     print("Тестирование умной системы разрешения конфликтов")
     print("ВНИМАНИЕ: Используются тестовые файлы!")
@@ -222,6 +280,8 @@ if __name__ == "__main__":
         test_plymouth_smart_placement()
         test_complex_dependencies()
         test_rules_directly()
+        test_required_modules_for_encrypt_hooks()
+        test_editor_adds_required_modules_for_encrypt()
         
         print("\n🎉 Все тесты завершены успешно!")
         

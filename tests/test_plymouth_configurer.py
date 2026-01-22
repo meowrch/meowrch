@@ -2,6 +2,7 @@
 import sys
 import os
 import shutil
+import tempfile
 from pathlib import Path
 
 # Ensure project root is importable
@@ -9,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import Builder.managers.custom_apps.plymouth as plymouth_mod
 from Builder.managers.custom_apps.plymouth import PlymouthConfigurer
+from Builder.utils.mkinitcpio_config import MkinitcpioConfigEditor
 
 
 def _fake_run_sudo_factory(calls):
@@ -16,6 +18,32 @@ def _fake_run_sudo_factory(calls):
         calls.append(list(cmd))
         return ""
     return _fake_run_sudo
+
+
+def _create_test_mkinitcpio_file(hooks: str) -> Path:
+    """Создать тестовый mkinitcpio.conf с заданными хуками"""
+    content = f'''# vim:set ft=sh
+MODULES=()
+BINARIES=()
+FILES=()
+HOOKS=({hooks})
+'''
+
+    tmp_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='_plymouth_hooks_test')
+    tmp_file.write(content)
+    tmp_file.close()
+    return Path(tmp_file.name)
+
+
+def _mock_run_sudo_for_file(test_file: Path):
+    def _mock_run_sudo(command, input=None):
+        if command[0] == "cat":
+            return test_file.read_text()
+        elif command[0] == "cp":
+            shutil.copy(command[1], command[2])
+            return ""
+        return ""
+    return _mock_run_sudo
 
 
 def test_plymouth_systemd_boot_skips_grub():
@@ -84,9 +112,106 @@ def test_plymouth_grub_calls_grub_mkconfig_when_ready():
         plymouth_mod.shutil.which = orig_which
         Path.exists = orig_exists
 
+def test_plymouth_realistic_hooks_luks():
+    """Проверить реальный набор HOOKS с LUKS и правильной вставкой plymouth."""
+    hooks = "base udev autodetect microcode modconf keyboard keymap consolefont kms block encrypt filesystems fsck"
+    test_file = _create_test_mkinitcpio_file(hooks)
 
-def test_plymouth_grub_skips_when_boot_not_mounted():
-    """On GRUB systems with /boot not mounted, grub-mkconfig should be skipped."""
+    try:
+        editor = MkinitcpioConfigEditor(test_file)
+        editor._run_sudo = _mock_run_sudo_for_file(test_file)
+
+        pc = PlymouthConfigurer()
+        pc.mkinitcpio_editor = editor
+
+        pc.update_mkinitcpio_hooks()
+
+        final_hooks = editor.list_hooks()
+        assert "plymouth" in final_hooks
+        assert "sd-encrypt" in final_hooks
+        assert "encrypt" not in final_hooks
+        assert final_hooks.index("kms") < final_hooks.index("plymouth") < final_hooks.index("sd-encrypt")
+
+        modules = editor.list_modules()
+        assert "dm_mod" in modules
+        assert "dm_crypt" in modules
+        assert "aes" in modules
+        assert "xts" in modules
+    finally:
+        test_file.unlink()
+
+
+def test_systemd_replaces_encrypt_with_sd_encrypt():
+    """Если используется systemd, encrypt должен быть заменен на sd-encrypt."""
+    hooks = "base systemd autodetect modconf block encrypt filesystems fsck"
+    test_file = _create_test_mkinitcpio_file(hooks)
+
+    try:
+        editor = MkinitcpioConfigEditor(test_file)
+        editor._run_sudo = _mock_run_sudo_for_file(test_file)
+
+        pc = PlymouthConfigurer()
+        pc.mkinitcpio_editor = editor
+
+        pc.update_mkinitcpio_hooks()
+
+        final_hooks = editor.list_hooks()
+        assert "sd-encrypt" in final_hooks
+        assert "encrypt" not in final_hooks
+    finally:
+        test_file.unlink()
+
+
+def test_udev_replaced_with_systemd_and_encrypt_migrated():
+    """Если был udev, он заменяется на systemd, а encrypt на sd-encrypt."""
+    hooks = "base udev autodetect modconf block encrypt filesystems fsck"
+    test_file = _create_test_mkinitcpio_file(hooks)
+
+    try:
+        editor = MkinitcpioConfigEditor(test_file)
+        editor._run_sudo = _mock_run_sudo_for_file(test_file)
+
+        pc = PlymouthConfigurer()
+        pc.mkinitcpio_editor = editor
+
+        pc.update_mkinitcpio_hooks()
+
+        final_hooks = editor.list_hooks()
+        assert "systemd" in final_hooks
+        assert "udev" not in final_hooks
+        assert "sd-encrypt" in final_hooks
+        assert "encrypt" not in final_hooks
+    finally:
+        test_file.unlink()
+
+
+def test_plymouth_realistic_hooks_sd_encrypt():
+    """Проверить реальный набор HOOKS с sd-encrypt и правильной вставкой plymouth."""
+    hooks = "base systemd autodetect microcode modconf keyboard keymap consolefont kms block sd-encrypt lvm2 resume filesystems fsck"
+    test_file = _create_test_mkinitcpio_file(hooks)
+
+    try:
+        editor = MkinitcpioConfigEditor(test_file)
+        editor._run_sudo = _mock_run_sudo_for_file(test_file)
+
+        pc = PlymouthConfigurer()
+        pc.mkinitcpio_editor = editor
+
+        pc.update_mkinitcpio_hooks()
+
+        final_hooks = editor.list_hooks()
+        assert "plymouth" in final_hooks
+        assert final_hooks.index("kms") < final_hooks.index("plymouth") < final_hooks.index("sd-encrypt")
+
+        modules = editor.list_modules()
+        assert "dm_mod" in modules
+        assert "dm_crypt" in modules
+    finally:
+        test_file.unlink()
+
+
+def test_plymouth_grub_runs_when_boot_is_directory():
+    """On GRUB systems where /boot is part of /, grub-mkconfig should still run."""
     pc = PlymouthConfigurer()
 
     calls = []
@@ -98,7 +223,7 @@ def test_plymouth_grub_skips_when_boot_not_mounted():
     orig_which = plymouth_mod.shutil.which
     plymouth_mod.shutil.which = lambda name: "/usr/bin/grub-mkconfig" if name == "grub-mkconfig" else orig_which(name)
 
-    # Pretend /boot/grub exists (though mount check should short-circuit)
+    # Pretend /boot/grub exists
     orig_exists = Path.exists
     def fake_exists(p: Path):
         if str(p) == "/boot/grub":
@@ -108,8 +233,8 @@ def test_plymouth_grub_skips_when_boot_not_mounted():
 
     try:
         pc.run_post_commands()
-        # No grub-mkconfig expected due to unmounted /boot
-        assert not any(cmd and cmd[0] == "grub-mkconfig" for cmd in calls), "grub-mkconfig must be skipped when /boot is not mounted"
+        # grub-mkconfig should still run when /boot is a directory on /
+        assert any(cmd[:2] == ["grub-mkconfig", "-o"] for cmd in calls), "grub-mkconfig must be called"
         # mkinitcpio -P still expected
         assert any(cmd[:2] == ["mkinitcpio", "-P"] for cmd in calls), "mkinitcpio -P must be called"
     finally:
@@ -122,7 +247,11 @@ if __name__ == "__main__":
     tests = [
         test_plymouth_systemd_boot_skips_grub,
         test_plymouth_grub_calls_grub_mkconfig_when_ready,
-        test_plymouth_grub_skips_when_boot_not_mounted,
+        test_plymouth_grub_runs_when_boot_is_directory,
+        test_plymouth_realistic_hooks_luks,
+        test_plymouth_realistic_hooks_sd_encrypt,
+        test_systemd_replaces_encrypt_with_sd_encrypt,
+        test_udev_replaced_with_systemd_and_encrypt_migrated,
     ]
     ok = 0
     for t in tests:

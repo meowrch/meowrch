@@ -117,6 +117,16 @@ class PlymouthConfigurer:
             self.mkinitcpio_editor.remove_hook("udev")
             self.mkinitcpio_editor.add_hook("systemd", "start")
             logger.info("Replaced udev with systemd")
+
+        # Refresh hooks after possible changes
+        current_hooks = self.mkinitcpio_editor.list_hooks()
+
+        # If systemd is used, prefer sd-encrypt over encrypt
+        if "systemd" in current_hooks and "encrypt" in current_hooks:
+            self.mkinitcpio_editor.remove_hook("encrypt")
+            if "sd-encrypt" not in current_hooks:
+                self.mkinitcpio_editor.add_hook("sd-encrypt")
+            logger.info("Replaced encrypt with sd-encrypt for systemd")
         
         # We guarantee that the “base” hook is always the first one.
         if "base" in current_hooks:
@@ -125,10 +135,9 @@ class PlymouthConfigurer:
         else:
             self.mkinitcpio_editor.add_hook("base", "start")
             
-        # Check if plymouth already exists
-        if "plymouth" in current_hooks:
+        plymouth_present = "plymouth" in current_hooks
+        if plymouth_present:
             logger.info("Plymouth hook already exists in configuration")
-            return
         
         # Define hooks that should be before plymouth
         before_plymouth_hooks = {
@@ -151,29 +160,33 @@ class PlymouthConfigurer:
                 first_encrypt_hook = hook
                 break
         
-        # Add plymouth with smart positioning
-        if last_before_hook and first_encrypt_hook:
-            # Plymouth after last_before_hook but before first_encrypt_hook
-            self.mkinitcpio_editor.add_hook("plymouth", 
-                                          after_hook=last_before_hook, 
-                                          before_hook=first_encrypt_hook)
-            logger.info(f"Added plymouth after {last_before_hook} and before {first_encrypt_hook}")
-        elif last_before_hook:
-            # Just after last_before_hook
-            self.mkinitcpio_editor.add_hook("plymouth", "after", last_before_hook)
-            logger.info(f"Added plymouth after {last_before_hook}")
-        elif first_encrypt_hook:
-            # Before first_encrypt_hook
-            self.mkinitcpio_editor.add_hook("plymouth", "before", first_encrypt_hook)
-            logger.info(f"Added plymouth before {first_encrypt_hook}")
-        else:
-            # Fallback: add after systemd or at start
-            if "systemd" in updated_hooks:
-                self.mkinitcpio_editor.add_hook("plymouth", "after", "systemd")
-                logger.info("Added plymouth after systemd")
+        if not plymouth_present:
+            # Add plymouth with smart positioning
+            if last_before_hook and first_encrypt_hook:
+                # Plymouth after last_before_hook but before first_encrypt_hook
+                self.mkinitcpio_editor.add_hook("plymouth", 
+                                              after_hook=last_before_hook, 
+                                              before_hook=first_encrypt_hook)
+                logger.info(f"Added plymouth after {last_before_hook} and before {first_encrypt_hook}")
+            elif last_before_hook:
+                # Just after last_before_hook
+                self.mkinitcpio_editor.add_hook("plymouth", "after", last_before_hook)
+                logger.info(f"Added plymouth after {last_before_hook}")
+            elif first_encrypt_hook:
+                # Before first_encrypt_hook
+                self.mkinitcpio_editor.add_hook("plymouth", "before", first_encrypt_hook)
+                logger.info(f"Added plymouth before {first_encrypt_hook}")
             else:
-                self.mkinitcpio_editor.add_hook("plymouth", "start")
-                logger.info("Added plymouth at start of hooks list")
+                # Fallback: add after systemd or at start
+                if "systemd" in updated_hooks:
+                    self.mkinitcpio_editor.add_hook("plymouth", "after", "systemd")
+                    logger.info("Added plymouth after systemd")
+                else:
+                    self.mkinitcpio_editor.add_hook("plymouth", "start")
+                    logger.info("Added plymouth at start of hooks list")
+
+        # Ensure required modules for encryption hooks are present
+        self.mkinitcpio_editor.ensure_required_modules_for_hooks()
 
         logger.success("mkinitcpio settings configured successfully!")
 

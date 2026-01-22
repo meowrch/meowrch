@@ -161,6 +161,18 @@ class MkinitcpioConfigEditor:
             logger.error(f"Ошибка при чтении mkinitcpio.conf: {e}")
             return []
 
+    def ensure_required_modules_for_hooks(self, hooks: Optional[List[str]] = None) -> bool:
+        """Добавить обязательные модули на основе текущих хуков"""
+        if hooks is None:
+            hooks = self.list_hooks()
+
+        required_modules = self.rules.get_required_modules_for_hooks(hooks)
+        if not required_modules:
+            logger.info("No required modules to add for current hooks")
+            return False
+
+        return self.add_modules(required_modules)
+
     def add_modules(self, modules: List[str], position: Position = Position.END, reference_module: Optional[str] = None) -> bool:
         """Добавить модули в конфигурацию mkinitcpio
         
