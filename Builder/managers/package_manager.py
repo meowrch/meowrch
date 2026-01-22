@@ -134,7 +134,7 @@ class PackageManager:
                 if aur is not None:
                     aur_cmd = aur.value.replace("-bin", "")
                     env = os.environ.copy()
-                    env["PKEXEC_UID"] = 99999
+                    env["PKEXEC_UID"] = "99999"
                     subprocess.run([aur_cmd, "-S", "--noconfirm", "--needed", package], check=True, env=env)
                 else:
                     subprocess.run(
