@@ -67,6 +67,7 @@ class FileSystemManager:
             ".Xresources",
             ".xinitrc",
             ".icons/default/index.theme",
+            ".zshenv"
         ]
 
         for item in backup_items:
@@ -124,6 +125,7 @@ class FileSystemManager:
         )
         shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
         shutil.copy(src=Path("./home/.face.icon"), dst=home / ".face.icon")
+        shutil.copy(src=Path("./home/.zshenv"), dst=home / ".zshenv")
 
         if not exclude_bspwm:
             shutil.copy(src=Path("./home/.Xresources"), dst=home / ".Xresources")
