@@ -10,19 +10,40 @@ from loguru import logger
 from managers.apps_manager import AppsManager
 from managers.chaotic_aur_manager import ChaoticAurManager
 from managers.drivers_manager import ChdwManager
+from managers.arm_driver_manager import ArmDriverManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
 from packages import BASE, CUSTOM
+from packages_arm import (
+    filter_packages_for_arm, 
+    get_arm_specific_packages,
+    should_skip_package_category,
+    ARM_COMPATIBLE_CUSTOM
+)
 from question import Question
+from utils.arch_detector import ArchDetector
 from utils.config_backup import ConfigBackup
-from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
+from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell, DeviceType
 
 
 class Builder:
     not_installed_packages = NotInstalledPackages()
 
     def run(self) -> None:
+        # Detect architecture first
+        logger.info("Detecting system architecture...")
+        self.arch_info = ArchDetector.get_architecture()
+        ArchDetector.print_architecture_info()
+        
+        # Warn about ARM limitations
+        if self.arch_info.is_arm:
+            logger.warning("Running on ARM architecture - some features will be limited")
+            if not self.arch_info.supports_gaming:
+                logger.warning("Gaming packages (Steam, etc.) will be skipped")
+            if not self.arch_info.supports_proprietary_drivers:
+                logger.warning("Proprietary drivers (NVIDIA/AMD) will be skipped")
+        
         logger.success(
             "The program has been launched successfully. We are starting the survey."
         )
@@ -73,12 +94,23 @@ class Builder:
 
             self.packages_installation()
 
-            # Установка драйверов через chwd
-            ChdwManager().install()
+            # Установка драйверов через chwd (только x86_64)
+            if self.arch_info.is_x86:
+                logger.info("Installing hardware drivers (x86_64)...")
+                ChdwManager().install()
+            else:
+                logger.info("Configuring ARM drivers...")
+                arm_driver_mgr = ArmDriverManager(self.arch_info)
+                arm_driver_mgr.install()
 
-            AppsManager.configure_grub()
+            # Configure bootloader and boot splash (x86_64 only)
+            if self.arch_info.is_x86:
+                AppsManager.configure_grub()
+                AppsManager.configure_plymouth()
+            else:
+                logger.info("Skipping GRUB/Plymouth configuration (ARM uses different bootloader)")
+            
             AppsManager.configure_sddm()
-            AppsManager.configure_plymouth()
             AppsManager.configure_firefox(
                 darkreader=self.build_options.ff_darkreader,
                 ublock=self.build_options.ff_ublock,
@@ -139,8 +171,16 @@ class Builder:
         pacman.extend(BASE.pacman.common)
         aur.extend(BASE.aur.common)
 
-        for category in CUSTOM.keys():
-            for package, info in CUSTOM[category].items():
+        # Use ARM-compatible custom packages if on ARM
+        custom_packages = ARM_COMPATIBLE_CUSTOM if self.arch_info.is_arm else CUSTOM
+        
+        for category in custom_packages.keys():
+            # Skip entire categories if not supported on this architecture
+            if should_skip_package_category(category, self.arch_info):
+                logger.info(f"Skipping package category '{category}' (not supported on {self.arch_info.architecture.value})")
+                continue
+                
+            for package, info in custom_packages[category].items():
                 if not info.selected:
                     continue
                 if info.aur:
@@ -157,6 +197,21 @@ class Builder:
             pacman.extend(["zsh", "zsh-syntax-highlighting", "zsh-autosuggestions", "zsh-history-substring-search"])
         else:
             pacman.append("fish")
+
+        # Filter packages for ARM if needed
+        if self.arch_info.is_arm:
+            is_rpi = self.arch_info.device_type in [DeviceType.RASPBERRY_PI_3, DeviceType.RASPBERRY_PI_4]
+            logger.info(f"Filtering packages for ARM architecture (Raspberry Pi: {is_rpi})")
+            
+            pacman = filter_packages_for_arm(pacman, "pacman", is_rpi)
+            aur = filter_packages_for_arm(aur, "aur", is_rpi)
+            
+            # Add ARM-specific packages
+            arm_pacman, arm_aur = get_arm_specific_packages(is_rpi)
+            pacman.extend(arm_pacman)
+            aur.extend(arm_aur)
+            
+            logger.info(f"Filtered to {len(pacman)} pacman and {len(aur)} AUR packages for ARM")
 
         # Deduplicate while preserving order
         pacman = list(dict.fromkeys(pacman))

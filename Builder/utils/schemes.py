@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 
 class AurHelper(Enum):
@@ -12,6 +12,37 @@ class AurHelper(Enum):
 class TerminalShell(Enum):
     FISH = "fish"
     ZSH = "zsh"
+
+
+class Architecture(Enum):
+    X86_64 = "x86_64"
+    AARCH64 = "aarch64"
+    ARMV7L = "armv7l"
+    UNKNOWN = "unknown"
+
+
+class DeviceType(Enum):
+    GENERIC_X86 = "generic_x86"
+    RASPBERRY_PI_4 = "raspberry_pi_4"
+    RASPBERRY_PI_3 = "raspberry_pi_3"
+    GENERIC_ARM = "generic_arm"
+    UNKNOWN = "unknown"
+
+
+@dataclass
+class ArchInfo:
+    """Information about system architecture and capabilities"""
+    architecture: Architecture
+    device_type: DeviceType
+    is_arm: bool
+    is_x86: bool
+    gpu_type: Optional[str] = None
+    supports_hyprland: bool = True
+    supports_gaming: bool = True
+    supports_proprietary_drivers: bool = True
+    
+    def __str__(self) -> str:
+        return f"{self.architecture.value} ({self.device_type.value})"
 
 
 @dataclass

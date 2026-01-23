@@ -19,6 +19,46 @@ echo
 echo "Starting pre-install..." && sleep 2
 
 
+##==> Detecting system architecture
+#######################################################
+ARCH=$(uname -m)
+echo ""
+echo "========================================="
+echo "  ARCHITECTURE DETECTION"
+echo "========================================="
+echo "Detected architecture: $ARCH"
+
+case "$ARCH" in
+    x86_64)
+        echo "Platform: x86_64 Desktop/Laptop"
+        echo "Full feature support available"
+        ;;
+    aarch64)
+        echo "Platform: ARM 64-bit (aarch64)"
+        echo "Note: Some features limited on ARM"
+        echo "  - Gaming packages will be skipped"
+        echo "  - Some proprietary apps unavailable"
+        ;;
+    armv7l)
+        echo "Platform: ARM 32-bit (armv7l)"
+        echo "Note: Limited feature support"
+        echo "  - Hyprland not recommended"
+        echo "  - Some packages may not be available"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture: $ARCH"
+        echo "Meowrch supports: x86_64, aarch64, armv7l"
+        exit 1
+        ;;
+esac
+
+# Export architecture for Python installer
+export MEOWRCH_ARCH=$ARCH
+echo "========================================="
+echo ""
+sleep 2
+
+
 ##==> Initializing git submodules
 #######################################################
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then

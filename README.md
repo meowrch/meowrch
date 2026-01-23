@@ -171,6 +171,13 @@ sh install.sh
 reboot
 ```
 
+> [!NOTE]
+> **ARM Architecture Support** 🎉
+> Meowrch now supports ARM devices including Raspberry Pi 4!
+> - Automatic architecture detection
+> - Optimized package selection for ARM
+> - See [ARM_INSTALLATION.md](./ARM_INSTALLATION.md) for details
+
 ---
 
 ## 📋 What do you get after installation?
