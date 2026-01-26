@@ -3,6 +3,7 @@ import sys
 import os
 import shutil
 import tempfile
+import subprocess
 from pathlib import Path
 
 # Ensure project root is importable
@@ -53,6 +54,7 @@ def test_plymouth_systemd_boot_skips_grub():
     # Track sudo calls and intercept all sudo executions
     calls = []
     pc._run_sudo = _fake_run_sudo_factory(calls)
+    pc.initramfs_tool = "mkinitcpio"
 
     # Force detection paths
     pc._bootloader_type = lambda: "systemd-boot"
@@ -80,6 +82,7 @@ def test_plymouth_grub_calls_grub_mkconfig_when_ready():
     # Track sudo calls
     calls = []
     pc._run_sudo = _fake_run_sudo_factory(calls)
+    pc.initramfs_tool = "mkinitcpio"
 
     # Force GRUB environment
     pc._bootloader_type = lambda: "grub"
@@ -216,6 +219,7 @@ def test_plymouth_grub_runs_when_boot_is_directory():
 
     calls = []
     pc._run_sudo = _fake_run_sudo_factory(calls)
+    pc.initramfs_tool = "mkinitcpio"
 
     pc._bootloader_type = lambda: "grub"
 
@@ -241,6 +245,46 @@ def test_plymouth_grub_runs_when_boot_is_directory():
         plymouth_mod.shutil.which = orig_which
         Path.exists = orig_exists
 
+def test_dracut_config_written_and_dracut_runs():
+    """Ensure dracut is configured for plymouth and dracut regeneration is triggered."""
+    pc = PlymouthConfigurer()
+    calls = []
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        conf_dir = Path(tmpdir) / "dracut.conf.d"
+        conf_dir.mkdir()
+        conf_file = conf_dir / "90-plymouth-meowrch.conf"
+
+        def _mock_run_sudo(cmd, input=None):
+            if cmd[:2] == ["mkdir", "-p"]:
+                Path(cmd[2]).mkdir(parents=True, exist_ok=True)
+                calls.append(list(cmd))
+                return ""
+            if cmd[0] == "cp":
+                shutil.copy(cmd[1], cmd[2])
+                calls.append(list(cmd))
+                return ""
+            if cmd[0] == "cat" and cmd[1] == str(conf_file):
+                calls.append(list(cmd))
+                if conf_file.exists():
+                    return conf_file.read_text()
+                raise subprocess.CalledProcessError(1, cmd, "", "")
+            calls.append(list(cmd))
+            return ""
+
+        pc._run_sudo = _mock_run_sudo
+        pc.dracut_conf_dir = conf_dir
+        pc.dracut_conf_file = conf_file
+        pc.initramfs_tool = "dracut"
+
+        pc.update_dracut_config()
+
+        assert conf_file.exists(), "Dracut plymouth config file should be created"
+        assert 'add_dracutmodules+=" plymouth "' in conf_file.read_text()
+
+        pc.run_post_commands()
+        assert any(cmd[0] == "dracut" for cmd in calls), "dracut must be called to regenerate initramfs"
+
 
 if __name__ == "__main__":
     # Run tests manually for ad-hoc execution
@@ -252,6 +296,7 @@ if __name__ == "__main__":
         test_plymouth_realistic_hooks_sd_encrypt,
         test_systemd_replaces_encrypt_with_sd_encrypt,
         test_udev_replaced_with_systemd_and_encrypt_migrated,
+        test_dracut_config_written_and_dracut_runs,
     ]
     ok = 0
     for t in tests:
