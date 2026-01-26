@@ -76,9 +76,13 @@ class Builder:
             # Установка драйверов через chwd
             ChdwManager().install()
 
-            AppsManager.configure_grub()
+            if self.build_options.install_grub:
+                AppsManager.configure_grub()
+
             AppsManager.configure_sddm()
-            AppsManager.configure_plymouth()
+            AppsManager.configure_plymouth(
+                allow_grub_config=self.build_options.install_grub
+            )
             AppsManager.configure_firefox(
                 darkreader=self.build_options.ff_darkreader,
                 ublock=self.build_options.ff_ublock,

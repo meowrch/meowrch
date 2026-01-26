@@ -14,11 +14,12 @@ except ImportError:
     from utils.mkinitcpio_config import MkinitcpioConfigEditor
 
 class PlymouthConfigurer:
-    def __init__(self):
+    def __init__(self, allow_grub_config: bool = True):
         self.theme_name = "meowrch"
         self.services_src = Path("./misc/services")
         self.theme_src = Path("./misc/plymouth_theme")
         self.theme_dest = Path("/usr/share/plymouth/themes/")
+        self.allow_grub_config = allow_grub_config
         
         # Инициализируем редакторы конфигурации
         self.grub_editor = GrubConfigEditor()
@@ -88,18 +89,25 @@ class PlymouthConfigurer:
     def update_grub_cmdline(self):
         """Update GRUB_CMDLINE_LINUX_DEFAULT"""
         logger.info("The process of configuring the settings of GRUB has begun")
+        if not self.allow_grub_config:
+            logger.info("Skipping GRUB configuration: user opted out of GRUB installation.")
+            return
+        
         # Skip if not a GRUB system
         if self._bootloader_type() != "grub":
             logger.info("Skipping GRUB configuration: bootloader is not GRUB (likely systemd-boot).")
             return
+        
         # Ensure the GRUB config file exists
         if not Path("/etc/default/grub").exists():
             logger.warning("Skipping GRUB configuration: /etc/default/grub not found.")
             return
+        
         changes_made = self.grub_editor.add_cmdline_params(
             self.required_grub_params, 
             update_grub=False  # Не запускаем update-grub пока, сделаем в конце
         )
+        
         if changes_made:
             logger.success("GRUB settings configured successfully!")
         else:
@@ -240,7 +248,7 @@ class PlymouthConfigurer:
         logger.info(f"Detected bootloader: {bootloader}")
 
         # Regenerate bootloader configuration when appropriate
-        if bootloader == "grub":
+        if bootloader == "grub" and self.allow_grub_config:
             if not Path("/boot/grub").exists():
                 logger.warning("Skipping GRUB config generation: /boot/grub directory does not exist.")
             elif not shutil.which("grub-mkconfig"):
@@ -248,6 +256,8 @@ class PlymouthConfigurer:
             else:
                 logger.info("Running grub-mkconfig -o /boot/grub/grub.cfg...")
                 self._run_sudo(["grub-mkconfig", "-o", "/boot/grub/grub.cfg"])
+        elif bootloader == "grub":
+            logger.info("Skipping GRUB config generation: user opted out of GRUB installation.")
         else:
             logger.info("Skipping GRUB config generation: system is not using GRUB.")
 

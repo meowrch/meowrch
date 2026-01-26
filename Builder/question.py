@@ -29,7 +29,7 @@ class Question:
 
             category_question = inquirer.List(
                 "category",
-                message="7) Select a category of packages and choose the ones you want",
+                message="8) Select a category of packages and choose the ones you want",
                 choices=list(
                     category
                     + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
@@ -99,37 +99,44 @@ class Question:
                 default="Yes",
                 carousel=True,
             ),
+            QuestionList(
+                name="install_grub",
+                message="2) Install and configure GRUB?",
+                choices=["Yes", "No"],
+                default="Yes",
+                carousel=True,
+            ),
             QuestionCheckbox(
                 name="install_wm",
-                message="2) Which window manager do you want to install?",
+                message="3) Which window manager do you want to install?",
                 choices=["hyprland", "bspwm"],
                 default=["bspwm", "hyprland"],
                 carousel=True,
             ),
             QuestionList(
                 name="aur_helper",
-                message="3) What kind of AUR helper do you want to have?",
+                message="4) What kind of AUR helper do you want to have?",
                 choices=["yay", "paru", "yay-bin"],
                 default="yay-bin",
                 carousel=True,
             ),
             QuestionList(
                 name="use_chaotic_aur",
-                message="4) Use Chaotic AUR for faster AUR package installation?",
+                message="5) Use Chaotic AUR for faster AUR package installation?",
                 choices=["Yes", "No"],
                 default="Yes",
                 carousel=True,
             ),
             QuestionCheckbox(
                 name="ff_plugins",
-                message="5) Would you like to add useful plugins for firefox?",
+                message="6) Would you like to add useful plugins for firefox?",
                 choices=firefox_choices,
                 default=firefox_choices,
                 carousel=True,
             ),
             QuestionList(
                 name="install_shell",
-                message="6) Which terminal shell do you prefer?",
+                message="7) Which terminal shell do you prefer?",
                 choices=["fish", "zsh"],
                 default="fish",
                 carousel=True,
@@ -164,6 +171,7 @@ class Question:
             make_backup=answers["make_backup"] == "Yes",
             install_bspwm="bspwm" in answers["install_wm"],
             install_hyprland="hyprland" in answers["install_wm"],
+            install_grub=answers["install_grub"] == "Yes",
             aur_helper=aur_helper,
             use_chaotic_aur=answers["use_chaotic_aur"] == "Yes",
             ff_darkreader="Dark Reader" in answers["ff_plugins"],
