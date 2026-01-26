@@ -4,8 +4,88 @@ Test script for ARM architecture detection and package filtering.
 Run this to verify ARM support is working correctly.
 """
 
+import subprocess
 import sys
 from pathlib import Path
+
+
+def check_pip_installed():
+    """Check if pip is installed and provide installation instructions if not"""
+    try:
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "--version"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+
+
+def check_and_install_dependencies():
+    """Check for required dependencies and install if missing"""
+    
+    # First, check if pip is installed
+    if not check_pip_installed():
+        print("=" * 70)
+        print("ERROR: pip IS NOT INSTALLED")
+        print("=" * 70)
+        print("Python pip is required to install dependencies.")
+        print("\nPlease install pip first with:")
+        print("  sudo pacman -S python-pip")
+        print("\nAfter installing pip, run this script again.")
+        print("=" * 70)
+        sys.exit(1)
+    
+    required_packages = {
+        'loguru': 'loguru',
+        'inquirer': 'inquirer'
+    }
+    
+    missing_packages = []
+    
+    for import_name, pip_name in required_packages.items():
+        try:
+            __import__(import_name)
+        except ImportError:
+            missing_packages.append(pip_name)
+    
+    if missing_packages:
+        print("=" * 70)
+        print("MISSING DEPENDENCIES DETECTED")
+        print("=" * 70)
+        print(f"The following Python packages are required but not installed:")
+        for pkg in missing_packages:
+            print(f"  - {pkg}")
+        print()
+        
+        response = input("Would you like to install them now? [Y/n]: ").strip().lower()
+        
+        if response in ['', 'y', 'yes']:
+            print("\nInstalling dependencies...")
+            for pkg in missing_packages:
+                try:
+                    print(f"Installing {pkg}...")
+                    subprocess.check_call(
+                        [sys.executable, "-m", "pip", "install", pkg, "--break-system-packages"],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.PIPE
+                    )
+                    print(f"✓ {pkg} installed successfully")
+                except subprocess.CalledProcessError as e:
+                    print(f"✗ Failed to install {pkg}: {e}")
+                    print("\nPlease install manually with:")
+                    print(f"  pip install {pkg} --break-system-packages")
+                    sys.exit(1)
+            print("\n✓ All dependencies installed successfully!\n")
+        else:
+            print("\nPlease install the required packages manually:")
+            print(f"  pip install {' '.join(missing_packages)} --break-system-packages")
+            sys.exit(1)
+
+
+# Check dependencies before importing
+check_and_install_dependencies()
 
 # Add Builder to path
 sys.path.insert(0, str(Path(__file__).parent / "Builder"))

@@ -32,7 +32,13 @@ This guide explains how to install Meowrch on ARM devices, specifically Raspberr
    - Wired connection recommended for initial install
    - WiFi should work but may be slower
 
-3. **Sufficient storage**
+3. **Python dependencies**
+   - The installer requires Python 3 and pip
+   - Required Python packages: `loguru`, `inquirer`
+   - These will be automatically installed by `install.sh`
+   - For manual testing, install with: `pip install -r requirements.txt --break-system-packages`
+
+4. **Sufficient storage**
    - Minimum 16GB SD card/storage
    - 32GB+ recommended for comfortable usage
 
@@ -43,11 +49,17 @@ This guide explains how to install Meowrch on ARM devices, specifically Raspberr
 git clone https://github.com/meowrch/meowrch --depth 1 --single-branch
 cd meowrch
 
-# 2. Run the installer
+# 2. (Optional) Check prerequisites
+python check_prerequisites.py
+# This will verify that your system has all required dependencies
+# including Python, pip, git, and network connectivity
+
+# 3. Run the installer
 sh install.sh
 
 # The installer will automatically detect ARM architecture and:
 # - Display architecture information
+# - Install Python dependencies (loguru, inquirer, etc.)
 # - Skip x86-only packages (Steam, proprietary apps, etc.)
 # - Configure ARM-specific drivers
 # - Optimize for ARM performance
@@ -204,6 +216,27 @@ vainfo
 # Install additional codecs if needed
 sudo pacman -S libva-mesa-driver mesa-vdpau
 ```
+
+### Python Dependency Errors
+
+**Problem**: `ModuleNotFoundError: No module named 'loguru'` or similar errors
+
+**Solution**:
+```bash
+# First, ensure pip is installed
+sudo pacman -S python-pip
+
+# Then install dependencies manually
+pip install loguru inquirer --break-system-packages
+
+# Or use requirements.txt
+pip install -r requirements.txt --break-system-packages
+
+# The test script will also offer to install dependencies automatically
+python test_arm_support.py
+```
+
+**Note**: The `test_arm_support.py` script will automatically detect if pip is missing and provide installation instructions.
 
 ## Known Limitations
 
