@@ -41,6 +41,9 @@ class Builder:
 
         if not self.build_options.install_grub:
             BASE.aur.common.remove("update-grub")
+
+        if not self.build_options.install_plymouth:
+            BASE.pacman.common.remove("plymouth")
     
         # Проверка существующей установки
         if self._check_existing_installation():
@@ -93,9 +96,12 @@ class Builder:
                 AppsManager.configure_grub()
 
             AppsManager.configure_sddm()
-            AppsManager.configure_plymouth(
-                allow_grub_config=self.build_options.install_grub
-            )
+
+            if self.build_options.install_plymouth:
+                AppsManager.configure_plymouth(
+                    allow_grub_config=self.build_options.install_grub
+                )
+
             AppsManager.configure_firefox(
                 darkreader=self.build_options.ff_darkreader,
                 ublock=self.build_options.ff_ublock,
