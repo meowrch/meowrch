@@ -81,14 +81,30 @@ class Builder:
             # Backup all critical system configs before any modifications
             ConfigBackup.backup_all()
 
-            # Включаем multilib и обновляем базу данных
-            PackageManager.update_pacman_conf(enable_multilib=True)
+            # Initialize keyring first to ensure we can verify packages
+            PackageManager.initialize_keyring(self.arch_info.is_arm)
+
+            # Enable multilib only on x86_64, not supported on ARM
+            enable_multilib = not self.arch_info.is_arm
+            if enable_multilib:
+                logger.info("Enabling multilib repository...")
+            else:
+                logger.info("Skipping multilib repository (not supported on ARM)")
+
+            PackageManager.update_pacman_conf(enable_multilib=enable_multilib)
             PackageManager.update_database()
             
             # Установка Chaotic AUR 
             if self.build_options.use_chaotic_aur:
-                logger.info("Setting up Chaotic AUR...")
-                ChaoticAurManager.install()
+                if self.arch_info.is_arm:
+                    logger.warning("Chaotic AUR is experimental on ARM and often unstable. Skipping and cleaning up.")
+                    ChaoticAurManager.remove()
+                else:
+                    logger.info("Setting up Chaotic AUR...")
+                    ChaoticAurManager.install()
+            elif self.arch_info.is_arm:
+                # Ensure it's removed if present on ARM even if not selected
+                ChaoticAurManager.remove()
                 
             PackageManager.install_aur_helper(self.build_options.aur_helper)
 

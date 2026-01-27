@@ -15,7 +15,41 @@ class ChaoticAurManager:
                 return '[chaotic-aur]' in content
         except Exception:
             return False
-    
+
+    @staticmethod
+    def remove() -> None:
+        """Removes Chaotic AUR from pacman.conf"""
+        logger.info("Removing Chaotic AUR from pacman.conf if present...")
+        pacman_conf_path = "/etc/pacman.conf"
+        try:
+            if not ChaoticAurManager.is_installed():
+                return
+
+            with open(pacman_conf_path, 'r') as f:
+                lines = f.readlines()
+
+            updated_lines = []
+            skip = False
+            for line in lines:
+                if line.strip() == '[chaotic-aur]':
+                    skip = True
+                elif skip and line.strip().startswith('['):
+                    skip = False
+                
+                if not skip:
+                    updated_lines.append(line)
+
+            # Write to tmp and move
+            temp_path = "/tmp/meowrch-pacman-clean.conf"
+            with open(temp_path, 'w') as f:
+                f.writelines(updated_lines)
+
+            subprocess.run(["sudo", "mv", temp_path, pacman_conf_path], check=True)
+            logger.success("Chaotic AUR removed from pacman.conf")
+
+        except Exception as e:
+            logger.error(f"Error removing Chaotic AUR: {e}")
+
     @staticmethod
     def install(max_retries: int = 3) -> bool:
         """Устанавливает Chaotic AUR репозиторий"""

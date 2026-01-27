@@ -9,6 +9,24 @@ from utils.schemes import AurHelper
 
 class PackageManager:
     @staticmethod
+    def initialize_keyring(is_arm: bool = False) -> None:
+        """Initializes the pacman keyring structure"""
+        logger.info("Initializing pacman keyring...")
+        try:
+            # Init keyring
+            subprocess.run(["sudo", "pacman-key", "--init"], check=True)
+            
+            # Populate keyring
+            keyring_name = "archlinuxarm" if is_arm else "archlinux"
+            subprocess.run(["sudo", "pacman-key", "--populate", keyring_name], check=True)
+            
+            logger.success("Pacman keyring initialized successfully!")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Error initializing keyring: {e.stderr}")
+        except Exception as e:
+            logger.error(f"Unexpected error initializing keyring: {e}")
+
+    @staticmethod
     def update_database() -> None:
         logger.info("Starting to update the package database.")
         error_msg = "Error updating package database: {err}"
@@ -254,20 +272,36 @@ class PackageManager:
             with open(pacman_config_path, "r") as file:
                 lines = file.readlines()
 
+            # State specifically for handling multilib removal
+            in_multilib_block = False
+
             for line in lines:
+                # Basic option handling
                 if line.startswith("#") and any(opt in line for opt in options.keys()):
                     line = line[1:]
 
                 for key, value in options.items():
-                    if key in line:
+                    if key in line and not line.strip().startswith("#"):
                         if value == "":
                             line = f"{key}\n"
                         else:
                             line = f"{key} = {value}\n"
                         break
 
-                if line.startswith(multilib_section):
-                    multilib_found = True
+                # Multilib handling
+                clean_line = line.strip()
+                if clean_line == multilib_section:
+                    if not enable_multilib:
+                        in_multilib_block = True
+                        line = f"#{line}"
+                    else:
+                        multilib_found = True
+                        in_multilib_block = False
+                elif in_multilib_block:
+                    if clean_line.startswith("["): # Next section
+                        in_multilib_block = False
+                    else:
+                        line = f"#{line}"
 
                 updated_lines.append(line)
 
