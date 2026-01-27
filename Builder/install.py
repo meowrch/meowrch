@@ -44,6 +44,9 @@ class Builder:
 
         if not self.build_options.install_plymouth:
             BASE.pacman.common.remove("plymouth")
+        
+        if not self.build_options.install_sddm:
+            BASE.pacman.common.remove("sddm")
     
         # Проверка существующей установки
         if self._check_existing_installation():
@@ -95,7 +98,8 @@ class Builder:
             if self.build_options.install_grub:
                 AppsManager.configure_grub()
 
-            AppsManager.configure_sddm()
+            if self.build_options.install_sddm:
+                AppsManager.configure_sddm()
 
             if self.build_options.install_plymouth:
                 AppsManager.configure_plymouth(
@@ -185,9 +189,12 @@ class Builder:
         logger.info("The daemons are starting to run...")
 
         daemons = {
-            "enable": ["NetworkManager", "bluetooth.service", "sddm.service"],
+            "enable": ["NetworkManager", "bluetooth.service"],
             "start": ["bluetooth.service"]
         }
+
+        if self.build_options.install_sddm:
+            daemons["enable"].append("sddm.service")
 
         user_daemons = {
             "enable": ["battery-monitor.timer"],
