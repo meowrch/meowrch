@@ -29,6 +29,19 @@ class Builder:
         self.build_options: BuildOptions = Question.get_answers()
         logger.info(f"User Responses to Questions: {self.build_options}")
 
+        # Убираем пакеты в зависимости от выбора пользователя
+        if self.build_options.terminal_shell != TerminalShell.ZSH:
+            BASE.pacman.common.remove("zsh")
+            BASE.pacman.common.remove("zsh-syntax-highlighting")
+            BASE.pacman.common.remove("zsh-autosuggestions")
+            BASE.pacman.common.remove("zsh-history-substring-search")
+        
+        if self.build_options.terminal_shell != TerminalShell.FISH:
+            BASE.pacman.common.remove("fish")
+
+        if not self.build_options.install_grub:
+            BASE.aur.common.remove("update-grub")
+    
         # Проверка существующей установки
         if self._check_existing_installation():
             logger.warning("Meowrch is already installed for this user!")
@@ -156,11 +169,6 @@ class Builder:
             if getattr(self.build_options, f"install_{wm}"):
                 pacman.extend(getattr(BASE.pacman, f"{wm}_packages"))
                 aur.extend(getattr(BASE.aur, f"{wm}_packages"))
-
-        if self.build_options.terminal_shell == TerminalShell.ZSH:
-            pacman.extend(["zsh", "zsh-syntax-highlighting", "zsh-autosuggestions", "zsh-history-substring-search"])
-        else:
-            pacman.append("fish")
 
         # Deduplicate while preserving order
         pacman = list(dict.fromkeys(pacman))
