@@ -78,6 +78,9 @@ def check_and_install_dependencies():
                     print(f"  pip install {pkg} --break-system-packages")
                     sys.exit(1)
             print("\n✓ All dependencies installed successfully!\n")
+            print("Restarting script to load new dependencies...\n")
+            import os
+            os.execv(sys.executable, [sys.executable] + sys.argv)
         else:
             print("\nPlease install the required packages manually:")
             print(f"  pip install {' '.join(missing_packages)} --break-system-packages")
