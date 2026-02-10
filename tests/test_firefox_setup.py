@@ -11,7 +11,7 @@ firefox = FirefoxConfigurer(
     ublock=True,
     twp=True,
     unpaywall=True,
-    tampermonkey=True
+    vot=True
 )
 
 firefox.setup()

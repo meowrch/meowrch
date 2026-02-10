@@ -9,8 +9,8 @@ from .custom_apps.mewline import MewlineConfigurer
 
 class AppsManager:
     @staticmethod
-    def configure_plymouth() -> None:
-        PlymouthConfigurer().setup()
+    def configure_plymouth(allow_grub_config: bool = True) -> None:
+        PlymouthConfigurer(allow_grub_config=allow_grub_config).setup()
 
     @staticmethod
     def configure_sddm() -> None:

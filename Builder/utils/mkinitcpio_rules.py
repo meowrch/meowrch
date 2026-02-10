@@ -121,14 +121,43 @@ class MkinitcpioRules:
             "ntfs3": 43,
             
             # Шифрование
+            "dm_mod": 48,
             "dm_crypt": 50,
             "aes": 51,
-            "sha256": 52,
+            "xts": 52,
+            "sha256": 53,
+            "sha512": 54,
+            "cryptd": 55,
             
             # Общие модули (в конце)
             "usb_storage": 60,
             "ahci": 65,
             "sd_mod": 70,
+        }
+
+        # Требуемые модули для конкретных хуков
+        # Важно: используем только универсальные модули, доступные в большинстве конфигураций ядра
+        self.hook_required_modules = {
+            # LUKS / dm-crypt
+            "encrypt": [
+                "dm_mod",
+                "dm_crypt",
+                "aes",
+                "xts",
+                "sha256",
+                "sha512",
+                "cryptd",
+            ],
+            # systemd-cryptsetup
+            "sd-encrypt": [
+                "dm_mod",
+                "dm_crypt",
+                "aes",
+                "xts",
+                "sha256",
+                "sha512",
+                "cryptd",
+            ],
         }
     
     def get_hook_priority(self, hook: str) -> int:
@@ -138,6 +167,19 @@ class MkinitcpioRules:
     def get_module_priority(self, module: str) -> int:
         """Получить приоритет модуля"""
         return self.module_priorities.get(module, 1000)
+
+    def get_required_modules_for_hooks(self, hooks: List[str]) -> List[str]:
+        """Получить список обязательных модулей для заданных хуков"""
+        required_modules: List[str] = []
+        for hook in hooks:
+            for module in self.hook_required_modules.get(hook, []):
+                if module not in required_modules:
+                    required_modules.append(module)
+
+        if not required_modules:
+            return []
+
+        return self.sort_modules_by_priority(required_modules)
     
     def validate_hook_order(self, hooks: List[str]) -> List[str]:
         """Проверить и исправить порядок хуков"""

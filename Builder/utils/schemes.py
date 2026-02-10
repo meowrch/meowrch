@@ -46,6 +46,9 @@ class BuildOptions:
     make_backup: bool
     install_bspwm: bool
     install_hyprland: bool
+    install_grub: bool
+    install_sddm: bool
+    install_plymouth: bool
     aur_helper: AurHelper
     use_chaotic_aur: bool
     ff_darkreader: bool
