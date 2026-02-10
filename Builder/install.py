@@ -18,6 +18,8 @@ from question import Question
 from utils.config_backup import ConfigBackup
 from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
 
+__VERSION__ = "3.0.4"
+
 
 class Builder:
     not_installed_packages = NotInstalledPackages()
@@ -35,7 +37,7 @@ class Builder:
             BASE.pacman.common.remove("zsh-syntax-highlighting")
             BASE.pacman.common.remove("zsh-autosuggestions")
             BASE.pacman.common.remove("zsh-history-substring-search")
-        
+
         if self.build_options.terminal_shell != TerminalShell.FISH:
             BASE.pacman.common.remove("fish")
 
@@ -44,16 +46,18 @@ class Builder:
 
         if not self.build_options.install_plymouth:
             BASE.pacman.common.remove("plymouth")
-        
+
         if not self.build_options.install_sddm:
             BASE.pacman.common.remove("sddm")
-    
+
         # Проверка существующей установки
         if self._check_existing_installation():
             logger.warning("Meowrch is already installed for this user!")
-            if not inquirer.confirm("Continue anyway? This will update the installation."):
+            if not inquirer.confirm(
+                "Continue anyway? This will update the installation."
+            ):
                 return
-        
+
         # Создаём временный маркер начала установки
         self._create_installation_marker()
 
@@ -82,12 +86,12 @@ class Builder:
             # Включаем multilib и обновляем базу данных
             PackageManager.update_pacman_conf(enable_multilib=True)
             PackageManager.update_database()
-            
-            # Установка Chaotic AUR 
+
+            # Установка Chaotic AUR
             if self.build_options.use_chaotic_aur:
                 logger.info("Setting up Chaotic AUR...")
                 ChaoticAurManager.install()
-                
+
             PackageManager.install_aur_helper(self.build_options.aur_helper)
 
             self.packages_installation()
@@ -117,13 +121,13 @@ class Builder:
 
             if self.build_options.install_hyprland:
                 AppsManager.configure_mewline()
-                
+
             AppsManager.configure_pawlette()
 
             self.daemons_setting()
             PostInstallation.apply(self.build_options)
 
-            self._write_installation_metadata("3.0.3")
+            self._write_installation_metadata(__VERSION__)
 
             logger.warning(
                 "The script was unable to automatically install these packages."
@@ -190,7 +194,7 @@ class Builder:
 
         daemons = {
             "enable": ["NetworkManager", "bluetooth.service"],
-            "start": ["bluetooth.service"]
+            "start": ["bluetooth.service"],
         }
 
         if self.build_options.install_sddm:
@@ -198,10 +202,10 @@ class Builder:
 
         user_daemons = {
             "enable": ["battery-monitor.timer"],
-            "start": ["battery-monitor.timer"]
+            "start": ["battery-monitor.timer"],
         }
 
-        error_msg = "Daemon \"{name}\" {action} error: {err}"
+        error_msg = 'Daemon "{name}" {action} error: {err}'
 
         for action, dmns in daemons.items():
             for d in dmns:
@@ -210,7 +214,11 @@ class Builder:
                 except subprocess.CalledProcessError as e:
                     logger.error(error_msg.format(action=action, name=d, err=e.stderr))
                 except Exception:
-                    logger.error(error_msg.format(action=action, name=d, err=traceback.format_exc()))
+                    logger.error(
+                        error_msg.format(
+                            action=action, name=d, err=traceback.format_exc()
+                        )
+                    )
 
         for action, dmns in user_daemons.items():
             for d in dmns:
@@ -219,76 +227,79 @@ class Builder:
                 except subprocess.CalledProcessError as e:
                     logger.error(error_msg.format(action=action, name=d, err=e.stderr))
                 except Exception:
-                    logger.error(error_msg.format(action=action, name=d, err=traceback.format_exc()))
+                    logger.error(
+                        error_msg.format(
+                            action=action, name=d, err=traceback.format_exc()
+                        )
+                    )
 
         logger.success("The setting of the daemons is complete!")
 
-    def _write_installation_metadata(self, version: str) -> None:        
+    def _write_installation_metadata(self, version: str) -> None:
         metadata = {
             "version": version,
             "installed_at": datetime.now().isoformat(),
             "user": os.getenv("USER"),
             "install_type": "full",
-            "dotfiles_applied": True
+            "dotfiles_applied": True,
         }
-        
+
         base_dir = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}")
         subprocess.run(["sudo", "mkdir", "-p", str(base_dir)], check=True)
-        
+
         # Записываем версию
         subprocess.run(
             ["sudo", "tee", str(base_dir / "version")],
             input=version.encode(),
             stdout=subprocess.DEVNULL,
-            check=True
+            check=True,
         )
-        
+
         # Записываем метаданные
         subprocess.run(
             ["sudo", "tee", str(base_dir / ".installed")],
             input=json.dumps(metadata, indent=2).encode(),
             stdout=subprocess.DEVNULL,
-            check=True
+            check=True,
         )
-        
+
         # Устанавливаем права: только чтение для пользователя
         subprocess.run(["sudo", "chmod", "444", str(base_dir / "version")], check=True)
-        subprocess.run(["sudo", "chmod", "444", str(base_dir / ".installed")], check=True)
-        
-        # Удаляем временный маркер установки
         subprocess.run(
-            ["sudo", "rm", "-f", str(base_dir / ".installing")],
-            check=False
+            ["sudo", "chmod", "444", str(base_dir / ".installed")], check=True
         )
-    
+
+        # Удаляем временный маркер установки
+        subprocess.run(["sudo", "rm", "-f", str(base_dir / ".installing")], check=False)
+
         logger.success(f"Version metadata protected: {version}")
 
     def _check_existing_installation(self) -> bool:
-        version_file = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}/version")
+        version_file = Path(
+            f"/usr/local/share/meowrch/users/{os.getenv('USER')}/version"
+        )
         return version_file.exists()
-    
+
     def _create_installation_marker(self) -> None:
         base_dir = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}")
         subprocess.run(["sudo", "mkdir", "-p", str(base_dir)], check=True)
-        
+
         # Временный файл для отслеживания процесса
         subprocess.run(
             ["sudo", "tee", str(base_dir / ".installing")],
             input=b"installation_in_progress",
             stdout=subprocess.DEVNULL,
-            check=True
+            check=True,
         )
-    
+
     def _cleanup_failed_installation(self) -> None:
         base_dir = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}")
-        
+
         # Удаляем временный маркер
-        subprocess.run(
-            ["sudo", "rm", "-f", str(base_dir / ".installing")],
-            check=False
-        )
-        
+        subprocess.run(["sudo", "rm", "-f", str(base_dir / ".installing")], check=False)
+
         logger.warning("Installation markers cleaned up due to failure")
+
 
 if __name__ == "__main__":
     logger.add(
