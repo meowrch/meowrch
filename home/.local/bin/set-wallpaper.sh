@@ -53,8 +53,32 @@ get_cursor_pos() {
 }
 
 apply_swww() {
-    command -v swww >/dev/null || { echo "Install swww for Wayland"; exit 1; }
-    
+    command -v swww >/dev/null || { echo "Install swww for Wayland" >&2; exit 1; }
+
+    # Ожидаем готовности демона (максимум 6 секунд)
+    local max_attempts=20
+    local attempt=0
+
+    while [[ $attempt -lt $max_attempts ]]; do
+        if swww query >/dev/null 2>&1; then
+            break
+        fi
+        
+        # Если демон не запущен, попробуем запустить его вручную
+        if ! pgrep -f "swww-daemon" >/dev/null; then
+            echo "swww-daemon not running, starting it..." >&2
+            sh ${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh -t service -s s swww-daemon
+        fi
+
+        sleep 0.3
+        attempt=$((attempt+1))
+    done
+
+    if [[ $attempt -eq $max_attempts ]]; then
+        echo "ERROR: swww daemon not available after $max_attempts attempts" >&2
+        exit 1
+    fi
+
     local refresh_rate=$(get_refresh_rate)
     local cursor_pos=$(get_cursor_pos)
     
