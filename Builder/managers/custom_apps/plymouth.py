@@ -99,16 +99,35 @@ class PlymouthConfigurer:
     def _detect_initramfs_tool(self) -> str:
         """
         Detect the initramfs generator in use.
-        Preference: mkinitcpio when its config is present, otherwise dracut if installed.
+        Preference: dracut when it is configured; otherwise mkinitcpio if present.
         """
         try:
-            if Path("/etc/mkinitcpio.conf").exists() and shutil.which("mkinitcpio"):
+            mkinitcpio_available = Path("/etc/mkinitcpio.conf").exists() and shutil.which("mkinitcpio")
+            dracut_available = shutil.which("dracut")
+            dracut_configured = self._dracut_config_present()
+
+            if dracut_available and (dracut_configured or not mkinitcpio_available):
+                return "dracut"
+            if mkinitcpio_available:
                 return "mkinitcpio"
-            if shutil.which("dracut"):
+            if dracut_available:
                 return "dracut"
         except Exception:
             pass
         return "unknown"
+    
+    def _dracut_config_present(self) -> bool:
+        """Check whether dracut has configuration files present."""
+        try:
+            if Path("/etc/dracut.conf").exists():
+                return True
+            if self.dracut_conf_dir.exists():
+                # Any file in dracut.conf.d implies dracut is configured/used
+                for _ in self.dracut_conf_dir.iterdir():
+                    return True
+        except Exception:
+            pass
+        return False
 
     def update_grub_cmdline(self):
         """Update GRUB_CMDLINE_LINUX_DEFAULT"""
