@@ -253,6 +253,8 @@ reboot
 
 **[🌐 Official Wiki](https://meowrch.github.io/)** — guides, FAQ, troubleshooting
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/meowrch/meowrch)
+
 <br>
 
 ### 💬 Join the Community
@@ -260,9 +262,12 @@ reboot
 <table align="center">
 <tr>
 <td align="center" width="33%">
-<h3>📢 Telegram</h3>
+<h3>📢 Social Media</h3>
 <a href="https://t.me/meowrch">
 <img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram">
+</a>
+<a href="https://x.com/me0wrch">
+<img src="https://img.shields.io/badge/twitter-181717?style=for-the-badge&logo=x&logoColor=white" alt="Reviews">
 </a>
 <br><br>
 News, updates and <a href="https://t.me/meowrch/7">quick support</a>
