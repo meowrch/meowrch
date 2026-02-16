@@ -285,6 +285,40 @@ class PlymouthConfigurer:
         self._run_sudo(["plymouth-set-default-theme", self.theme_name])
         logger.success(f'Installed "{self.theme_name}" Plymouth theme')
 
+    def detect_initramfs_path(self) -> Path:
+        # 1. defaults
+        candidates = [
+            Path("/boot/initramfs-linux.img"),
+            Path("/boot/initramfs-linux-lts.img"),
+        ]
+        for c in candidates:
+            if c.exists():
+                logger.info(f"Detected initramfs at {c}")
+                return c
+
+        # 2. Попытка для systemd-boot: читаем loader entries
+        loader_dir = Path("/boot/loader/entries")
+        if loader_dir.is_dir():
+            for entry in loader_dir.glob("*.conf"):
+                lines = entry.read_text(encoding="utf-8", errors="ignore").splitlines()
+                for line in lines:
+                    line = line.strip()
+                    if line.lower().startswith("initrd"):
+                        # формат: initrd /initramfs-linux.img
+                        parts = line.split()
+                        if len(parts) >= 2:
+                            rel = parts[1]
+                            # предполагаем, что ESP смонтирован в /boot
+                            p = Path("/boot") / rel.lstrip("/")
+                            if p.exists():
+                                logger.info(f"Detected initramfs from {entry}: {p}")
+                                return p
+
+        raise FileNotFoundError(
+            "Could not detect initramfs path automatically. "
+            "Please specify it manually or ensure /boot/initramfs-linux.img exists."
+        )
+        
     def run_post_commands(self):
         """Run post-installation commands"""
         bootloader = self._bootloader_type()
@@ -310,8 +344,25 @@ class PlymouthConfigurer:
             logger.info("Running mkinitcpio -P...")
             self._run_sudo(["mkinitcpio", "-P"])
         elif tool == "dracut":
-            logger.info("Running dracut --regenerate-all --force...")
-            self._run_sudo(["dracut", "--regenerate-all", "--force"])
+            try:
+                kver = subprocess.run(
+                    ["uname", "-r"],
+                    text=True,
+                    capture_output=True,
+                    check=True,
+                ).stdout.strip()
+
+                initramfs_path = self.detect_initramfs_path()
+
+                logger.info(f"Running dracut for kernel {kver}...")
+                self._run_sudo([
+                    "dracut",
+                    "--kver", kver,
+                    str(initramfs_path),
+                    "--force",
+                ])
+            except subprocess.CalledProcessError as e:
+                logger.error(f"dracut failed: {e.stderr or e}")
         else:
             logger.warning("Initramfs tool is unknown; skipping initramfs rebuild.")
 
