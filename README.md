@@ -19,8 +19,11 @@
 
 <br>
 
-[🚀 Quick Start](#-installation) • [📸 Gallery](#-visual-presentation) • [⚡ Features](#-why-meowrch) • [📖 Wiki](https://meowrch.github.io/en/) • [💬 Community](https://t.me/meowrch)
+[🚀 Installation](#-installation) • [ <img src="https://cdn.simpleicons.org/nixos/5277C3" width="16"> NixOS version](#alternative-installations) • [<img src="https://cdn.simpleicons.org/apple/FFFFFF" width="16"> MacBook version](#alternative-installations)
 
+[⚡ Features](#-why-meowrch) • [📸 Gallery](#-visual-presentation) • [📖 Wiki](https://meowrch.github.io/en/)
+
+[💬 Community](https://t.me/meowrch)
 </div>
 
 ---
@@ -170,6 +173,21 @@ sh install.sh
 # 3. Reboot
 reboot
 ```
+
+### <a name="alternative-installations"></a>🌐 Community Alternative Installations
+
+In addition to the standard Arch Linux installation, the Meowrch community maintains the following ports:
+
+| Platform | Description | Repository |
+|:---|:---|:---|
+| <img src="https://cdn.simpleicons.org/nixos/5277C3" width="16"> **NixOS** | Full Meowrch port to NixOS using home-manager and flakes | [NixOS-Meowrch](https://github.com/Redm00use/NixOS-Meowrch) |
+| <img src="https://cdn.simpleicons.org/apple/FFFFFF" width="16"> **MacBook (Apple Silicon)** | Meowrch on Arch-based system for MacBook M1 (via Asahi Linux) | [meowrch-asahi](https://github.com/Redm00use/meowrch-asahi) |
+| <img src="https://cdn.simpleicons.org/apple/FFFFFF" width="16"><img src="https://cdn.simpleicons.org/nixos/5277C3" width="16"> **MacBook + NixOS** | Meowrch on NixOS for MacBook M1 (via Asahi Linux) | [NixOS-Asahi-Kennel](https://github.com/Redm00use/NixOS-Asahi-Kennel) |
+
+> [!WARNING]
+> **These are unofficial community ports.**  
+> These repositories are maintained by community enthusiasts and are not part of the official Meowrch codebase.  
+> We do not take responsibility for their functionality, but we welcome community contributions to the ecosystem!
 
 ---
 
