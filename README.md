@@ -19,7 +19,7 @@
 
 <br>
 
-[🚀 Installation](#-installation) • [ <img src="https://cdn.simpleicons.org/nixos/5277C3" width="16"> NixOS version](#alternative-installations) • [<img src="https://cdn.simpleicons.org/apple/FFFFFF" width="16"> MacBook version](#alternative-installations)
+[🚀 Installation](#installation) • [ <img src="https://cdn.simpleicons.org/nixos/5277C3" width="16"> NixOS version](#alternative-installations) • [<img src="https://cdn.simpleicons.org/apple/FFFFFF" width="16"> MacBook version](#alternative-installations)
 
 [⚡ Features](#-why-meowrch) • [📸 Gallery](#-visual-presentation) • [📖 Wiki](https://meowrch.github.io/en/)
 
@@ -152,7 +152,7 @@ We solved this agonizing problem.
 
 ---
 
-## 🛠️ Installation
+## <a name="installation"></a>🛠️ Installation
 
 > [!WARNING] 
 > The installer is designed for **clean Arch Linux**. \
