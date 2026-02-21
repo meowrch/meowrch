@@ -10,10 +10,30 @@
 # Github: https://github.com/DIMFLIX
 
 # ---------- Configuration ----------
+declare -A BAR_CMD
+declare -A BAR_PROCESS
+
+# hyprland
+BAR_CMD["mewline"]="${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh -t service -s s mewline"
+BAR_PROCESS["mewline"]="mewline"
+
+BAR_CMD["waybar"]="${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh -t service -s s waybar"
+BAR_PROCESS["waybar"]="waybar"
+
+# bspwm
+BAR_CMD["polybar"]="$HOME/.config/polybar/launch.sh"
+BAR_PROCESS["polybar"]="polybar"
+
+# Add new bars in the same way:
+# BAR_CMD["mybar"]="$HOME/.config/mybar/start.sh"
+# BAR_PROCESS["mybar"]="mybar"
+
+# Список доступных баров для каждого оконного менеджера
 declare -A WM_BARS
 WM_BARS["hyprland"]="mewline waybar"
 WM_BARS["bspwm"]="polybar"
 
+# ---------- Initial setup ----------
 STATE_DIR="$HOME/.cache/meowrch"
 mkdir -p "$STATE_DIR"
 
@@ -30,7 +50,7 @@ esac
 
 FLAG_FILE="$STATE_DIR/current_bar_${WM}"
 
-# Default action if no arguments
+# ---------- Argument parsing ----------
 ACTION="toggle"
 case "$1" in
     "--start")  ACTION="start"  ;;
@@ -38,7 +58,6 @@ case "$1" in
     "--toggle") ACTION="toggle" ;;
     "--next")   ACTION="next"   ;;
     "")
-        # no argument = toggle (old behaviour)
         ACTION="toggle"
         ;;
     *)
@@ -50,43 +69,65 @@ esac
 
 # ---------- Helper functions ----------
 is_bar_installed() {
-    command -v "$1" >/dev/null 2>&1
+    local bar_name="$1"
+    local cmd="${BAR_CMD[$bar_name]}"
+    [[ -z "$cmd" ]] && return 1
+
+    # Extract the first token (executable file)
+    local exe
+    exe=$(echo "$cmd" | awk '{print $1}')
+
+    if [[ "$exe" == /* ]]; then
+        # Absolute path — check that the file exists and execute
+        [[ -x "$exe" ]]
+    else
+        # Relative name — search in PATH
+        command -v "$exe" >/dev/null 2>&1
+    fi
 }
 
 launch_bar() {
     local bar_name="$1"
-    if [[ "$WM" == "hyprland" ]]; then
-        # Use uwsm-launcher.sh for both mewline and waybar
-        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh" -t service -s s "$bar_name" >/dev/null 2>&1 &
-        disown
-    elif [[ "$WM" == "bspwm" && "$bar_name" == "polybar" ]]; then
-        "$HOME/.config/polybar/launch.sh" &
+    local cmd="${BAR_CMD[$bar_name]}"
+    if [[ -z "$cmd" ]]; then
+        echo "Error: no command defined for bar '$bar_name'" >&2
+        exit 1
     fi
+
+    # Run the command in the background, detach from the terminal
+    nohup sh -c "$cmd" >/dev/null 2>&1 &
+    disown
 }
 
-# Wait up to 2 seconds for the bar process to appear
+# Please wait up to 2 seconds for the bar process to appear.
 ensure_bar_running() {
     local bar_name="$1"
-    if pgrep -x "$bar_name" >/dev/null; then
+    local process_name="${BAR_PROCESS[$bar_name]:-$bar_name}"
+
+    if pgrep -x "$process_name" >/dev/null; then
         return 0
     fi
+
     launch_bar "$bar_name"
     sleep 2
-    pgrep -x "$bar_name" >/dev/null
+    pgrep -x "$process_name" >/dev/null
 }
 
 stop_bar() {
     local bar_name="$1"
-    if pgrep -x "$bar_name" >/dev/null; then
-        pkill -x "$bar_name"
-        # bspwm specific cleanup
+    local process_name="${BAR_PROCESS[$bar_name]:-$bar_name}"
+
+    if pgrep -x "$process_name" >/dev/null; then
+        pkill -x "$process_name"
+
+        # Specific cleanup for bspwm (polybar)
         if [[ "$WM" == "bspwm" && "$bar_name" == "polybar" ]]; then
             bspc config -m focused top_padding 0 2>/dev/null
         fi
     fi
 }
 
-# Get the next bar in the circular list for the current WM
+# Get the next bar in the cyclic list for the current WM
 get_next_bar() {
     local current="$1"
     local -a bars=(${WM_BARS[$WM]})
@@ -95,6 +136,7 @@ get_next_bar() {
         echo ""
         return 1
     fi
+
     local idx=-1
     for i in "${!bars[@]}"; do
         if [[ "${bars[$i]}" == "$current" ]]; then
@@ -102,6 +144,7 @@ get_next_bar() {
             break
         fi
     done
+
     if [[ $idx -eq -1 ]]; then
         echo "${bars[0]}"
     else
@@ -109,12 +152,13 @@ get_next_bar() {
     fi
 }
 
-# Read current bar from flag file, or set to first available if missing
+# Read the current bar from the status file; if it's not there, pick the first one available.
 get_current_bar() {
     if [[ -f "$FLAG_FILE" ]]; then
         cat "$FLAG_FILE"
     else
-        local first_bar=$(echo ${WM_BARS[$WM]} | awk '{print $1}')
+        local first_bar
+        first_bar=$(echo "${WM_BARS[$WM]}" | awk '{print $1}')
         echo "$first_bar" > "$FLAG_FILE"
         echo "$first_bar"
     fi
@@ -123,53 +167,34 @@ get_current_bar() {
 # ---------- Core actions ----------
 case "$ACTION" in
     "start")
-        # Startup: try to run the current bar; if it fails, try others in order.
         current_bar=$(get_current_bar)
-        attempted=()
-        bar="$current_bar"
-        success=false
-        while true; do
-            if is_bar_installed "$bar"; then
-                if ensure_bar_running "$bar"; then
-                    # Update flag if we changed bar
-                    if [[ "$bar" != "$current_bar" ]]; then
-                        echo "$bar" > "$FLAG_FILE"
-                    fi
-                    # bspwm padding
-                    if [[ "$WM" == "bspwm" && "$bar" == "polybar" ]]; then
-                        bspc config -m focused top_padding 31 2>/dev/null
-                    fi
-                    success=true
-                    break
-                fi
-            fi
-            attempted+=("$bar")
-            bar=$(get_next_bar "$bar")
-            # Stop if we cycled through all bars
-            if [[ "$bar" == "$current_bar" ]] || [[ ${#attempted[@]} -ge ${#WM_BARS[$WM]} ]]; then
-                break
-            fi
-        done
-        if [[ "$success" == false ]]; then
-            echo "Error: no working bar found." >&2
+
+        if ! is_bar_installed "$current_bar"; then
+            echo "Error: bar '$current_bar' is not installed or command not found." >&2
             exit 1
+        fi
+
+        launch_bar "$current_bar"
+
+        if [[ "$WM" == "bspwm" && "$current_bar" == "polybar" ]]; then
+            bspc config -m focused top_padding 31 2>/dev/null
         fi
         ;;
 
     "stop")
-        # Stop only the current bar (if running)
         current_bar=$(get_current_bar)
         stop_bar "$current_bar"
         ;;
 
     "toggle")
-        # If current bar is running, stop it; otherwise start it (no fallback)
         current_bar=$(get_current_bar)
-        if pgrep -x "$current_bar" >/dev/null; then
+        process_name="${BAR_PROCESS[$current_bar]:-$current_bar}"
+
+        if pgrep -x "$process_name" >/dev/null; then
             stop_bar "$current_bar"
         else
             if ! is_bar_installed "$current_bar"; then
-                echo "Error: bar '$current_bar' is not installed." >&2
+                echo "Error: bar '$current_bar' is not installed or command not found." >&2
                 exit 1
             fi
             if ! ensure_bar_running "$current_bar"; then
@@ -183,15 +208,15 @@ case "$ACTION" in
         ;;
 
     "next")
-        # Switch to the next bar in the list, stop current, start next (no fallback)
         current_bar=$(get_current_bar)
         next_bar=$(get_next_bar "$current_bar")
         echo "Switching from $current_bar to $next_bar"
+
         stop_bar "$current_bar"
-        # Update flag immediately
         echo "$next_bar" > "$FLAG_FILE"
+
         if ! is_bar_installed "$next_bar"; then
-            echo "Error: next bar '$next_bar' is not installed." >&2
+            echo "Error: next bar '$next_bar' is not installed or command not found." >&2
             exit 1
         fi
         if ! ensure_bar_running "$next_bar"; then
