@@ -74,7 +74,11 @@ super + c
 
 # Description: Toggle status bar
 super + b
-    sh $XDG_BIN_HOME/toggle-bar.sh
+    sh $XDG_BIN_HOME/toggle-bar.sh --wm bspwm
+
+# Description: Switch status bar
+super + shift + b 
+	sh $XDG_BIN_HOME/toggle-bar.sh --next --wm bspwm
 
 # Description: Open emoji picker
 super + period
