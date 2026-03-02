@@ -30,6 +30,51 @@ super + shift + y
 	kitty -e yazi
 ##############################################################################################
 
+
+##==> Mewline
+##############################################################################################
+# Description: Open power menu module
+super + alt + p
+    fabric-cli invoke-action mewline dynamic-island-open "power-menu"
+
+# Description: Open date & notification module
+super + alt + d
+    fabric-cli invoke-action mewline dynamic-island-open "date-notification"
+
+# Description: Open bluetooth module
+super + alt + b
+    fabric-cli invoke-action mewline dynamic-island-open "bluetooth"
+
+# Description: Open app launcher module
+super + alt + a
+    fabric-cli invoke-action mewline dynamic-island-open "app-launcher"
+
+# Description: Open wallpapers module
+super + alt + w
+    fabric-cli invoke-action mewline dynamic-island-open "wallpapers"
+
+# Description: Open emoji picker module
+super + alt + less
+    fabric-cli invoke-action mewline dynamic-island-open "emoji"
+
+# Description: Open clipboard module
+super + alt + v
+    fabric-cli invoke-action mewline dynamic-island-open "clipboard"
+
+# Description: Open network module
+super + alt + n
+    fabric-cli invoke-action mewline dynamic-island-open "network"
+
+# Description: Open pawlette themes module
+super + alt + t
+    fabric-cli invoke-action mewline dynamic-island-open "pawlette-themes"
+
+# Description: Open workspaces module
+super + alt + Tab
+    fabric-cli invoke-action mewline dynamic-island-open "workspaces"
+##############################################################################################
+
+
 ##==> SYSTEM BINDS
 ##############################################################################################
 # Description: Open terminal
