@@ -77,7 +77,7 @@ BASE = Packages(
             ###########################################
             "ttf-meslo-nerd-font-powerlevel10k",
 		],
-		bspwm_packages=["xkb-switch", "i3lock-color"],
+		bspwm_packages=["xkb-switch", "betterlockscreen"],
 		hyprland_packages=[
 			"hyprprop", "grimblast-git", "mewline"
 		]

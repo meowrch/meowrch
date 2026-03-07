@@ -207,8 +207,8 @@ class Builder:
             daemons["enable"].append("sddm.service")
 
         user_daemons = {
-            "enable": ["battery-monitor.timer"],
-            "start": ["battery-monitor.timer"],
+            "enable": ["battery-monitor.timer", "betterlockscreen-watch.path"],
+            "start": ["battery-monitor.timer", "betterlockscreen-watch.path"],
         }
 
         error_msg = 'Daemon "{name}" {action} error: {err}'

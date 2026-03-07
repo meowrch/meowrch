@@ -50,3 +50,4 @@ esac
 sh ${XDG_BIN_HOME:-$HOME/bin}/toggle-bar.sh --start --wm bspwm &
 sh ${XDG_BIN_HOME:-$HOME/bin}/polkitkdeauth.sh & # authentication dialogue for GUI apps
 sh ${XDG_BIN_HOME:-$HOME/bin}/set-wallpaper.sh --current & # set current wallpaper
+systemctl --user start betterlockscreen-watch.service &

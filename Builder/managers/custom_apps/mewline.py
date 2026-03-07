@@ -1,10 +1,7 @@
-import os
-import json
 import subprocess
 import traceback
 
 from loguru import logger
-from pathlib import Path
 
 from .base import AppConfigurer
 from ..package_manager import PackageManager
@@ -42,19 +39,3 @@ class MewlineConfigurer(AppConfigurer):
             stderr=subprocess.PIPE,
             text=True,
         )
-        
-        config_path = Path.home().joinpath(".config/mewline/config.json")
-        if config_path.exists():
-            with open(config_path) as f:
-                config = json.load(f)
-            
-            config["modules"]["dynamic_island"]["power_menu"]["commands"]["bspwm"]["lock"] = (
-                f"sh {os.environ['HOME']}/.local/bin/screen-lock.sh"
-            )
-
-            with open(config_path, "w") as f:
-                json.dump(config, f, indent=4, ensure_ascii=False)
-
-            logger.success("Mewline config created!")
-        else:
-            logger.error("Failed to create mewline config...")

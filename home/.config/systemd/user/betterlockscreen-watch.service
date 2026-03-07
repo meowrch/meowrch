@@ -1,0 +1,8 @@
+[Unit]
+Description=Update betterlockscreen cache on wallpaper change
+ConditionEnvironment=DISPLAY
+ExecCondition=/bin/sh -c 'test "$XDG_SESSION_TYPE" = "x11"'
+
+[Service]
+Type=oneshot
+ExecStart=betterlockscreen -u %h/.local/share/wallpapers/.current.wall --fx dim
