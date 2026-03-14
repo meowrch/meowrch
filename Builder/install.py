@@ -18,7 +18,7 @@ from question import Question
 from utils.config_backup import ConfigBackup
 from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
 
-__VERSION__ = "3.0.4"
+__VERSION__ = "3.0.5"
 
 
 class Builder:
@@ -49,6 +49,12 @@ class Builder:
 
         if not self.build_options.install_sddm:
             BASE.pacman.common.remove("sddm")
+        
+        # If dracut is already installed on the system, avoid installing mkinitcpio
+        if PackageManager.check_package_installed("dracut"):
+            if "mkinitcpio" in BASE.pacman.common:
+                BASE.pacman.common.remove("mkinitcpio")
+                logger.info("Detected dracut; skipping mkinitcpio installation.")
 
         # Проверка существующей установки
         if self._check_existing_installation():
