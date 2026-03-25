@@ -18,7 +18,7 @@ from question import Question
 from utils.config_backup import ConfigBackup
 from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
 
-__VERSION__ = "3.0.5"
+__VERSION__ = "3.0.6"
 
 
 class Builder:
