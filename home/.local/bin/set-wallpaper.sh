@@ -52,22 +52,22 @@ get_cursor_pos() {
     fi
 }
 
-apply_swww() {
-    command -v swww >/dev/null || { echo "Install swww for Wayland" >&2; exit 1; }
+apply_awww() {
+    command -v awww >/dev/null || { echo "Install awww for Wayland" >&2; exit 1; }
 
     # Ожидаем готовности демона (максимум 6 секунд)
     local max_attempts=20
     local attempt=0
 
     while [[ $attempt -lt $max_attempts ]]; do
-        if swww query >/dev/null 2>&1; then
+        if awww query >/dev/null 2>&1; then
             break
         fi
         
         # Если демон не запущен, попробуем запустить его вручную
-        if ! pgrep -f "swww-daemon" >/dev/null; then
-            echo "swww-daemon not running, starting it..." >&2
-            sh ${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh -t service -s s swww-daemon
+        if ! pgrep -f "awww-daemon" >/dev/null; then
+            echo "awww-daemon not running, starting it..." >&2
+            sh ${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh -t service -s s awww-daemon
         fi
 
         sleep 0.3
@@ -75,14 +75,14 @@ apply_swww() {
     done
 
     if [[ $attempt -eq $max_attempts ]]; then
-        echo "ERROR: swww daemon not available after $max_attempts attempts" >&2
+        echo "ERROR: awww daemon not available after $max_attempts attempts" >&2
         exit 1
     fi
 
     local refresh_rate=$(get_refresh_rate)
     local cursor_pos=$(get_cursor_pos)
     
-    if swww img "$1" \
+    if awww img "$1" \
         --transition-bezier .43,1.19,1,.4 \
         --transition-type grow \
         --transition-duration 0.4 \
@@ -125,10 +125,10 @@ apply_current_wallpaper() {
     fi
     
     case "$SESSION_TYPE" in
-        "wayland") apply_swww "$target_wall" ;;
+        "wayland") apply_awww "$target_wall" ;;
         "x11")     apply_feh "$target_wall" ;;
         *)
-            command -v swww >/dev/null && apply_swww "$target_wall"
+            command -v awww >/dev/null && apply_awww "$target_wall"
             command -v feh >/dev/null && apply_feh "$target_wall"
             ;;
     esac
@@ -143,12 +143,12 @@ else
 fi
 
 case "$SESSION_TYPE" in
-    "wayland") apply_swww "$1" ;;
+    "wayland") apply_awww "$1" ;;
     "x11")     apply_feh "$1" ;;
     *)
         echo "Unknown session type: $SESSION_TYPE"
         echo "Trying fallback methods..."
-        command -v swww >/dev/null && apply_swww "$1"
+        command -v awww >/dev/null && apply_awww "$1"
         command -v feh >/dev/null && apply_feh "$1"
         exit 1
         ;;
