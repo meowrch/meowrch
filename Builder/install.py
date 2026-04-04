@@ -1,8 +1,6 @@
-import json
 import os
 import subprocess
 import traceback
-from datetime import datetime
 from pathlib import Path
 
 import inquirer
@@ -17,9 +15,6 @@ from packages import BASE, CUSTOM
 from question import Question
 from utils.config_backup import ConfigBackup
 from utils.schemes import BuildOptions, NotInstalledPackages, TerminalShell
-
-__VERSION__ = "3.0.6"
-
 
 class Builder:
     not_installed_packages = NotInstalledPackages()
@@ -133,7 +128,7 @@ class Builder:
             self.daemons_setting()
             PostInstallation.apply(self.build_options)
 
-            self._write_installation_metadata(__VERSION__)
+            self._remove_installation_marker()
 
             logger.warning(
                 "The script was unable to automatically install these packages."
@@ -149,9 +144,6 @@ class Builder:
             self._cleanup_failed_installation()
             raise
 
-        is_reboot = inquirer.confirm("Do you want to reboot?")
-        if is_reboot:
-            subprocess.run("sudo reboot", shell=True)
 
     def packages_installation(self) -> None:
         logger.info("Starting the package installation process")
@@ -241,44 +233,9 @@ class Builder:
 
         logger.success("The setting of the daemons is complete!")
 
-    def _write_installation_metadata(self, version: str) -> None:
-        metadata = {
-            "version": version,
-            "installed_at": datetime.now().isoformat(),
-            "user": os.getenv("USER"),
-            "install_type": "full",
-            "dotfiles_applied": True,
-        }
-
+    def _remove_installation_marker(self) -> None:
         base_dir = Path(f"/usr/local/share/meowrch/users/{os.getenv('USER')}")
-        subprocess.run(["sudo", "mkdir", "-p", str(base_dir)], check=True)
-
-        # Записываем версию
-        subprocess.run(
-            ["sudo", "tee", str(base_dir / "version")],
-            input=version.encode(),
-            stdout=subprocess.DEVNULL,
-            check=True,
-        )
-
-        # Записываем метаданные
-        subprocess.run(
-            ["sudo", "tee", str(base_dir / ".installed")],
-            input=json.dumps(metadata, indent=2).encode(),
-            stdout=subprocess.DEVNULL,
-            check=True,
-        )
-
-        # Устанавливаем права: только чтение для пользователя
-        subprocess.run(["sudo", "chmod", "444", str(base_dir / "version")], check=True)
-        subprocess.run(
-            ["sudo", "chmod", "444", str(base_dir / ".installed")], check=True
-        )
-
-        # Удаляем временный маркер установки
         subprocess.run(["sudo", "rm", "-f", str(base_dir / ".installing")], check=False)
-
-        logger.success(f"Version metadata protected: {version}")
 
     def _check_existing_installation(self) -> bool:
         version_file = Path(
