@@ -257,7 +257,7 @@ In addition to the standard Arch Linux installation, the Meowrch community maint
 
 
 > [!TIP]
-> **All available hotkeys** can be found [**here**](https://meowrch.github.io/en/usage/hotkeys/#meowrch-hotkeys).
+> **All available hotkeys** can be found [**here**](https://meowrch.github.io/en/meowrch-base/hotkeys/meowrch-hotkeys/).
 
 ---
 

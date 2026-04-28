@@ -258,7 +258,7 @@ reboot
 
 
 > [!TIP]
-> **Все доступные сочетания клавиш** вы можете найти [**здесь**](https://meowrch.github.io/ru/usage/hotkeys/#meowrch-hotkeys).
+> **Все доступные сочетания клавиш** вы можете найти [**здесь**](https://meowrch.github.io/ru/meowrch-base/hotkeys/meowrch-hotkeys/).
 
 ---
 
