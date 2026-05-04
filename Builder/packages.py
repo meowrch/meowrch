@@ -67,7 +67,7 @@ BASE = Packages(
             ##==> Customization: Themes, icons and cursors
             ###########################################
             "bibata-cursor-theme-bin", "tela-circle-icon-theme-dracula",
-            "pawlette",
+            "pawlette-legacy",
             
             ##==> CLI-Tools
             ###########################################
