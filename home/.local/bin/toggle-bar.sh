@@ -24,6 +24,9 @@ BAR_PROCESS["waybar"]="waybar"
 BAR_CMD["polybar"]="$HOME/.config/polybar/launch.sh"
 BAR_PROCESS["polybar"]="polybar"
 
+BAR_CMD["mewline-bspwm"]="mewline"
+BAR_PROCESS["mewline-bspwm"]="mewline"
+
 # Add new bars in the same way:
 # BAR_CMD["mybar"]="$HOME/.config/mybar/start.sh"
 # BAR_PROCESS["mybar"]="mybar"
@@ -31,7 +34,7 @@ BAR_PROCESS["polybar"]="polybar"
 # Available bars per window manager
 declare -A WM_BARS
 WM_BARS["hyprland"]="mewline waybar"
-WM_BARS["bspwm"]="polybar"
+WM_BARS["bspwm"]="mewline-bspwm polybar"
 
 # ---------- Initial setup ----------
 STATE_DIR="$HOME/.cache/meowrch"
