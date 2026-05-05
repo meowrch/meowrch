@@ -9,97 +9,235 @@
 # The program was created by DIMFLIX
 # Github: https://github.com/DIMFLIX
 
-SESSION_TYPE=$XDG_SESSION_TYPE
-FLAG_FILE="$HOME/.config/hypr/current_bar"
+# ---------- Configuration ----------
+declare -A BAR_CMD
+declare -A BAR_PROCESS
+
+# hyprland
+BAR_CMD["mewline"]="${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh -t service -s s mewline"
+BAR_PROCESS["mewline"]="mewline"
+
+BAR_CMD["waybar"]="${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh -t service -s s waybar"
+BAR_PROCESS["waybar"]="waybar"
+
+# bspwm
+BAR_CMD["polybar"]="$HOME/.config/polybar/launch.sh"
+BAR_PROCESS["polybar"]="polybar"
+
+# Add new bars in the same way:
+# BAR_CMD["mybar"]="$HOME/.config/mybar/start.sh"
+# BAR_PROCESS["mybar"]="mybar"
+
+# Available bars per window manager
+declare -A WM_BARS
+WM_BARS["hyprland"]="mewline waybar"
+WM_BARS["bspwm"]="polybar"
+
+# ---------- Initial setup ----------
+STATE_DIR="$HOME/.cache/meowrch"
+mkdir -p "$STATE_DIR"
+
+# ---------- Argument parsing ----------
 ACTION="toggle"
+FORCE_WM=""
 
-# Parsing arguments
-case "$1" in
-    "--start") ACTION="start" ;;
-    "--stop")  ACTION="stop"  ;;
-    "")
-        # No arguments - save toggle
-        ;;
-    *)
-        echo "Unknown Argument: $1"
-        echo "Utilization: $0 [--start|--stop]"
-        exit 1
-        ;;
-esac
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --start)  ACTION="start" ;;
+        --stop)   ACTION="stop" ;;
+        --toggle) ACTION="toggle" ;;
+        --next)   ACTION="next" ;;
+        --wm)
+            if [[ -z "$2" ]]; then
+                echo "Error: --wm requires an argument" >&2
+                exit 1
+            fi
+            FORCE_WM="${2,,}"
+            shift
+            ;;
+        *)
+            echo "Unknown argument: $1"
+            echo "Usage: $0 [--start|--stop|--toggle|--next] [--wm <wm_name>]"
+            exit 1
+            ;;
+    esac
+    shift
+done
 
-# Launch bar with UWSM support
+# ---------- WM detection ----------
+if [[ -n "$FORCE_WM" ]]; then
+    WM="$FORCE_WM"
+else
+    XDG_DESKTOP="${XDG_SESSION_DESKTOP,,}"
+    case "$XDG_DESKTOP" in
+        hyprland|hyprland*) WM="hyprland" ;;
+        bspwm|bspwm*)       WM="bspwm" ;;
+        *)
+            echo "Unsupported window manager: $XDG_DESKTOP"
+            exit 1
+            ;;
+    esac
+fi
+
+if [[ -z "${WM_BARS[$WM]+x}" ]]; then
+    echo "Unsupported window manager: $WM"
+    exit 1
+fi
+
+FLAG_FILE="$STATE_DIR/current_bar_${WM}"
+
+# ---------- Helper functions ----------
+is_bar_installed() {
+    local bar_name="$1"
+    local cmd="${BAR_CMD[$bar_name]}"
+    [[ -z "$cmd" ]] && return 1
+
+    local exe
+    exe=$(echo "$cmd" | awk '{print $1}')
+
+    if [[ "$exe" == /* ]]; then
+        [[ -x "$exe" ]]
+    else
+        command -v "$exe" >/dev/null 2>&1
+    fi
+}
+
 launch_bar() {
     local bar_name="$1"
-    # Use service type for auto-restart capability when UWSM is active
-    # nohup is needed here because we want the bar to survive toggle-bar.sh exit
-    if [[ "$bar_name" == "mewline" ]]; then
-        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh" -t service -s s "$bar_name" >/dev/null 2>&1 &
-    else
-        nohup "${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh" -t service -s s "$bar_name" >/dev/null 2>&1 &
+    local cmd="${BAR_CMD[$bar_name]}"
+    if [[ -z "$cmd" ]]; then
+        echo "Error: no command defined for bar '$bar_name'" >&2
+        exit 1
     fi
+
+    nohup sh -c "$cmd" >/dev/null 2>&1 &
     disown
 }
 
-handle_wayland() {
-    [ ! -f "$FLAG_FILE" ] && echo "mewline" > "$FLAG_FILE"
-    current_bar=$(cat "$FLAG_FILE")
+ensure_bar_running() {
+    local bar_name="$1"
+    local process_name="${BAR_PROCESS[$bar_name]:-$bar_name}"
 
-    case "$ACTION" in
-        "start")
-            if ! pgrep -x "$current_bar" >/dev/null; then
-                launch_bar "$current_bar"
-            fi
-            ;;
+    if pgrep -x "$process_name" >/dev/null; then
+        return 0
+    fi
 
-        "stop")
-            pgrep -x "$current_bar" >/dev/null && pkill -x "$current_bar"
-            ;;
-
-        "toggle")
-            if pgrep -x "$current_bar" >/dev/null; then
-                pkill -x "$current_bar"
-            else
-                launch_bar "$current_bar"
-            fi
-            ;;
-    esac
+    launch_bar "$bar_name"
+    sleep 2
+    pgrep -x "$process_name" >/dev/null
 }
 
-handle_x11() {
-    case "$ACTION" in
-        "start")
-            if ! pgrep -x polybar >/dev/null; then
-                "$HOME/.config/polybar/launch.sh"
-                bspc config -m focused top_padding 31
-            fi
-            ;;
+stop_bar() {
+    local bar_name="$1"
+    local process_name="${BAR_PROCESS[$bar_name]:-$bar_name}"
 
-        "stop")
-            if pgrep -x polybar >/dev/null; then
-                killall polybar
-                bspc config -m focused top_padding 0
-            fi
-            ;;
+    if pgrep -x "$process_name" >/dev/null; then
+        pkill -x "$process_name"
 
-        "toggle")
-            if pgrep -x polybar >/dev/null; then
-                killall polybar
-                bspc config -m focused top_padding 0
-            else 
-                "$HOME/.config/polybar/launch.sh"
-                bspc config -m focused top_padding 31
-            fi
-            ;;
-    esac
+        if [[ "$WM" == "bspwm" ]]; then
+            bspc config -m focused top_padding 0 2>/dev/null
+        fi
+    fi
 }
 
-case "$SESSION_TYPE" in
-    "wayland") handle_wayland ;;
-    "x11")     handle_x11     ;;
-    *)
-        echo "The session type is not defined or is not Wayland/X11."
+get_next_bar() {
+    local current="$1"
+    local -a bars=(${WM_BARS[$WM]})
+    local len=${#bars[@]}
+    if [[ $len -eq 0 ]]; then
+        echo ""
+        return 1
+    fi
+
+    local idx=-1
+    for i in "${!bars[@]}"; do
+        if [[ "${bars[$i]}" == "$current" ]]; then
+            idx=$i
+            break
+        fi
+    done
+
+    if [[ $idx -eq -1 ]]; then
+        echo "${bars[0]}"
+    else
+        echo "${bars[$(( (idx + 1) % len ))]}"
+    fi
+}
+
+get_current_bar() {
+    if [[ -f "$FLAG_FILE" ]]; then
+        cat "$FLAG_FILE"
+    else
+        local first_bar
+        first_bar=$(echo "${WM_BARS[$WM]}" | awk '{print $1}')
+        echo "$first_bar" > "$FLAG_FILE"
+        echo "$first_bar"
+    fi
+}
+
+# ---------- Core actions ----------
+case "$ACTION" in
+"start")
+    current_bar=$(get_current_bar)
+
+    if ! is_bar_installed "$current_bar"; then
+        echo "Error: bar '$current_bar' is not installed or command not found." >&2
         exit 1
-        ;;
+    fi
+
+    launch_bar "$current_bar"
+
+    if [[ "$WM" == "bspwm" ]]; then
+        bspc config -m focused top_padding 31 2>/dev/null
+    fi
+    ;;
+
+"stop")
+    current_bar=$(get_current_bar)
+    stop_bar "$current_bar"
+    ;;
+
+"toggle")
+    current_bar=$(get_current_bar)
+    process_name="${BAR_PROCESS[$current_bar]:-$current_bar}"
+
+    if pgrep -x "$process_name" >/dev/null; then
+        stop_bar "$current_bar"
+    else
+        if ! is_bar_installed "$current_bar"; then
+            echo "Error: bar '$current_bar' is not installed or command not found." >&2
+            exit 1
+        fi
+        if ! ensure_bar_running "$current_bar"; then
+            echo "Error: failed to start '$current_bar'." >&2
+            exit 1
+        fi
+        if [[ "$WM" == "bspwm" ]]; then
+            bspc config -m focused top_padding 31 2>/dev/null
+        fi
+    fi
+    ;;
+
+"next")
+    current_bar=$(get_current_bar)
+    next_bar=$(get_next_bar "$current_bar")
+    echo "Switching from $current_bar to $next_bar"
+
+    stop_bar "$current_bar"
+    echo "$next_bar" > "$FLAG_FILE"
+
+    if ! is_bar_installed "$next_bar"; then
+        echo "Error: next bar '$next_bar' is not installed or command not found." >&2
+        exit 1
+    fi
+    if ! ensure_bar_running "$next_bar"; then
+        echo "Error: failed to start '$next_bar'." >&2
+        exit 1
+    fi
+    if [[ "$WM" == "bspwm" ]]; then
+        bspc config -m focused top_padding 31 2>/dev/null
+    fi
+    ;;
 esac
 
 exit 0
