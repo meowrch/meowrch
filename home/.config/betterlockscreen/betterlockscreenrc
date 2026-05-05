@@ -1,0 +1,78 @@
+# -- General
+display_on=0
+blur_level=8
+dim_level=20
+bgcolor=1e2030ff
+loginbox=00000000
+loginshadow=00000000
+quiet=false
+
+# -- Font
+font="JetBrainsMonoNerdFontMono-Bold"
+
+# -- Time & Date
+time_format="%H:%M"
+timecolor=d8dee9b3
+
+# -- Password hint / greeter
+locktext="󰌾  Enter password"
+greetercolor=ffffff55
+
+# -- Ring (idle)
+ringcolor=ffffff35
+insidecolor=ffffff12
+separatorcolor=00000000
+
+# -- Ring (verifying)
+ringvercolor=cc8822cc
+insidevercolor=cc882228
+veriftext="Verifying..."
+verifcolor=cc8822ff
+
+# -- Ring (wrong)
+ringwrongcolor=d23c3dcc
+insidewrongcolor=d23c3d28
+wrongtext="Wrong password"
+wrongcolor=d23c3dff
+
+# -- Key highlight
+keyhlcolor=cc8822ff
+bshlcolor=cc882299
+modifcolor=ffffff99
+
+# -------------------------------------------------------
+# -- Позиции, размеры, радиус
+# -------------------------------------------------------
+lockargs=()
+
+# Time
+lockargs+=(--time-pos="x+w/2:y+h/2")
+lockargs+=(--time-align=0)
+lockargs+=(--time-size=120)
+lockargs+=(--time-font="JetBrainsMonoNerdFontMono-Bold")
+lockargs+=(--date-font="JetBrainsMonoNerdFontMono-Bold")
+
+# Date
+lockargs+=(--date-str="%A, %B %d")
+lockargs+=(--date-pos="tx:ty-110")
+lockargs+=(--date-align=0)
+lockargs+=(--date-size=22)
+lockargs+=(--date-color=d8dee9b3)
+
+# Ring indicator
+lockargs+=(--ind-pos="x+w/2:y+h/2+230")
+lockargs+=(--radius=55)
+lockargs+=(--ring-width=4)
+
+# Greeter pos
+lockargs+=(--greeter-pos="ix:iy+80")
+lockargs+=(--greeter-align=0)
+lockargs+=(--greeter-size=14)
+
+# Verif pos
+lockargs+=(--verif-pos="ix:iy+80")
+lockargs+=(--verif-align=0)
+
+# Wrong pos
+lockargs+=(--wrong-pos="ix:iy+80")
+lockargs+=(--wrong-align=0)
