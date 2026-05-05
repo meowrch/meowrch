@@ -33,7 +33,7 @@ BASE = Packages(
             "vlc", "loupe", "qt5ct", "qt6ct", "qt5-graphicaleffects", 
             "qt5-svg", "qt5-multimedia", "qt5-quickcontrols2", "gst-plugins-good", 
             "redshift", "zenity", "polkit-gnome", "gnome-disk-utility","rofimoji",
-            "flameshot", "rofi", "qalculate-gtk",
+            "flameshot", "rofi", "qalculate-gtk", "breeze", "breeze5",
             
 			##==> Fonts
             ###########################################
