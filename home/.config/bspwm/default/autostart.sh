@@ -14,8 +14,6 @@ case "$GPU_SETUP" in
     # NVIDIA: full optimization with sync-fence
     picom -b --backend glx --vsync \
       --use-damage \
-      --xrender-sync-fence \
-      --glx-no-stencil \
       --glx-no-rebind-pixmap\
       --config $HOME/.config/bspwm/picom.conf &
     ;;
@@ -23,19 +21,15 @@ case "$GPU_SETUP" in
     # AMD/Mesa: no sync-fence, no rebind-pixmap (glitches on AMDGPU)
     picom -b --backend glx --vsync \
       --use-damage \
-      --glx-no-stencil \
-      --glx-use-copysubbuffer-mesa \
       --config $HOME/.config/bspwm/picom.conf &
     ;;
   intel-only)
     # Intel iGPU: aggressive flags for modern GPUs (Gen 9+)
     # WARNING: If you see artifacts/transparency bugs on older Intel:
-    #   - Remove --glx-no-stencil
     #   - Remove --glx-no-rebind-pixmap
     #   - Or switch to: --backend xrender
     picom -b --backend glx --vsync \
       --use-damage \
-      --glx-no-stencil \
       --glx-no-rebind-pixmap \
       --config $HOME/.config/bspwm/picom.conf &
     ;;
