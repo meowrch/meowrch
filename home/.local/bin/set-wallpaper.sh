@@ -13,6 +13,8 @@ DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 WALLPAPERS_DIR="${DATA_HOME}/wallpapers"
 CURRENT_WALL_LINK="$WALLPAPERS_DIR/.current.wall"
 SESSION_TYPE=${XDG_SESSION_TYPE:-unknown}
+# Path to the dynamic theme state file
+DYNAMIC_STATE_FILE="$HOME/.local/state/meowrch/dynamic_theme"
 
 mkdir -p "$WALLPAPERS_DIR" || {
     echo "Failed to create wallpapers directory: $WALLPAPERS_DIR"
@@ -29,6 +31,19 @@ update_wallpaper_link() {
         echo "Failed to create symlink"
         return 1
     }
+}
+
+pawlette_dynamic_theme_hook() {
+    local wallpaper="$1"
+
+    if [[ -f "$DYNAMIC_STATE_FILE" ]]; then
+        state=$(cat "$DYNAMIC_STATE_FILE")
+        if [[ "$state" == "1" ]]; then
+            # If dynamic themes are enabled, -
+            # force Pawlette to rebuild itself to match the new wallpaper
+            pawlette apply image "$wallpaper"
+        fi
+    fi
 }
 
 get_refresh_rate() {
@@ -55,7 +70,7 @@ get_cursor_pos() {
 apply_awww() {
     command -v awww >/dev/null || { echo "Install awww for Wayland" >&2; exit 1; }
 
-    # Ожидаем готовности демона (максимум 6 секунд)
+    # Waiting for the daemon to be ready (up to 6 seconds)
     local max_attempts=20
     local attempt=0
 
@@ -64,7 +79,7 @@ apply_awww() {
             break
         fi
         
-        # Если демон не запущен, попробуем запустить его вручную
+        # If the daemon isn't running, let's try starting it manually
         if ! pgrep -f "awww-daemon" >/dev/null; then
             echo "awww-daemon not running, starting it..." >&2
             sh ${XDG_BIN_HOME:-$HOME/bin}/uwsm-launcher.sh -t service -s s awww-daemon
@@ -91,6 +106,7 @@ apply_awww() {
         --transition-pos "$cursor_pos"
     then
         update_wallpaper_link "$1"
+        pawlette_dynamic_theme_hook "$1"
     fi
 }
 
@@ -99,6 +115,7 @@ apply_feh() {
     
     if feh --no-fehbg --bg-fill "$1"; then
         update_wallpaper_link "$1"
+        pawlette_dynamic_theme_hook "$1"
     fi
 }
 

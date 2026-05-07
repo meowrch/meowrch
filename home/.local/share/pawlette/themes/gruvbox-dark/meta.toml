@@ -1,0 +1,6 @@
+[meta]
+name        = "Gruvbox Dark"
+author      = "morhetz"
+dark        = true
+description = "Retro groove color scheme — dark variant"
+url         = "https://github.com/morhetz/gruvbox"

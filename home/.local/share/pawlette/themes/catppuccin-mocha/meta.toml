@@ -1,0 +1,6 @@
+[meta]
+name        = "Catppuccin Mocha"
+author      = "catppuccin"
+dark        = true
+description = "Catppuccin is a community-driven pastel theme that aims to be the middle ground between low and high-contrast themes."
+source      = "https://github.com/catppuccin/catppuccin"

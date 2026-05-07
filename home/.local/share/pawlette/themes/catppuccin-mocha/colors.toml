@@ -1,0 +1,140 @@
+# Catppuccin Mocha — https://github.com/catppuccin/catppuccin
+# Base palette uses Lavender accent; override via --variant
+
+[colors]
+# --- Surfaces ---
+color_bg              = "#1e1e2e"  # Base
+color_bg_alt          = "#181825"  # Mantle
+color_surface         = "#313244"  # Surface 0
+color_surface_alt     = "#45475a"  # Surface 1
+
+# --- Text ---
+color_text            = "#cdd6f4"  # Text
+color_text_muted      = "#bac2de"  # Subtext 1
+color_text_subtle     = "#a6adc8"  # Subtext 0
+
+# --- Accents ---
+color_primary         = "#b4befe"  # Lavender
+color_secondary       = "#cba6f7"  # Mauve
+
+# --- Borders ---
+color_border_active   = "#b4befe"  # Lavender
+color_border_inactive = "#45475a"  # Surface 1
+
+# --- Cursor / Selection ---
+color_cursor          = "#b4befe"  # Lavender
+color_selection_bg    = "#585b70"  # Selection (surface 2)
+
+# --- ANSI 16 ---
+ansi_color0           = "#1e1e2e"  # Base         (black)
+ansi_color1           = "#f38ba8"  # Red
+ansi_color2           = "#a6e3a1"  # Green
+ansi_color3           = "#f9e2af"  # Yellow
+ansi_color4           = "#89b4fa"  # Blue
+ansi_color5           = "#cba6f7"  # Mauve        (magenta)
+ansi_color6           = "#94e2d5"  # Teal         (cyan)
+ansi_color7           = "#bac2de"  # Subtext 1    (white)
+ansi_color8           = "#585b70"  # Surface 2    (bright black)
+ansi_color9           = "#f38ba8"  # Red   (bright)
+ansi_color10          = "#a6e3a1"  # Green (bright)
+ansi_color11          = "#f9e2af"  # Yellow (bright)
+ansi_color12          = "#b4befe"  # Lavender     (bright blue)
+ansi_color13          = "#f5c2e7"  # Pink         (bright magenta)
+ansi_color14          = "#89dceb"  # Sky          (bright cyan)
+ansi_color15          = "#cdd6f4"  # Text         (bright white)
+
+# --- Semantic ---
+color_red             = "#f38ba8"  # Red
+color_green           = "#a6e3a1"  # Green
+color_yellow          = "#f9e2af"  # Yellow
+color_blue            = "#89b4fa"  # Blue
+color_cyan            = "#94e2d5"  # Teal
+color_magenta         = "#cba6f7"  # Mauve
+
+# ---------------------------------------------------------------------------
+# Variants — override accent colours
+# ---------------------------------------------------------------------------
+
+[variants.rosewater]
+color_primary         = "#f5e0dc" # Rosewater
+color_secondary       = "#f2cdcd" # Flamingo
+color_border_active   = "#f5e0dc"
+color_cursor          = "#f5e0dc"
+
+[variants.flamingo]
+color_primary         = "#f2cdcd" # Flamingo
+color_secondary       = "#f5c2e7" # Pink
+color_border_active   = "#f2cdcd"
+color_cursor          = "#f2cdcd"
+
+[variants.pink]
+color_primary         = "#f5c2e7" # Pink
+color_secondary       = "#cba6f7" # Mauve
+color_border_active   = "#f5c2e7"
+color_cursor          = "#f5c2e7"
+
+[variants.mauve]
+color_primary         = "#cba6f7" # Mauve
+color_secondary       = "#f5c2e7" # Pink
+color_border_active   = "#cba6f7"
+color_cursor          = "#cba6f7"
+
+[variants.red]
+color_primary         = "#f38ba8" # Red
+color_secondary       = "#eba0ac" # Maroon
+color_border_active   = "#f38ba8"
+color_cursor          = "#f38ba8"
+
+[variants.maroon]
+color_primary         = "#eba0ac" # Maroon
+color_secondary       = "#f38ba8" # Red
+color_border_active   = "#eba0ac"
+color_cursor          = "#eba0ac"
+
+[variants.peach]
+color_primary         = "#fab387" # Peach
+color_secondary       = "#f9e2af" # Yellow
+color_border_active   = "#fab387"
+color_cursor          = "#fab387"
+
+[variants.yellow]
+color_primary         = "#f9e2af" # Yellow
+color_secondary       = "#fab387" # Peach
+color_border_active   = "#f9e2af"
+color_cursor          = "#f9e2af"
+
+[variants.green]
+color_primary         = "#a6e3a1" # Green
+color_secondary       = "#94e2d5" # Teal
+color_border_active   = "#a6e3a1"
+color_cursor          = "#a6e3a1"
+
+[variants.teal]
+color_primary         = "#94e2d5" # Teal
+color_secondary       = "#a6e3a1" # Green
+color_border_active   = "#94e2d5"
+color_cursor          = "#94e2d5"
+
+[variants.sky]
+color_primary         = "#89dceb" # Sky
+color_secondary       = "#74c7ec" # Sapphire
+color_border_active   = "#89dceb"
+color_cursor          = "#89dceb"
+
+[variants.sapphire]
+color_primary         = "#74c7ec" # Sapphire
+color_secondary       = "#89b4fa" # Blue
+color_border_active   = "#74c7ec"
+color_cursor          = "#74c7ec"
+
+[variants.blue]
+color_primary         = "#89b4fa" # Blue
+color_secondary       = "#b4befe" # Lavender
+color_border_active   = "#89b4fa"
+color_cursor          = "#89b4fa"
+
+[variants.lavender]
+color_primary         = "#b4befe" # Lavender
+color_secondary       = "#cba6f7" # Mauve
+color_border_active   = "#b4befe"
+color_cursor          = "#b4befe"
