@@ -1,0 +1,10 @@
+* {
+    main-bg:            {{color_bg | alpha 90}};
+    main-fg:            {{color_text}};
+    main-br:            {{color_primary}};
+    main-ex:            {{color_secondary}};
+    select-bg:          {{color_primary}};
+    select-fg:          {{color_bg}};
+    separatorcolor:     transparent;
+    border-color:       transparent;
+}

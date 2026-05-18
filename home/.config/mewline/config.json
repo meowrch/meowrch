@@ -1,0 +1,126 @@
+{
+    "theme": {
+        "name": "meowrch"
+    },
+    "options": {
+        "screen_corners": true,
+        "intercept_notifications": true,
+        "osd_enabled": true
+    },
+    "monitors": {
+        "mode": "all",
+        "monitors_list": []
+    },
+    "notifications_monitors": {
+        "mode": "all",
+        "monitors_list": []
+    },
+    "modules": {
+        "osd": {
+            "timeout": 1500,
+            "anchor": "bottom-center"
+        },
+        "workspaces": {
+            "count": 10,
+            "hide_unoccupied": true,
+            "ignored": [
+                -99
+            ],
+            "reverse_scroll": false,
+            "empty_scroll": false,
+            "navigate_empty": false,
+            "icon_map": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6",
+                "7": "7",
+                "8": "8",
+                "9": "9",
+                "10": "10"
+            }
+        },
+        "system_tray": {
+            "icon_size": 16,
+            "ignore": [],
+            "pinned": [
+                "Telegram"
+            ]
+        },
+        "power": {
+            "icon": "\uf011",
+            "icon_size": "16px",
+            "tooltip": true
+        },
+        "datetime": {
+            "format": "%d-%m-%y %H:%M"
+        },
+        "battery": {
+            "show_label": false,
+            "tooltip": true
+        },
+        "ocr": {
+            "icon": "\udb83\udd11",
+            "icon_size": "20px",
+            "tooltip": true,
+            "default_lang": "rus+eng"
+        },
+        "dynamic_island": {
+            "power_menu": {
+                "lock_icon": "\uf023",
+                "lock_icon_size": "20px",
+                "suspend_icon": "\udb82\udd04",
+                "suspend_icon_size": "20px",
+                "logout_icon": "\udb81\uddfd",
+                "logout_icon_size": "20px",
+                "reboot_icon": "\udb81\udc53",
+                "reboot_icon_size": "20px",
+                "shutdown_icon": "\uf011",
+                "shutdown_icon_size": "20px",
+                "commands": {
+                    "hyprland": {
+                        "lock": "hyprlock",
+                        "logout": "hyprctl dispatch exit",
+                        "suspend": "systemctl suspend",
+                        "reboot": "systemctl reboot",
+                        "shutdown": "systemctl poweroff"
+                    },
+                    "bspwm": {
+                        "lock": "betterlockscreen --lock dim",
+                        "logout": "bspc quit",
+                        "suspend": "systemctl suspend",
+                        "reboot": "systemctl reboot",
+                        "shutdown": "systemctl poweroff"
+                    }
+                }
+            },
+            "compact": {
+                "window_titles": {
+                    "enable_icon": true,
+                    "truncation": true,
+                    "truncation_size": 50,
+                    "title_map": []
+                },
+                "music": {
+                    "enabled": true,
+                    "truncation": true,
+                    "truncation_size": 30,
+                    "default_album_logo": "https://sonos-partner-documentation.s3.amazonaws.com/ReadMe-External/content-service-features/add-images/add-album-art/SonosApp-DefaultArt-Alone.png",
+                    "visualizer_enabled": true
+                }
+            },
+            "wallpapers": {
+                "x11_method": "feh",
+                "wayland_method": "awww",
+                "wallpapers_dirs": [
+                    "~/.local/share/wallpapers",
+                    "~/.local/share/pawlette/theme_wallpapers"
+                ],
+                "save_current_wall": true,
+                "current_wall_path": "~/.local/share/wallpapers/.current.wall"
+            }
+        }
+    }
+}

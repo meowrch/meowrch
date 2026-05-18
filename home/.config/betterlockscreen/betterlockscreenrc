@@ -2,7 +2,7 @@
 display_on=0
 blur_level=8
 dim_level=20
-bgcolor=1e2030ff
+bgcolor={{color_bg | alpha 100 | strip}}
 loginbox=00000000
 loginshadow=00000000
 quiet=false
@@ -12,36 +12,36 @@ font="JetBrainsMonoNerdFontMono-Bold"
 
 # -- Time & Date
 time_format="%H:%M"
-timecolor=d8dee9b3
+timecolor={{color_text | alpha 70 | strip}}
 
 # -- Password hint / greeter
 locktext="󰌾  Enter password"
-greetercolor=ffffff55
+greetercolor={{color_text_muted | alpha 33 | strip}}
 
 # -- Ring (idle)
-ringcolor=ffffff35
-insidecolor=ffffff12
+ringcolor={{color_border_inactive | alpha 20 | strip}}
+insidecolor={{color_bg_alt | alpha 7 | strip}}
 separatorcolor=00000000
 
 # -- Ring (verifying)
-ringvercolor=cc8822cc
-insidevercolor=cc882228
+ringvercolor={{color_primary | alpha 80 | strip}}
+insidevercolor={{color_primary | alpha 15 | strip}}
 veriftext="Verifying..."
-verifcolor=cc8822ff
+verifcolor={{color_primary | alpha 100 | strip}}
 
 # -- Ring (wrong)
-ringwrongcolor=d23c3dcc
-insidewrongcolor=d23c3d28
+ringwrongcolor={{color_red | alpha 80 | strip}}
+insidewrongcolor={{color_red | alpha 15 | strip}}
 wrongtext="Wrong password"
-wrongcolor=d23c3dff
+wrongcolor={{color_red | alpha 100 | strip}}
 
 # -- Key highlight
-keyhlcolor=cc8822ff
-bshlcolor=cc882299
-modifcolor=ffffff99
+keyhlcolor={{color_primary | alpha 100 | strip}}
+bshlcolor={{color_primary | alpha 60 | strip}}
+modifcolor={{color_text | alpha 60 | strip}}
 
 # -------------------------------------------------------
-# -- Позиции, размеры, радиус
+# -- Positions, dimensions, radius
 # -------------------------------------------------------
 lockargs=()
 
@@ -57,7 +57,7 @@ lockargs+=(--date-str="%A, %B %d")
 lockargs+=(--date-pos="tx:ty-110")
 lockargs+=(--date-align=0)
 lockargs+=(--date-size=22)
-lockargs+=(--date-color=d8dee9b3)
+lockargs+=(--date-color={{color_text | alpha 70 | strip}})
 
 # Ring indicator
 lockargs+=(--ind-pos="x+w/2:y+h/2+230")

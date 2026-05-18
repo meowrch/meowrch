@@ -1,0 +1,13 @@
+[color]
+gradient = 1
+gradient_color_1 = '{{color_primary}}'
+gradient_color_2 = '{{color_primary | lighten 10}}'
+gradient_color_3 = '{{color_secondary}}'
+gradient_color_4 = '{{color_secondary | lighten 10}}'
+gradient_color_5 = '{{color_blue}}'
+gradient_color_6 = '{{color_magenta}}'
+gradient_color_7 = '{{color_red}}'
+gradient_color_8 = '{{color_red | lighten 20}}'
+
+[shadow]
+color = '{{color_bg}}'

@@ -1,9 +1,16 @@
 #!/bin/sh
 
-# Set the border colors for focused and normal windows
-bspc config focused_border_color "#b4befe"
 bspc config border_width 3
 bspc config borderless_monocle true
+
+# Set the border colors for focused and normal windows
+PALETTE="$HOME/.local/state/pawlette/active_palette.json"
+if [[ -f "$PALETTE" ]]; then
+    COLOR_PRIMARY=$(jq -r '.color_primary' "$PALETTE")
+    bspc config focused_border_color "$COLOR_PRIMARY"
+else
+    bspc config focused_border_color "#b4befe"
+fi
 
 # Set mouse cursor to left pointer
 xsetroot -cursor_name left_ptr
