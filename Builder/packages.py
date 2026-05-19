@@ -24,7 +24,7 @@ BASE = Packages(
             "wget", "neovim", "tmux", "ffmpeg", "cliphist",
             "tree", "bash-completion", "zsh", "zsh-syntax-highlighting", 
             "zsh-autosuggestions", "zsh-history-substring-search",
-            "fish",
+            "fish", "matugen",
 
 			##==> GUI 
 			###########################################

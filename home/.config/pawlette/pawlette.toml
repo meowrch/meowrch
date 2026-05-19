@@ -1,0 +1,5 @@
+backend = "matugen"
+mode = "dark"
+
+[backends.matugen]
+prefer = "lightness"
