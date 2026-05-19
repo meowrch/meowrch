@@ -3,3 +3,10 @@ mode = "dark"
 
 [backends.matugen]
 prefer = "lightness"
+
+[plugins.telegram]
+template_dir = "~/.config/tg-config"
+output = "~/.config/tg-config/colors.tdesktop-theme"
+
+#==> Uncomment this line if you want to use the wallpaper for chats
+#background_image = "~/.local/share/wallpapers/.current.wall"

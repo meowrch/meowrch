@@ -97,6 +97,7 @@ CUSTOM = {
 	},
     "social_media": {
 		"telegram-desktop": PackageInfo("Popular messenger", recommended=True, selected=True),
+        "tg-config": PackageInfo("An extension for configuring Telegram via a config file", recommended=True, aur=True, selected=True),
         "discord": PackageInfo("Popular social platform", recommended=True),
 		"vesktop": PackageInfo("Custom Discord client", recommended=True, aur=True)
 	},
