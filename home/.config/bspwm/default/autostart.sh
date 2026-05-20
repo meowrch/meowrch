@@ -1,6 +1,6 @@
 #!/bin/sh
 
-xrdb merge $HOME/.Xresources
+xrdb merge $HOME/.config/X11/Xresources
 xsettingsd &
 dunst &
 

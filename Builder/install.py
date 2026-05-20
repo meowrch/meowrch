@@ -76,10 +76,7 @@ class Builder:
                 input("Press Enter to continue with the installation: ")
 
             FileSystemManager.create_default_folders()
-            FileSystemManager.copy_dotfiles(
-                exclude_bspwm=not self.build_options.install_bspwm,
-                exclude_hyprland=not self.build_options.install_hyprland,
-            )
+            FileSystemManager.copy_dotfiles()
 
             # Backup all critical system configs before any modifications
             ConfigBackup.backup_all()
