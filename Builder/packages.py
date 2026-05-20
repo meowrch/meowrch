@@ -33,7 +33,7 @@ BASE = Packages(
             "vlc", "loupe", "qt5ct", "qt6ct", "qt5-graphicaleffects", 
             "qt5-svg", "qt5-multimedia", "qt5-quickcontrols2", "gst-plugins-good", 
             "redshift", "zenity", "polkit-gnome", "gnome-disk-utility","rofimoji",
-            "flameshot", "rofi", "qalculate-gtk", "breeze", "breeze5", "adw-gtk-theme",
+            "satty", "rofi", "qalculate-gtk", "breeze", "breeze5", "adw-gtk-theme",
             
 			##==> Fonts
             ###########################################
@@ -45,13 +45,13 @@ BASE = Packages(
 		bspwm_packages=[
 			"xorg-server", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
 			"wmname", "polybar", "xorg-xrandr", "xsettingsd", "clipnotify",
-            "dunst", "xorg-xsetroot", "picom"
+            "dunst", "xorg-xsetroot", "picom", "maim"
 		],
 		hyprland_packages=[
 			"hyprland", "waybar", "hyprlock", "awww", "wl-clipboard", 
             "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
 			"xdg-desktop-portal-wlr", "hypridle", "hyprpicker", "wlr-randr",
-            "uwsm", "libnewt", "swaync", "wl-clip-persist"
+            "uwsm", "libnewt", "swaync", "wl-clip-persist", "grim", "slurp"
         ]
 	),
 	aur=DistributionPackages(

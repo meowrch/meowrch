@@ -135,11 +135,11 @@ ctrl + shift + Escape
 
 # Description: Take screenshot GUI
 Print
-    flameshot gui
+    sh $XDG_BIN_HOME/screenshot.sh
 
 # Description: Take fullscreen screenshot
 super + Print
-    flameshot full --clipboard
+    sh $XDG_BIN_HOME/screenshot.sh --full
 
 # Description: Switch keyboard layout
 alt + shift
