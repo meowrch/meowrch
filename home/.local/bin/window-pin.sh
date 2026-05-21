@@ -17,14 +17,14 @@ pin_hyprland() {
     win_float=$(jq -r '.floating' <<< "$win_data")
     win_pinned=$(jq -r '.pinned' <<< "$win_data")
 
-    # The logic of entrenchment
+    # The logic of pinning
     if [[ "$win_float" == "false" && "$win_pinned" == "false" ]]; then
-        hyprctl dispatch togglefloating active
-        hyprctl dispatch pin active
+        hyprctl dispatch 'hl.dsp.window.float({ action = "toggle" })'
+        hyprctl dispatch 'hl.dsp.window.pin()'
     elif [[ "$win_pinned" == "false" ]]; then
-        hyprctl dispatch pin active
+        hyprctl dispatch 'hl.dsp.window.pin()'
     else
-        hyprctl dispatch pin active  # Unfasten if already fastened
+        hyprctl dispatch 'hl.dsp.window.pin()'  # Unfasten if already fastened
     fi
 }
 
