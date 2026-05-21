@@ -95,7 +95,23 @@ super + t
 
 # Description: Pin window
 super + p
-    sh $XDG_BIN_HOME/window-pin.sh
+    win_id=$(bspc query -N -n focused)
+    is_sticky=$(bspc query -N -n "$win_id.sticky")
+    is_locked=$(bspc query -N -n "$win_id.locked")
+    
+    if [[ -n "$is_sticky" && -n "$is_locked" ]]; then
+        bspc node "$win_id" -g sticky=off
+        bspc node "$win_id" -g locked=off
+    else
+        if [[ -z $(bspc query -N -n "$win_id.floating") ]]; then
+            bspc node "$win_id" -t floating
+        fi
+
+        bspc node "$win_id" -g sticky=on
+        bspc node "$win_id" -g locked=on
+        bspc node "$win_id" -f
+        bspc node "$win_id" -c
+    fi
 
 # Description: Open clipboard manager
 super + v
@@ -216,13 +232,12 @@ super + Escape
     pkill -x sxhkd 2>/dev/null && sxhkd -c ~/.config/bspwm/sxhkdrc_disabled &
 
 #--------------------------------------------------------------------------------------------# Window actions
-# Description: Close window
-super + q
-	sh $XDG_BIN_HOME/window-close.sh
-
-# Description: Kill window
-super + k
-	sh $XDG_BIN_HOME/window-kill.sh
+# Description: Close/Kill window
+super + {q,k}
+    win_id=$(bspc query -N -n focused); \
+    [ -n "$(bspc query -N -n "$win_id.sticky.locked")" ] && \
+    bspc node "$win_id" -g sticky=off -g locked=off && sleep 0.1; \
+    bspc node "$win_id" -{c,k}
 
 # Description: Toggle floating mode
 super + space
