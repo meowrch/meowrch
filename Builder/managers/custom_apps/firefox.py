@@ -1,4 +1,5 @@
 import glob
+import json
 import os
 import sqlite3
 import subprocess
@@ -25,7 +26,7 @@ class FirefoxConfigurer(AppConfigurer):
             (ublock, "uBlock0@raymondhill.net.xpi", "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"),
             (twp, "{036a55b4-5e72-4d05-a06c-cba2dfcc134a}.xpi", "https://addons.mozilla.org/firefox/downloads/latest/traduzir-paginas-web/latest.xpi"),
             (unpaywall, "{f209234a-76f0-4735-9920-eb62507a54cd}.xpi", "https://addons.mozilla.org/firefox/downloads/latest/unpaywall/latest.xpi"),
-            (vot, "voice-over-translation@meowrch.xpi", "https://github.com/meowrch/voice-over-translation/releases/latest/download/voice-over-translation@meowrch.xpi"),
+            (vot, "vot-extension@firefox.xpi", None),  # URL resolved dynamically via GitHub API
             (True, "ATBC@EasonWong.xpi", "https://addons.mozilla.org/firefox/downloads/latest/adaptive-tab-bar-colour/latest.xpi"),  # Always enable Adaptive Tab Bar Color
         ]
         self._firefox_base_path = None  # Кешируем путь после первого определения
@@ -395,6 +396,32 @@ fi
         except subprocess.CalledProcessError as e:
             logger.warning(f"Failed to set up auto-update timer: {e}")
 
+    def _resolve_vot_download_url(self) -> str | None:
+        """Resolve the latest VOT Firefox extension download URL via GitHub API.
+        The release asset name includes the version (e.g. vot-extension-firefox-1.11.6.xpi),
+        so we cannot use a static URL. Instead, we query the GitHub API to find the correct asset.
+        """
+        try:
+            result = subprocess.run(
+                ["curl", "-s", "https://api.github.com/repos/ilyhalight/voice-over-translation/releases/latest"],
+                capture_output=True, text=True, check=False,
+            )
+            if result.returncode != 0:
+                logger.warning("Failed to query GitHub API for VOT releases")
+                return None
+
+            release = json.loads(result.stdout)
+            for asset in release.get("assets", []):
+                if asset["name"].startswith("vot-extension-firefox-") and asset["name"].endswith(".xpi"):
+                    logger.info(f"Found VOT release asset: {asset['name']}")
+                    return asset["browser_download_url"]
+
+            logger.warning("No Firefox XPI asset found in latest VOT release")
+            return None
+        except Exception as e:
+            logger.error(f"Error resolving VOT download URL: {e}")
+            return None
+
     def _fetch_latest_plugins(self) -> None:
         """Download latest versions of the plugins from official sources"""
         logger.info("Fetching latest plugins...")
@@ -415,9 +442,17 @@ fi
                 continue
     
             try:
+                # Resolve dynamic URLs (e.g. VOT via GitHub API)
+                download_url = url
+                if download_url is None and plugin_file == "vot-extension@firefox.xpi":
+                    download_url = self._resolve_vot_download_url()
+                    if download_url is None:
+                        logger.warning(f"Skipping {plugin_file}: could not resolve download URL")
+                        continue
+
                 logger.info(f"Downloading {plugin_file}...")
                 plugin_path = os.path.join(extension_dir, plugin_file)
-                cmd = ["curl", "-L", "--silent", "--fail", "-o", plugin_path, url]
+                cmd = ["curl", "-L", "--silent", "--fail", "-o", plugin_path, download_url]
                 result = subprocess.run(
                     cmd, check=False, capture_output=True, text=True
                 )
