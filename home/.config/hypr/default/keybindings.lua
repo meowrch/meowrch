@@ -38,7 +38,7 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("sh " .. bin .. "/toggle-bar.sh --tog
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t"), {description = "Toggle Sway notification manager"})
 hl.bind(subMod .. " + B", hl.dsp.exec_cmd("sh " .. bin .. "/toggle-bar.sh --next --wm hyprland"), {description = "Switch status bar"})
 hl.bind("Caps_Lock", hl.dsp.exec_cmd("pkill -RTMIN+8 waybar"), {description = "Update capslock indicator in waybar", release = true})
-hl.bind(mainMod .. " + SLASH", hl.dsp.exec_cmd("hotkeyhub --hyprland " .. home .. "/.config/hypr/hyprland.conf"), {description = "Hotkeys cheat sheet"})
+hl.bind(mainMod .. " + SLASH", hl.dsp.exec_cmd("hotkeyhub --hyprland " .. home .. "/.config/hypr/hyprland.lua"), {description = "Hotkeys cheat sheet"})
 
 -- ==> To disable/enable hotkeys 
 -- TODO: Uncomment when issue #14578 is resolved
