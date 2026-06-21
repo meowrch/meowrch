@@ -41,11 +41,10 @@ hl.bind("Caps_Lock", hl.dsp.exec_cmd("pkill -RTMIN+8 waybar"), {description = "U
 hl.bind(mainMod .. " + SLASH", hl.dsp.exec_cmd("hotkeyhub --hyprland " .. home .. "/.config/hypr/hyprland.lua"), {description = "Hotkeys cheat sheet"})
 
 -- ==> To disable/enable hotkeys 
--- TODO: Uncomment when issue #14578 is resolved
--- hl.bind(mainMod .. " + ESCAPE", hl.dsp.submap("passthru"), {description = "Disable all keybinds"})
--- hl.define_submap("passthru", function()
---     hl.bind(mainMod .. " + ESCAPE", hl.dsp.submap("reset"), {description = "Enable all keybinds"})
--- end)
+hl.bind(mainMod .. " + ESCAPE", hl.dsp.submap("passthru"), {description = "Disable all keybinds"})
+hl.define_submap("passthru", function()
+    hl.bind(mainMod .. " + ESCAPE", hl.dsp.submap("reset"), {description = "Enable all keybinds"})
+end)
 ------------------------------------------------------------------------------------------------
 
 
