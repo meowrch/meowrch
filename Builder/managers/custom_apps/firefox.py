@@ -127,35 +127,15 @@ class FirefoxConfigurer(AppConfigurer):
         chrome_dir = os.path.join(path_profile, "chrome")
         os.makedirs(chrome_dir, exist_ok=True)
 
-        # Clone or update the theme repository
-        theme_repo_path = os.path.join(chrome_dir, "firefox-gnome-theme")
-        if os.path.exists(theme_repo_path):
-            logger.info("Updating existing Firefox GNOME Theme...")
-            subprocess.run(["git", "pull"], cwd=theme_repo_path, check=True)
-        else:
-            logger.info("Cloning Firefox GNOME Theme repository...")
-            subprocess.run(
-                [
-                    "git",
-                    "clone",
-                    "https://github.com/rafaelmardojai/firefox-gnome-theme.git",
-                    theme_repo_path,
-                ],
-                check=True,
-            )
-
         # Create userChrome.css
         user_chrome_path = os.path.join(chrome_dir, "userChrome.css")
         with open(user_chrome_path, "w") as f:
-            f.write('@import "firefox-gnome-theme/userChrome.css";')
+            f.write('@import "/usr/lib/firefox-gnome-theme/userChrome.css";')
 
         # Create userContent.css
         user_content_path = os.path.join(chrome_dir, "userContent.css")
         with open(user_content_path, "w") as f:
-            f.write('@import "firefox-gnome-theme/userContent.css";')
-
-        # Set up auto-update system
-        self._setup_theme_auto_update(theme_repo_path)
+            f.write('@import "/usr/lib/firefox-gnome-theme/userContent.css";')
     
     def _configure_startup_preferences(self) -> None:
         """
@@ -342,59 +322,6 @@ class FirefoxConfigurer(AppConfigurer):
                 f.write(pref + "\n")
     
         logger.info("Firefox theme preferences configured")
-
-    def _setup_theme_auto_update(self, theme_repo_path: str) -> None:
-        """Set up automatic theme updates using systemd user timer"""
-        logger.info("Setting up Firefox theme auto-update system...")
-
-        # Create update script
-        update_script_dir = os.path.expanduser("~/.local/bin")
-        os.makedirs(update_script_dir, exist_ok=True)
-
-        update_script_path = os.path.join(
-            update_script_dir, "update-firefox-gnome-theme.sh"
-        )
-
-        update_script_content = f'''#!/bin/bash
-# Firefox GNOME Theme Auto-Update Script
-
-THEME_DIR="{theme_repo_path}"
-LOG_FILE="$HOME/.local/share/firefox-theme-update.log"
-
-echo "$(date): Checking for Firefox GNOME Theme updates..." >> "$LOG_FILE"
-
-cd "$THEME_DIR" || exit 1
-
-# Check if there are updates available
-if git fetch && [[ $(git rev-list HEAD...origin/master --count) -gt 0 ]]; then
-    echo "$(date): Updates found, updating theme..." >> "$LOG_FILE"
-    git pull origin master
-    echo "$(date): Firefox GNOME Theme updated successfully" >> "$LOG_FILE"
-else
-    echo "$(date): No updates available" >> "$LOG_FILE"
-fi
-'''
-
-        with open(update_script_path, "w") as f:
-            f.write(update_script_content)
-
-        # Make script executable
-        os.chmod(update_script_path, 0o755)
-
-        # Enable and start the timer
-        try:
-            subprocess.run(["systemctl", "--user", "daemon-reload"], check=True)
-            subprocess.run(
-                ["systemctl", "--user", "enable", "firefox-theme-update.timer"],
-                check=True,
-            )
-            subprocess.run(
-                ["systemctl", "--user", "start", "firefox-theme-update.timer"],
-                check=True,
-            )
-            logger.info("Firefox theme auto-update system set up successfully")
-        except subprocess.CalledProcessError as e:
-            logger.warning(f"Failed to set up auto-update timer: {e}")
 
     def _resolve_vot_download_url(self) -> str | None:
         """Resolve the latest VOT Firefox extension download URL via GitHub API.
