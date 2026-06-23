@@ -13,6 +13,23 @@ class Question:
     answers_type = Dict[str, Union[str, List[str]]]
 
     @staticmethod
+    def _detect_default_gpu_drivers() -> List[str]:
+        """Detect installed GPUs and pre-select the matching drivers.
+
+        Returns the list of detected vendors ("nvidia"/"intel"/"amd"). Any
+        failure (e.g. lspci not available) yields an empty list, in which case
+        nothing is pre-selected.
+        """
+        try:
+            from utils.gpu_detector import GpuDetector
+            detected = GpuDetector.detect_all()
+            return list(detected.keys())
+        except Exception:
+            # Detection is best-effort: never let it break the survey.
+            return []
+
+
+    @staticmethod
     def _choose_custom_packages() -> None:
         selected_packages = {}
         complete_btn_text = Fore.GREEN + "Complete the survey"
@@ -29,7 +46,7 @@ class Question:
 
             category_question = inquirer.List(
                 "category",
-                message="8) Select a category of packages and choose the ones you want",
+                message="9) Select a category of packages and choose the ones you want",
                 choices=list(
                     category
                     + f" | {Fore.YELLOW}Selected: {selected_counts[category]}"
@@ -91,6 +108,8 @@ class Question:
             f"Voice Over Translation | {Fore.YELLOW}Adds voice translation for videos from YaBrowser."
         ]
 
+        detected_gpus = Question._detect_default_gpu_drivers()
+
         quests: List[Union[QuestionCheckbox, QuestionList]] = [
             QuestionList(
                 name="make_backup",
@@ -107,36 +126,43 @@ class Question:
                 carousel=True,
             ),
             QuestionCheckbox(
+                name="install_gpu_drivers",
+                message="3) Select the GPU drivers to install (detected cards are pre-selected)",
+                choices=["nvidia", "intel", "amd"],
+                default=detected_gpus,
+                carousel=True,
+            ),
+            QuestionCheckbox(
                 name="install_wm",
-                message="3) Which window manager do you want to install?",
+                message="4) Which window manager do you want to install?",
                 choices=["hyprland", "bspwm"],
                 default=["bspwm", "hyprland"],
                 carousel=True,
             ),
             QuestionList(
                 name="aur_helper",
-                message="4) What kind of AUR helper do you want to have?",
+                message="5) What kind of AUR helper do you want to have?",
                 choices=["yay", "paru", "yay-bin"],
                 default="yay-bin",
                 carousel=True,
             ),
             QuestionList(
                 name="use_chaotic_aur",
-                message="5) Use Chaotic AUR for faster AUR package installation?",
+                message="6) Use Chaotic AUR for faster AUR package installation?",
                 choices=["Yes", "No"],
                 default="Yes",
                 carousel=True,
             ),
             QuestionCheckbox(
                 name="ff_plugins",
-                message="6) Would you like to add useful plugins for firefox?",
+                message="7) Would you like to add useful plugins for firefox?",
                 choices=firefox_choices,
                 default=firefox_choices,
                 carousel=True,
             ),
             QuestionList(
                 name="install_shell",
-                message="7) Which terminal shell do you prefer?",
+                message="8) Which terminal shell do you prefer?",
                 choices=["fish", "zsh"],
                 default="fish",
                 carousel=True,
@@ -155,8 +181,6 @@ class Question:
 
         if answers["aur_helper"] == "paru":
             aur_helper = AurHelper.PARU
-        elif answers["aur_helper"] == "paru-bin":
-            aur_helper = AurHelper.PARU_BIN
         elif answers["aur_helper"] == "yay-bin":
             aur_helper = AurHelper.YAY_BIN
         else:
@@ -174,6 +198,9 @@ class Question:
             install_grub="grub" in answers["install_boot_components"],
             install_plymouth="plymouth" in answers["install_boot_components"],
             install_sddm="sddm" in answers["install_boot_components"],
+            install_nvidia="nvidia" in answers["install_gpu_drivers"],
+            install_intel="intel" in answers["install_gpu_drivers"],
+            install_amd="amd" in answers["install_gpu_drivers"],
             aur_helper=aur_helper,
             use_chaotic_aur=answers["use_chaotic_aur"] == "Yes",
             ff_darkreader="Dark Reader" in answers["ff_plugins"],

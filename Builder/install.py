@@ -7,7 +7,7 @@ import inquirer
 from loguru import logger
 from managers.apps_manager import AppsManager
 from managers.chaotic_aur_manager import ChaoticAurManager
-from managers.drivers_manager import ChdwManager
+from managers.gpu_drivers_manager import GpuDriversManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
@@ -94,8 +94,8 @@ class Builder:
 
             self.packages_installation()
 
-            # Установка драйверов через chwd
-            ChdwManager().install()
+            # Установка GPU-драйверов (NVIDIA/Intel/AMD)
+            GpuDriversManager().install(self.build_options)
 
             if self.build_options.install_grub:
                 AppsManager.configure_grub()
