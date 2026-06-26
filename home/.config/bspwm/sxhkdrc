@@ -95,23 +95,21 @@ super + t
 
 # Description: Pin window
 super + p
-    win_id=$(bspc query -N -n focused)
-    is_sticky=$(bspc query -N -n "$win_id.sticky")
-    is_locked=$(bspc query -N -n "$win_id.locked")
-    
-    if [[ -n "$is_sticky" && -n "$is_locked" ]]; then
-        bspc node "$win_id" -g sticky=off
-        bspc node "$win_id" -g locked=off
-    else
-        if [[ -z $(bspc query -N -n "$win_id.floating") ]]; then
-            bspc node "$win_id" -t floating
-        fi
-
-        bspc node "$win_id" -g sticky=on
-        bspc node "$win_id" -g locked=on
-        bspc node "$win_id" -f
-        bspc node "$win_id" -c
-    fi
+    bash -c ' \
+    win_id=$(bspc query -N -n focused); \
+    is_sticky=$(bspc query -N -n "$win_id.sticky"); \
+    is_locked=$(bspc query -N -n "$win_id.locked"); \
+    \
+    if [ -n "$is_sticky" ] && [ -n "$is_locked" ]; then \
+        bspc node "$win_id" -g locked=off; \
+        bspc node "$win_id" -g sticky=off; \
+    else \
+        if [ -z "$(bspc query -N -n "$win_id.floating")" ]; then \
+            bspc node "$win_id" -t floating; \
+        fi; \
+        bspc node "$win_id" -g sticky=on -g locked=on; \
+        bspc node "$win_id" -f; \
+    fi'
 
 # Description: Open clipboard manager
 super + v
@@ -234,10 +232,21 @@ super + Escape
 #--------------------------------------------------------------------------------------------# Window actions
 # Description: Close/Kill window
 super + {q,k}
+    bash -c ' \
     win_id=$(bspc query -N -n focused); \
-    [ -n "$(bspc query -N -n "$win_id.sticky.locked")" ] && \
-    bspc node "$win_id" -g sticky=off -g locked=off && sleep 0.1; \
-    bspc node "$win_id" -{c,k}
+    [ -z "$win_id" ] && exit 0; \
+    \
+    if [ -n "$(bspc query -N -n "$win_id.locked")" ] || [ -n "$(bspc query -N -n "$win_id.sticky")" ]; then \
+        bspc node "$win_id" -g locked=off; \
+        bspc node "$win_id" -g sticky=off; \
+        sleep 0.05; \
+    fi; \
+    \
+    if [ "{q,k}" = "q" ]; then \
+        bspc node "$win_id" -c; \
+    else \
+        bspc node "$win_id" -k; \
+    fi'
 
 # Description: Toggle floating mode
 super + space
