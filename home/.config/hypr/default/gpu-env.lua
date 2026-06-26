@@ -165,9 +165,9 @@ hl.config({
 })
 
 -- Debug log (optional)
-hl.on("hyprland.start", function()
-     hl.exec_cmd(string.format(
-         'notify-send -t 3000 -u low "🎮 GPU" "Profile: %s"',
-         gpu_setup or "unknown"
-     ))
-end)
+-- hl.on("hyprland.start", function()
+--      hl.exec_cmd(string.format(
+--          'notify-send -t 3000 -u low "🎮 GPU" "Profile: %s"',
+--          gpu_setup or "unknown"
+--      ))
+-- end)
