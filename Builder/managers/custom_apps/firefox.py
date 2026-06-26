@@ -88,6 +88,7 @@ class FirefoxConfigurer(AppConfigurer):
         try:
             self._init_firefox_profile()
             self._configure_startup_preferences()
+            self._install_firefox_gnome_theme()
             self._fetch_latest_plugins()
             self._force_extensions_initialization()
             self._configure_theme_preferences()
