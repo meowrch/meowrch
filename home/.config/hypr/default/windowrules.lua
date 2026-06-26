@@ -23,10 +23,10 @@ hl.window_rule({
 -- ##===> Picture In Picture
 -- ############################################
 hl.window_rule({
-    name = "picture_in_picture"
+    name = "picture_in_picture",
     match = { title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" },
-    float = true
-    keep_aspect_ratio = true
+    float = true,
+    keep_aspect_ratio = true,
     move = { "(monitor_w*0.745)", "(monitor_h*0.74)" },
     size = { "(monitor_w*0.25)", "(monitor_h*0.25)" },
     pin = true
