@@ -29,7 +29,7 @@ MODULES_DIR="$HOME/.config/bspwm/default"
 
 . "$MODULES_DIR/initial.sh"
 . "$MODULES_DIR/monitors.sh"
+. "$MODULES_DIR/autostart.sh"
 . "$MODULES_DIR/appearance.sh"
 . "$MODULES_DIR/windowrules.sh"
-. "$MODULES_DIR/autostart.sh"
 . "$MODULES_DIR/clipboard.sh"

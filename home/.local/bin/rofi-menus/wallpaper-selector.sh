@@ -13,7 +13,6 @@
 DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 WALLPAPERS_DIRS=(
     "${DATA_HOME}/wallpapers"
-    "${DATA_HOME}/pawlette/theme_wallpapers"
 )
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/mewline/thumbs"
 RANDOM_ICON="${DATA_HOME}/meowrch/assets/random.png"

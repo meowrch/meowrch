@@ -49,6 +49,9 @@ class BuildOptions:
     install_grub: bool
     install_sddm: bool
     install_plymouth: bool
+    install_nvidia: bool
+    install_intel: bool
+    install_amd: bool
     aur_helper: AurHelper
     use_chaotic_aur: bool
     ff_darkreader: bool

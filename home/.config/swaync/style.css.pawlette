@@ -1,0 +1,605 @@
+@define-color base {{color_bg}};
+@define-color text {{color_text}};
+@define-color subtext0 {{color_text_muted}};
+@define-color subtext1 {{color_text_subtle}};
+@define-color surface0 {{color_surface}};
+@define-color surface2 {{color_selection_bg}};
+@define-color lavender {{color_primary}};
+
+/* Custom variables for controlling notification transparency */
+@define-color noti-bg @base;
+@define-color noti-border {{color_border_active}};
+@define-color noti-border-critical {{color_red}};
+@define-color mpris-title #eeeeee;
+
+/* Override GTK variables */
+@define-color theme_bg_color transparent;
+@define-color theme_base_color transparent;
+@define-color insensitive_bg_color transparent;
+@define-color bg_color transparent;
+@define-color warning_bg_color transparent;
+@define-color error_bg_color transparent;
+@define-color success_bg_color transparent;
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    color: @text;
+    font-weight: 700;
+}
+
+/* Notifications base */
+.notification,
+.floating-notifications .notification,
+.popup .notification,
+window.notification,
+.notification-window,
+.swaync-notification,
+box.notification,
+.notification-row .notification,
+.control-center-list .notification {
+    background: @noti-bg;
+    border: 2px solid @noti-border;
+    border-radius: 8px;
+    box-shadow: none;
+    background-image: none;
+}
+
+/* Levels of urgency */
+.low .notification, .notification.low, .floating-notifications .low, .floating-notifications .notification.low, .notification-row .low, .notification-row .notification.low, .control-center-list .low, .control-center-list .notification.low,
+.normal .notification, .notification.normal, .floating-notifications .normal, .floating-notifications .notification.normal, .notification-row .normal, .notification-row .notification.normal, .control-center-list .normal, .control-center-list .notification.normal {
+    border-color: @noti-border;
+}
+
+.critical .notification, .notification.critical, .floating-notifications .critical, .floating-notifications .notification.critical, .notification-row .critical, .notification-row .notification.critical, .control-center-list .critical, .control-center-list .notification.critical {
+    border-color: @noti-border-critical;
+}
+
+/* Disable hover and overlay effects completely */
+.notification:hover, .notification:focus, .notification:active, .notification:selected,
+.notification-row:hover, .notification-row:focus, .notification-row:active, .notification-row:selected,
+.notification-row:hover .notification, .notification-row:focus .notification {
+    background: @noti-bg !important; /* !important на случай особо упрямых GTK тем */
+    box-shadow: none !important;
+    outline: none !important;
+    color: inherit;
+}
+
+.notification-row {
+    outline: none;
+    outline-width: 0px;
+    transition: none;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 10px 5px 0px 5px;
+    border-radius: 14px;
+}
+
+/* action buttons (notifications) */
+.notification-action,
+button.notification-action,
+.floating-notifications .notification-action,
+.floating-notifications .notification-action button {
+    background: @lavender;
+    color: @base;
+    border: 0;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 4px 2px;
+    min-width: 80px;
+    box-shadow: none;
+}
+
+.notification-action:hover, .notification-action:focus, .notification-action:active,
+button.notification-action:hover, button.notification-action:focus, button.notification-action:active,
+.notification-action button:hover, .notification-action button:focus, .notification-action button:active {
+    background: @lavender;
+    color: @base;
+    box-shadow: none;
+    border: 0;
+}
+
+.notification-action *, .notification-action label,
+button.notification-action *, button.notification-action label,
+.floating-notifications .notification-action * {
+    color: @base;
+}
+
+.notification-action:first-child {
+    border-bottom-left-radius: 4px;
+    margin-left: 0px;
+}
+
+.notification-action:last-child {
+    border-bottom-right-radius: 4px;
+    margin-right: 0px;
+}
+
+.notification-actions {
+    padding: 4px;
+    margin: 0px;
+}
+
+/* close btn */
+.close-button {
+    background: transparent;
+    color: @subtext0;
+    border-radius: 50%;
+    padding: 2px;
+    margin: 8px;
+    min-width: 20px;
+    min-height: 20px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.close-button:hover,
+button.close-button:hover,
+.notification .close-button:hover,
+.notification-row .close-button:hover {
+    background: @lavender;
+    color: @base;
+    border-radius: 50%;
+    box-shadow: none;
+}
+
+.close-button:hover image,
+.close-button:hover label,
+.close-button:hover * {
+    color: @base;
+}
+
+/* notifications content */
+.notification-content {
+    min-height: 64px;
+    margin: 12px;
+    padding: 8px;
+    border-radius: 0px;
+    background: transparent;
+}
+
+.summary {
+    color: @text;
+    font-size: 14px;
+    padding: 4px 0px;
+    margin-bottom: 4px;
+    background: transparent;
+}
+
+.time {
+    color: @subtext0;
+    font-size: 12px;
+    text-shadow: none;
+    margin: 4px 0px 6px 0px;
+    padding: 2px 0px;
+    background: transparent;
+}
+
+.body {
+    font-size: 14px;
+    font-weight: 500;
+    color: @subtext1;
+    text-shadow: none;
+    margin: 6px 0px 8px 0px;
+    padding: 4px 0px;
+    background: transparent;
+}
+
+.body-image {
+    border-radius: 4px;
+    margin: 8px 24px 8px 0px;
+}
+
+.app-icon,
+.notification image,
+.notification-content image {
+    margin-right: 20px;
+}
+
+.top-action-title {
+    color: @text;
+    text-shadow: none;
+    background: transparent;
+}
+
+/* control center */
+.control-center {
+    background: {{color_bg | alpha 80}};
+    border-radius: 15px;
+    border: none;
+    margin: 10px;
+    padding: 4px;
+}
+
+.control-center-list {
+    background: transparent;
+    min-height: 5px;
+    border-top: none;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.control-center-list-placeholder,
+.notification-group-icon {
+    color: alpha(@theme_text_color, 0.50);
+}
+
+.notification-group {
+    opacity: 1.0;
+    box-shadow: none;
+    color: alpha(@theme_text_color, 0.50);
+    background: transparent;
+    border-radius: 8px;
+    border: none;
+}
+
+.notification-group > box {
+    all: unset;
+    background: transparent;
+    padding: 4px;
+    margin: 0px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.notification-group:hover, .notification-group:focus, .notification-group:active,
+.notification-group > box:hover, .notification-group > box:focus, .notification-group > box:active {
+    border: none;
+    box-shadow: none;
+}
+
+.notification-group > box.vertical {
+    margin-top: 3px;
+}
+
+.blank-window {
+    background: transparent;
+}
+
+/* widgets */
+.widget-title {
+    margin: 0px;
+    background: transparent;
+    border-radius: 4px 4px 0px 0px;
+    border-bottom: none;
+}
+
+.widget-title > label {
+    margin: 18px 10px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.widget-title > button {
+    font-weight: 700;
+    padding: 7px 3px;
+    margin-right: 10px;
+    background: transparent;
+    color: @text;
+    border: none;
+    border-radius: 4px;
+}
+
+.widget-label {
+    margin: 0px;
+    padding: 0px;
+    min-height: 5px;
+    background: {{color_bg_alt | alpha 80}};
+    border-radius: 0px 0px 4px 4px;
+    border-top: none;
+}
+
+.widget-label > label {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.widget-menubar {
+    background: transparent;
+    border: none;
+}
+
+.widget-menubar > box > box {
+    margin: 5px 10px;
+    min-height: 40px;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.widget-menubar > box > box > button {
+    background: {{color_bg_alt | alpha 80}};
+    min-width: 185px;
+    min-height: 50px;
+    margin-right: 10px;
+    font-size: 14px;
+    padding: 0px;
+}
+
+.widget-menubar > box > box > button:nth-child(2) {
+    margin-right: 0px;
+}
+
+.widget-menubar button:focus {
+    box-shadow: none;
+}
+
+.widget-menubar > box > revealer > box {
+    margin: 5px 10px;
+    background: {{color_bg_alt | alpha 80}};
+    border-radius: 4px;
+}
+
+.widget-menubar > box > revealer > box > button {
+    background: transparent;
+    min-height: 50px;
+    padding: 0px;
+    margin: 5px;
+}
+
+.widget-buttons-grid {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0px;
+    padding: 5px;
+    border-radius: 0px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild {
+    background: {{color_bg_alt | alpha 80}};
+    border-radius: 4px;
+    min-height: 50px;
+    min-width: 85px;
+    margin: 5px;
+    padding: 0px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+    background: transparent;
+    border-radius: 4px;
+    margin: 0px;
+    border: none;
+    box-shadow: none;
+}
+
+/* mpris widget */
+.widget-mpris {
+    padding: 8px 8px 15px 8px;
+    margin-bottom: 5px;
+    border-radius: 12px;
+}
+
+.widget-mpris > box {
+    padding: 0px;
+    margin: -5px 0px -10px 0px;
+    border-radius: 12px;
+    background: transparent;
+    box-shadow: none;
+}
+
+.widget-mpris carousel .widget-mpris-player {  
+    border-radius: 12px;
+    margin: 7px 10px;
+}
+
+.widget-mpris > box > button:nth-child(1),
+.widget-mpris > box > button:nth-child(3) {
+    margin-bottom: 0px;
+    margin-left: -25px;
+    margin-right: -25px;
+    opacity: 0;
+}
+
+.widget-mpris-album-art {
+    all: unset;
+}
+
+.widget-mpris > box > carousel > widget > box > box:nth-child(2) {
+    margin: 5px 0px -5px 90px;
+}
+
+.widget-mpris > box > carousel > widget > box > box:nth-child(2) > button {
+    border-radius: 4px;
+}
+
+carouselindicatordots {
+    opacity: 0;
+}
+
+.widget-mpris-title {
+    color: @mpris-title;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.widget-mpris-subtitle {
+    color: @mpris-title;
+    font-size: 1rem;
+}
+
+.widget-mpris-player {
+    border-radius: 0px;
+    margin: 0px;
+}
+
+.widget-mpris-player > box > image {
+    margin: 0px 0px -48px 0px;
+    border-radius: 12px;
+}
+
+.widget-mpris image,
+.widget-mpris button image,
+.widget-mpris carousel image {
+    border-radius: 12px;
+}
+
+/* volume widget */
+.widget-volume {
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.widget-volume > box {
+    background: {{color_bg_alt | alpha 30}};
+    border-radius: 7px;
+    margin: 5px 10px;
+    min-height: 50px;
+}
+
+.widget-volume > box > label {
+    min-width: 50px;
+    padding: 0px;
+    font-size: 18px;
+}
+
+.widget-volume > box > button {
+    min-width: 50px;
+    box-shadow: none;
+    padding: 0px;
+    font-size: 24px;
+    background: transparent;
+    border-radius: 4px;
+}
+
+.widget-volume > box > button:hover,
+.widget-volume > box > button:active,
+.widget-volume > box > button:checked {
+    background: transparent;
+}
+
+.widget-volume > box > button:focus {
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+}
+
+.widget-volume > box > button image,
+.widget-volume > box > button label {
+    font-size: 24px;
+    background: transparent;
+}
+.widget-volume > box > button image {
+    min-width: 24px;
+    min-height: 24px;
+}
+
+.widget-volume > revealer > list {
+    background: {{color_bg_alt | alpha 30}};
+    border-radius: 7px;
+    margin-top: 5px;
+    padding: 0px;
+}
+
+.widget-volume > revealer > list > row {
+    padding-left: 10px;
+    min-height: 40px;
+    background: transparent;
+}
+
+/* dnd widget & toggles */
+.widget-dnd {
+    margin: 6px;
+    font-size: 1.2rem;
+}
+
+.widget-dnd > switch,
+.toggle {
+    background: @surface0;
+    font-size: initial;
+    border-radius: 8px;
+    box-shadow: none;
+    padding: 2px;
+}
+
+.widget-dnd > switch:not(:checked) {
+    background: @surface0;
+}
+
+.widget-dnd > switch:checked,
+.toggle:checked {
+    background: @lavender;
+}
+
+.widget-dnd > switch slider {
+    background: @surface2;
+    border-radius: 6px;
+}
+
+.widget-dnd > switch:checked slider {
+    background: @text;
+}
+
+/* sliders */
+scale {
+    padding: 0px;
+    margin: 0px 10px;
+}
+
+scale trough {
+    border-radius: 4px;
+    background: @surface0;
+}
+
+scale highlight {
+    border-radius: 5px;
+    min-height: 10px;
+    margin-right: -5px;
+    background: @lavender;
+}
+
+scale slider {
+    margin: -10px;
+    min-width: 10px;
+    min-height: 10px;
+    background: @lavender;
+    box-shadow: none;
+    padding: 0px;
+    border-radius: 50%;
+}
+
+.right.overlay-indicator {
+    all: unset;
+}
+
+/* ============================================
+   FIXES: hover overlay & double border
+   ============================================ */
+
+/* 1. Remove the yellowish background on hover.
+   Inside the notification, there are invisible buttons (.notification-default-action
+   and simply button) to which GTK applies its highlight color on hover. */
+.notification button,
+.notification button:hover,
+.notification button:focus,
+.notification button:active {
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    border-radius: 0px;
+    margin: 0px;
+    padding: 0px;
+    box-shadow: none;
+    color: inherit;
+}
+
+.notification-default-action,
+.notification-default-action:hover,
+.notification-default-action:focus,
+.notification-default-action:active {
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    outline: none;
+    color: inherit;
+}

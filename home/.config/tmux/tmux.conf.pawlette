@@ -1,0 +1,43 @@
+set-option -g prefix C-a
+unbind-key C-b
+bind-key C-a send-prefix
+
+set -g mouse on
+set -g default-terminal "tmux-256color"
+
+# Theme
+set -g status on
+set -g status-position bottom
+set -g status-justify left
+set -g status-left-length 100
+set -g status-right-length 100
+set -g status-style "bg={{color_bg_alt}},fg={{color_text}}"
+
+# Status Left: session
+set -g status-left "#[fg=#{?client_prefix,{{color_red}},{{color_primary}}},bg={{color_bg_alt}}]#[fg={{color_bg}},bg=#{?client_prefix,{{color_red}},{{color_primary}}},bold]  #S #[fg=#{?client_prefix,{{color_red}},{{color_primary}}},bg={{color_bg_alt}}] "
+
+# Windows
+set -g window-status-separator ""
+set -g window-status-format "#[fg={{color_surface}},bg={{color_bg_alt}}]#[fg={{color_text_muted}},bg={{color_surface}}] #I  #W #[fg={{color_surface}},bg={{color_bg_alt}}] "
+set -g window-status-current-format "#[fg={{color_primary}},bg={{color_bg_alt}}]#[fg={{color_bg}},bg={{color_primary}},bold] #I #[fg={{color_primary}},bg={{color_surface}}]#[fg={{color_text}},bg={{color_surface}}] #W #[fg={{color_surface}},bg={{color_bg_alt}}] "
+set -g window-status-activity-style "none"
+set -g window-status-bell-style "none"
+
+# Status Right: host + date + time
+set -g status-right ""
+set -ag status-right "#[fg={{color_surface}},bg={{color_bg_alt}}]#[fg={{color_cyan}},bg={{color_surface}}]󰋜 #[fg={{color_text}},bg={{color_surface}}]#h #[fg={{color_surface}},bg={{color_bg_alt}}]"
+set -ag status-right " #[fg={{color_primary}},bg={{color_bg_alt}}]#[fg={{color_bg}},bg={{color_primary}}] #[fg={{color_primary}},bg={{color_surface}}]#[fg={{color_text}},bg={{color_surface}}] %d/%m %H:%M #[fg={{color_surface}},bg={{color_bg_alt}}]"
+
+# Panes
+set -g pane-border-style "fg={{color_border_inactive}}"
+set -g pane-active-border-style "fg={{color_border_active}}"
+
+# Messages
+set -g message-style "fg={{color_cyan}},bg={{color_surface}}"
+set -g message-command-style "fg={{color_cyan}},bg={{color_surface}}"
+
+# Copy mode
+set -g mode-style "bg={{color_selection_bg}},bold"
+
+# Clock
+set -g clock-mode-colour "{{color_blue}}"

@@ -1,0 +1,78 @@
+# -- General
+display_on=0
+blur_level=8
+dim_level=20
+bgcolor={{color_bg | alpha 100 | strip}}
+loginbox=00000000
+loginshadow=00000000
+quiet=false
+
+# -- Font
+font="JetBrainsMonoNerdFontMono-Bold"
+
+# -- Time & Date
+time_format="%H:%M"
+timecolor={{color_text | alpha 70 | strip}}
+
+# -- Password hint / greeter
+locktext="󰌾  Enter password"
+greetercolor={{color_text_muted | alpha 33 | strip}}
+
+# -- Ring (idle)
+ringcolor={{color_border_inactive | alpha 20 | strip}}
+insidecolor={{color_bg_alt | alpha 7 | strip}}
+separatorcolor=00000000
+
+# -- Ring (verifying)
+ringvercolor={{color_primary | alpha 80 | strip}}
+insidevercolor={{color_primary | alpha 15 | strip}}
+veriftext="Verifying..."
+verifcolor={{color_primary | alpha 100 | strip}}
+
+# -- Ring (wrong)
+ringwrongcolor={{color_red | alpha 80 | strip}}
+insidewrongcolor={{color_red | alpha 15 | strip}}
+wrongtext="Wrong password"
+wrongcolor={{color_red | alpha 100 | strip}}
+
+# -- Key highlight
+keyhlcolor={{color_primary | alpha 100 | strip}}
+bshlcolor={{color_primary | alpha 60 | strip}}
+modifcolor={{color_text | alpha 60 | strip}}
+
+# -------------------------------------------------------
+# -- Positions, dimensions, radius
+# -------------------------------------------------------
+lockargs=()
+
+# Time
+lockargs+=(--time-pos="x+w/2:y+h/2")
+lockargs+=(--time-align=0)
+lockargs+=(--time-size=120)
+lockargs+=(--time-font="JetBrainsMonoNerdFontMono-Bold")
+lockargs+=(--date-font="JetBrainsMonoNerdFontMono-Bold")
+
+# Date
+lockargs+=(--date-str="%A, %B %d")
+lockargs+=(--date-pos="tx:ty-110")
+lockargs+=(--date-align=0)
+lockargs+=(--date-size=22)
+lockargs+=(--date-color={{color_text | alpha 70 | strip}})
+
+# Ring indicator
+lockargs+=(--ind-pos="x+w/2:y+h/2+230")
+lockargs+=(--radius=55)
+lockargs+=(--ring-width=4)
+
+# Greeter pos
+lockargs+=(--greeter-pos="ix:iy+80")
+lockargs+=(--greeter-align=0)
+lockargs+=(--greeter-size=14)
+
+# Verif pos
+lockargs+=(--verif-pos="ix:iy+80")
+lockargs+=(--verif-align=0)
+
+# Wrong pos
+lockargs+=(--wrong-pos="ix:iy+80")
+lockargs+=(--wrong-align=0)

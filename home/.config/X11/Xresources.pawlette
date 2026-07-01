@@ -1,0 +1,54 @@
+! Xft settings
+Xft.antialias:   1
+Xft.hinting:     1
+Xft.autohint:    0
+Xft.hintstyle:   hintslight
+Xft.rgba:        rgb
+Xft.lcdfilter:   lcddefault
+Xft.dpi:         100
+
+Xcursor.theme: Bibata-Modern-Classic
+Xcursor.size: 20
+
+st.font:         JetBrainsMono Nerd Font:style:medium:pixelsize=20
+
+! window border inner
+st.opacity: 255
+st.borderpx: 10
+
+! Special
+*.foreground:    {{color_text}}
+*.background:    {{color_bg}}
+*.cursorColor:   {{color_cursor}}
+
+! Black
+*.color0:        {{ansi_color0}}
+*.color8:        {{ansi_color8}}
+
+! Red
+*.color1:        {{ansi_color1}}
+*.color9:        {{ansi_color9}}
+
+! Green
+*.color2:        {{ansi_color2}}
+*.color10:       {{ansi_color10}}
+
+! Yellow
+*.color3:        {{ansi_color3}}
+*.color11:       {{ansi_color11}}
+
+! Blue
+*.color4:        {{ansi_color4}}
+*.color12:       {{ansi_color12}}
+
+! Magenta
+*.color5:        {{ansi_color5}}
+*.color13:       {{ansi_color13}}
+
+! Cyan
+*.color6:        {{ansi_color6}}
+*.color14:       {{ansi_color14}}
+
+! White
+*.color7:        {{ansi_color7}}
+*.color15:       {{ansi_color15}}

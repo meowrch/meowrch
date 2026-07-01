@@ -1,0 +1,15 @@
+[settings]
+ScalePercent = 100
+AutoStart = 0
+
+[experimental]
+show-peer-id-below-about = true
+webview-debug-enabled = true
+view-profile-in-chats-list-context-menu = true
+show-channel-joined-below-about = true
+fractional-scaling-enabled = true
+
+[theme]
+# is generated using the Telegram plugin for Pawlette.
+# You can change the path in ~/.config/pawlette/pawlette.toml
+path = "~/.config/tg-config/colors.tdesktop-theme" 

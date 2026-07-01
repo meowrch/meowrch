@@ -95,17 +95,13 @@ class FileSystemManager:
                 )
 
     @staticmethod
-    def copy_dotfiles(exclude_bspwm: bool, exclude_hyprland: bool) -> None:
+    def copy_dotfiles() -> None:
         logger.success("Starting the process of copying dotfiles")
         home = Path.home()
 
         ##==> Копирование дотфайлов
         ##############################################
         config_folders_exclusions = []
-        if exclude_bspwm:
-            config_folders_exclusions.extend(["bspwm", "polybar"])
-        if exclude_hyprland:
-            config_folders_exclusions.extend(["hypr", "waybar"])
 
         FileSystemManager.copy_with_exclusions(
             src=Path("./home/.config"),
@@ -125,11 +121,13 @@ class FileSystemManager:
         )
         shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
         shutil.copy(src=Path("./home/.face.icon"), dst=home / ".face.icon")
+        shutil.copy(src=Path("./home/.xinitrc"), dst=home / ".xinitrc")
         shutil.copy(src=Path("./home/.zshenv"), dst=home / ".zshenv")
-
-        if not exclude_bspwm:
-            shutil.copy(src=Path("./home/.Xresources"), dst=home / ".Xresources")
-            shutil.copy(src=Path("./home/.xinitrc"), dst=home / ".xinitrc")
+        
+        xsession_path = home / ".xsession"
+        if xsession_path.exists() or xsession_path.is_symlink():
+            xsession_path.unlink()
+        xsession_path.symlink_to(home / ".xinitrc")
 
         destination = home / ".icons" / "default" / "index.theme"
         destination.parent.mkdir(parents=True, exist_ok=True)

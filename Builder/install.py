@@ -7,7 +7,7 @@ import inquirer
 from loguru import logger
 from managers.apps_manager import AppsManager
 from managers.chaotic_aur_manager import ChaoticAurManager
-from managers.drivers_manager import ChdwManager
+from managers.gpu_drivers_manager import GpuDriversManager
 from managers.filesystem_manager import FileSystemManager
 from managers.package_manager import PackageManager
 from managers.post_install_manager import PostInstallation
@@ -76,10 +76,7 @@ class Builder:
                 input("Press Enter to continue with the installation: ")
 
             FileSystemManager.create_default_folders()
-            FileSystemManager.copy_dotfiles(
-                exclude_bspwm=not self.build_options.install_bspwm,
-                exclude_hyprland=not self.build_options.install_hyprland,
-            )
+            FileSystemManager.copy_dotfiles()
 
             # Backup all critical system configs before any modifications
             ConfigBackup.backup_all()
@@ -97,8 +94,8 @@ class Builder:
 
             self.packages_installation()
 
-            # Установка драйверов через chwd
-            ChdwManager().install()
+            # Установка GPU-драйверов (NVIDIA/Intel/AMD)
+            GpuDriversManager().install(self.build_options)
 
             if self.build_options.install_grub:
                 AppsManager.configure_grub()
@@ -122,8 +119,6 @@ class Builder:
 
             if self.build_options.install_hyprland:
                 AppsManager.configure_mewline()
-
-            AppsManager.configure_pawlette()
 
             self.daemons_setting()
             PostInstallation.apply(self.build_options)
@@ -199,8 +194,8 @@ class Builder:
             daemons["enable"].append("sddm.service")
 
         user_daemons = {
-            "enable": ["battery-monitor.timer"],
-            "start": ["battery-monitor.timer"],
+            "enable": ["battery-monitor.timer", "betterlockscreen-watch.path"],
+            "start": ["battery-monitor.timer", "betterlockscreen-watch.path"],
         }
 
         error_msg = 'Daemon "{name}" {action} error: {err}'

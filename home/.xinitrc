@@ -1,7 +1,8 @@
 #!/bin/sh
 
-userresources=$HOME/.Xresources
-usermodmap=$HOME/.Xmodmap
+export X11_CONFIG="$HOME/.config/X11"
+userresources=$X11_CONFIG/Xresources
+usermodmap=$X11_CONFIG/Xmodmap
 sysresources=/etc/X11/xinit/.Xresources
 sysmodmap=/etc/X11/xinit/.Xmodmap
 

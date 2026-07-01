@@ -24,7 +24,7 @@ BASE = Packages(
             "wget", "neovim", "tmux", "ffmpeg", "cliphist",
             "tree", "bash-completion", "zsh", "zsh-syntax-highlighting", 
             "zsh-autosuggestions", "zsh-history-substring-search",
-            "fish",
+            "fish", "matugen",
 
 			##==> GUI 
 			###########################################
@@ -33,7 +33,7 @@ BASE = Packages(
             "vlc", "loupe", "qt5ct", "qt6ct", "qt5-graphicaleffects", 
             "qt5-svg", "qt5-multimedia", "qt5-quickcontrols2", "gst-plugins-good", 
             "redshift", "zenity", "polkit-gnome", "gnome-disk-utility","rofimoji",
-            "flameshot", "rofi", "qalculate-gtk",
+            "satty", "rofi", "qalculate-gtk", "breeze", "breeze5", "adw-gtk-theme",
             
 			##==> Fonts
             ###########################################
@@ -45,13 +45,13 @@ BASE = Packages(
 		bspwm_packages=[
 			"xorg-server", "bspwm", "sxhkd", "xorg-xinit", "xclip", "feh", 
 			"wmname", "polybar", "xorg-xrandr", "xsettingsd", "clipnotify",
-            "dunst", "xorg-xsetroot", "picom"
+            "dunst", "xorg-xsetroot", "picom", "maim"
 		],
 		hyprland_packages=[
 			"hyprland", "waybar", "hyprlock", "awww", "wl-clipboard", 
             "xdg-desktop-portal-hyprland", "qt5-wayland", "qt6-wayland",
 			"xdg-desktop-portal-wlr", "hypridle", "hyprpicker", "wlr-randr",
-            "uwsm", "libnewt", "swaync", "wl-clip-persist"
+            "uwsm", "libnewt", "swaync", "wl-clip-persist", "grim", "slurp"
         ]
 	),
 	aur=DistributionPackages(
@@ -67,7 +67,7 @@ BASE = Packages(
             ##==> Customization: Themes, icons and cursors
             ###########################################
             "bibata-cursor-theme-bin", "tela-circle-icon-theme-dracula",
-            "pawlette-legacy",
+            "pawlette", "firefox-gnome-theme",
             
             ##==> CLI-Tools
             ###########################################
@@ -77,7 +77,7 @@ BASE = Packages(
             ###########################################
             "ttf-meslo-nerd-font-powerlevel10k",
 		],
-		bspwm_packages=["xkb-switch", "i3lock-color"],
+		bspwm_packages=["xkb-switch", "betterlockscreen"],
 		hyprland_packages=[
 			"hyprprop", "grimblast-git", "mewline"
 		]
@@ -97,6 +97,7 @@ CUSTOM = {
 	},
     "social_media": {
 		"telegram-desktop": PackageInfo("Popular messenger", recommended=True, selected=True),
+        "tg-config": PackageInfo("An extension for configuring Telegram via a config file", recommended=True, aur=True, selected=True),
         "discord": PackageInfo("Popular social platform", recommended=True),
 		"vesktop": PackageInfo("Custom Discord client", recommended=True, aur=True)
 	},

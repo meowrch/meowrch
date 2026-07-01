@@ -1,6 +1,6 @@
 #!/bin/sh
 
-xrdb merge $HOME/.Xresources
+xrdb merge $HOME/.config/X11/Xresources
 xsettingsd &
 dunst &
 
@@ -14,8 +14,6 @@ case "$GPU_SETUP" in
     # NVIDIA: full optimization with sync-fence
     picom -b --backend glx --vsync \
       --use-damage \
-      --xrender-sync-fence \
-      --glx-no-stencil \
       --glx-no-rebind-pixmap\
       --config $HOME/.config/bspwm/picom.conf &
     ;;
@@ -23,19 +21,15 @@ case "$GPU_SETUP" in
     # AMD/Mesa: no sync-fence, no rebind-pixmap (glitches on AMDGPU)
     picom -b --backend glx --vsync \
       --use-damage \
-      --glx-no-stencil \
-      --glx-use-copysubbuffer-mesa \
       --config $HOME/.config/bspwm/picom.conf &
     ;;
   intel-only)
     # Intel iGPU: aggressive flags for modern GPUs (Gen 9+)
     # WARNING: If you see artifacts/transparency bugs on older Intel:
-    #   - Remove --glx-no-stencil
     #   - Remove --glx-no-rebind-pixmap
     #   - Or switch to: --backend xrender
     picom -b --backend glx --vsync \
       --use-damage \
-      --glx-no-stencil \
       --glx-no-rebind-pixmap \
       --config $HOME/.config/bspwm/picom.conf &
     ;;
@@ -53,6 +47,6 @@ case "$GPU_SETUP" in
 esac
 ##########################################################
 
-sh ${XDG_BIN_HOME:-$HOME/bin}/toggle-bar.sh --start &
+sh ${XDG_BIN_HOME:-$HOME/bin}/toggle-bar.sh --start --wm bspwm &
 sh ${XDG_BIN_HOME:-$HOME/bin}/polkitkdeauth.sh & # authentication dialogue for GUI apps
 sh ${XDG_BIN_HOME:-$HOME/bin}/set-wallpaper.sh --current & # set current wallpaper

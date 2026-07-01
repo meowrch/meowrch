@@ -1,0 +1,11 @@
+[Unit]
+Description=Watch wallpaper file for changes
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Path]
+PathModified=%h/.local/share/wallpapers/.current.wall
+Unit=betterlockscreen-watch.service
+
+[Install]
+WantedBy=graphical-session.target

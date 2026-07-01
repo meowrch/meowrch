@@ -10,6 +10,7 @@ class ConfigBackup:
         "/etc/default/grub",
         "/etc/pacman.conf",
         "/etc/sddm.conf",
+        "/etc/modprobe.d/nvidia.conf",
     ]
 
     @staticmethod

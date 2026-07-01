@@ -1,0 +1,79 @@
+# Nord — https://github.com/nordtheme/nord
+
+[colors]
+# --- Surfaces ---
+color_bg              = "#2e3440"  # Nord0
+color_bg_alt          = "#242933"  # Nord0 затемнённый
+color_surface         = "#3b4252"  # Nord1
+color_surface_alt     = "#434c5e"  # Nord2
+
+# --- Text ---
+color_text            = "#eceff4"  # Nord6
+color_text_muted      = "#d8dee9"  # Nord4
+color_text_subtle     = "#4c566a"  # Nord3
+
+# --- Accents ---
+color_primary         = "#88c0d0"  # Nord8  (Frost light blue)
+color_secondary       = "#81a1c1"  # Nord9  (Frost blue)
+
+# --- Borders ---
+color_border_active   = "#88c0d0"  # Nord8
+color_border_inactive = "#434c5e"  # Nord2
+
+# --- Cursor / Selection ---
+color_cursor          = "#88c0d0"  # Nord8
+color_selection_bg    = "#3b4252"  # Nord1
+
+# --- ANSI 16 ---
+ansi_color0           = "#2e3440"  # Nord0        (black)
+ansi_color1           = "#bf616a"  # Nord11 red
+ansi_color2           = "#a3be8c"  # Nord14 green
+ansi_color3           = "#ebcb8b"  # Nord13 yellow
+ansi_color4           = "#81a1c1"  # Nord9  blue
+ansi_color5           = "#b48ead"  # Nord15 purple
+ansi_color6           = "#88c0d0"  # Nord8  cyan
+ansi_color7           = "#e5e9f0"  # Nord5  white
+ansi_color8           = "#4c566a"  # Nord3  bright black
+ansi_color9           = "#bf616a"  # Nord11 bright red
+ansi_color10          = "#a3be8c"  # Nord14 bright green
+ansi_color11          = "#ebcb8b"  # Nord13 bright yellow
+ansi_color12          = "#81a1c1"  # Nord9  bright blue
+ansi_color13          = "#b48ead"  # Nord15 bright purple
+ansi_color14          = "#8fbcbb"  # Nord7  bright cyan
+ansi_color15          = "#eceff4"  # Nord6  bright white
+
+# --- Semantic ---
+color_red             = "#bf616a"  # Nord11
+color_green           = "#a3be8c"  # Nord14
+color_yellow          = "#ebcb8b"  # Nord13
+color_blue            = "#81a1c1"  # Nord9
+color_cyan            = "#88c0d0"  # Nord8
+color_magenta         = "#b48ead"  # Nord15
+
+# ---------------------------------------------------------------------------
+# Variants — Nord Flavors
+# ---------------------------------------------------------------------------
+
+[variants.frost]
+color_primary         = "#5e81ac" # Nord10
+color_secondary       = "#81a1c1" # Nord9
+color_border_active   = "#5e81ac"
+color_cursor          = "#5e81ac"
+
+[variants.snow]
+color_primary         = "#eceff4" # Nord6
+color_secondary       = "#88c0d0" # Nord8
+color_border_active   = "#eceff4"
+color_cursor          = "#eceff4"
+
+[variants.aurora]
+color_primary         = "#b48ead" # Nord15
+color_secondary       = "#81a1c1" # Nord9
+color_border_active   = "#b48ead"
+color_cursor          = "#b48ead"
+
+[variants.nature]
+color_primary         = "#a3be8c" # Nord14
+color_secondary       = "#8fbcbb" # Nord7
+color_border_active   = "#a3be8c"
+color_cursor          = "#a3be8c"

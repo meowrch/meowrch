@@ -1,0 +1,6 @@
+[Unit]
+Description=Update betterlockscreen cache on wallpaper change
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/betterlockscreen -u %h/.local/share/wallpapers/.current.wall --fx dim

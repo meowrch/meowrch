@@ -1,4 +1,5 @@
 import glob
+import json
 import os
 import sqlite3
 import subprocess
@@ -25,7 +26,7 @@ class FirefoxConfigurer(AppConfigurer):
             (ublock, "uBlock0@raymondhill.net.xpi", "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"),
             (twp, "{036a55b4-5e72-4d05-a06c-cba2dfcc134a}.xpi", "https://addons.mozilla.org/firefox/downloads/latest/traduzir-paginas-web/latest.xpi"),
             (unpaywall, "{f209234a-76f0-4735-9920-eb62507a54cd}.xpi", "https://addons.mozilla.org/firefox/downloads/latest/unpaywall/latest.xpi"),
-            (vot, "voice-over-translation@meowrch.xpi", "https://github.com/meowrch/voice-over-translation/releases/latest/download/voice-over-translation@meowrch.xpi"),
+            (vot, "vot-extension@firefox.xpi", None),  # URL resolved dynamically via GitHub API
             (True, "ATBC@EasonWong.xpi", "https://addons.mozilla.org/firefox/downloads/latest/adaptive-tab-bar-colour/latest.xpi"),  # Always enable Adaptive Tab Bar Color
         ]
         self._firefox_base_path = None  # Кешируем путь после первого определения
@@ -87,6 +88,7 @@ class FirefoxConfigurer(AppConfigurer):
         try:
             self._init_firefox_profile()
             self._configure_startup_preferences()
+            self._install_firefox_gnome_theme()
             self._fetch_latest_plugins()
             self._force_extensions_initialization()
             self._configure_theme_preferences()
@@ -126,35 +128,15 @@ class FirefoxConfigurer(AppConfigurer):
         chrome_dir = os.path.join(path_profile, "chrome")
         os.makedirs(chrome_dir, exist_ok=True)
 
-        # Clone or update the theme repository
-        theme_repo_path = os.path.join(chrome_dir, "firefox-gnome-theme")
-        if os.path.exists(theme_repo_path):
-            logger.info("Updating existing Firefox GNOME Theme...")
-            subprocess.run(["git", "pull"], cwd=theme_repo_path, check=True)
-        else:
-            logger.info("Cloning Firefox GNOME Theme repository...")
-            subprocess.run(
-                [
-                    "git",
-                    "clone",
-                    "https://github.com/rafaelmardojai/firefox-gnome-theme.git",
-                    theme_repo_path,
-                ],
-                check=True,
-            )
-
         # Create userChrome.css
         user_chrome_path = os.path.join(chrome_dir, "userChrome.css")
         with open(user_chrome_path, "w") as f:
-            f.write('@import "firefox-gnome-theme/userChrome.css";')
+            f.write('@import "/usr/lib/firefox-gnome-theme/userChrome.css";')
 
         # Create userContent.css
         user_content_path = os.path.join(chrome_dir, "userContent.css")
         with open(user_content_path, "w") as f:
-            f.write('@import "firefox-gnome-theme/userContent.css";')
-
-        # Set up auto-update system
-        self._setup_theme_auto_update(theme_repo_path)
+            f.write('@import "/usr/lib/firefox-gnome-theme/userContent.css";')
     
     def _configure_startup_preferences(self) -> None:
         """
@@ -342,58 +324,31 @@ class FirefoxConfigurer(AppConfigurer):
     
         logger.info("Firefox theme preferences configured")
 
-    def _setup_theme_auto_update(self, theme_repo_path: str) -> None:
-        """Set up automatic theme updates using systemd user timer"""
-        logger.info("Setting up Firefox theme auto-update system...")
-
-        # Create update script
-        update_script_dir = os.path.expanduser("~/.local/bin")
-        os.makedirs(update_script_dir, exist_ok=True)
-
-        update_script_path = os.path.join(
-            update_script_dir, "update-firefox-gnome-theme.sh"
-        )
-
-        update_script_content = f'''#!/bin/bash
-# Firefox GNOME Theme Auto-Update Script
-
-THEME_DIR="{theme_repo_path}"
-LOG_FILE="$HOME/.local/share/firefox-theme-update.log"
-
-echo "$(date): Checking for Firefox GNOME Theme updates..." >> "$LOG_FILE"
-
-cd "$THEME_DIR" || exit 1
-
-# Check if there are updates available
-if git fetch && [[ $(git rev-list HEAD...origin/master --count) -gt 0 ]]; then
-    echo "$(date): Updates found, updating theme..." >> "$LOG_FILE"
-    git pull origin master
-    echo "$(date): Firefox GNOME Theme updated successfully" >> "$LOG_FILE"
-else
-    echo "$(date): No updates available" >> "$LOG_FILE"
-fi
-'''
-
-        with open(update_script_path, "w") as f:
-            f.write(update_script_content)
-
-        # Make script executable
-        os.chmod(update_script_path, 0o755)
-
-        # Enable and start the timer
+    def _resolve_vot_download_url(self) -> str | None:
+        """Resolve the latest VOT Firefox extension download URL via GitHub API.
+        The release asset name includes the version (e.g. vot-extension-firefox-1.11.6.xpi),
+        so we cannot use a static URL. Instead, we query the GitHub API to find the correct asset.
+        """
         try:
-            subprocess.run(["systemctl", "--user", "daemon-reload"], check=True)
-            subprocess.run(
-                ["systemctl", "--user", "enable", "firefox-theme-update.timer"],
-                check=True,
+            result = subprocess.run(
+                ["curl", "-s", "https://api.github.com/repos/ilyhalight/voice-over-translation/releases/latest"],
+                capture_output=True, text=True, check=False,
             )
-            subprocess.run(
-                ["systemctl", "--user", "start", "firefox-theme-update.timer"],
-                check=True,
-            )
-            logger.info("Firefox theme auto-update system set up successfully")
-        except subprocess.CalledProcessError as e:
-            logger.warning(f"Failed to set up auto-update timer: {e}")
+            if result.returncode != 0:
+                logger.warning("Failed to query GitHub API for VOT releases")
+                return None
+
+            release = json.loads(result.stdout)
+            for asset in release.get("assets", []):
+                if asset["name"].startswith("vot-extension-firefox-") and asset["name"].endswith(".xpi"):
+                    logger.info(f"Found VOT release asset: {asset['name']}")
+                    return asset["browser_download_url"]
+
+            logger.warning("No Firefox XPI asset found in latest VOT release")
+            return None
+        except Exception as e:
+            logger.error(f"Error resolving VOT download URL: {e}")
+            return None
 
     def _fetch_latest_plugins(self) -> None:
         """Download latest versions of the plugins from official sources"""
@@ -415,9 +370,17 @@ fi
                 continue
     
             try:
+                # Resolve dynamic URLs (e.g. VOT via GitHub API)
+                download_url = url
+                if download_url is None and plugin_file == "vot-extension@firefox.xpi":
+                    download_url = self._resolve_vot_download_url()
+                    if download_url is None:
+                        logger.warning(f"Skipping {plugin_file}: could not resolve download URL")
+                        continue
+
                 logger.info(f"Downloading {plugin_file}...")
                 plugin_path = os.path.join(extension_dir, plugin_file)
-                cmd = ["curl", "-L", "--silent", "--fail", "-o", plugin_path, url]
+                cmd = ["curl", "-L", "--silent", "--fail", "-o", plugin_path, download_url]
                 result = subprocess.run(
                     cmd, check=False, capture_output=True, text=True
                 )

@@ -1,0 +1,73 @@
+# Gruvbox Dark — https://github.com/morhetz/gruvbox
+
+[colors]
+# --- Surfaces ---
+color_bg              = "#282828"  # bg
+color_bg_alt          = "#1d2021"  # bg hard
+color_surface         = "#3c3836"  # bg1
+color_surface_alt     = "#504945"  # bg2
+
+# --- Text ---
+color_text            = "#ebdbb2"  # fg
+color_text_muted      = "#bdae93"  # fg3
+color_text_subtle     = "#a89984"  # fg4
+
+# --- Accents ---
+color_primary         = "#fabd2f"  # Bright Yellow
+color_secondary       = "#fe8019"  # Bright Orange
+
+# --- Borders ---
+color_border_active   = "#fabd2f"
+color_border_inactive = "#504945"
+
+# --- Cursor / Selection ---
+color_cursor          = "#fabd2f"
+color_selection_bg    = "#504945"  # bg2
+
+# --- ANSI 16 ---
+ansi_color0           = "#282828"  # bg           (black)
+ansi_color1           = "#cc241d"  # red
+ansi_color2           = "#98971a"  # green
+ansi_color3           = "#d79921"  # yellow
+ansi_color4           = "#458588"  # blue
+ansi_color5           = "#b16286"  # purple       (magenta)
+ansi_color6           = "#689d6a"  # aqua         (cyan) 
+ansi_color7           = "#a89984"  # fg4          (white)
+ansi_color8           = "#928374"  # bg gray      (bright black)
+ansi_color9           = "#fb4934"  # bright red
+ansi_color10          = "#b8bb26"  # bright green
+ansi_color11          = "#fabd2f"  # bright yellow
+ansi_color12          = "#83a598"  # bright blue
+ansi_color13          = "#d3869b"  # bright purple
+ansi_color14          = "#8ec07c"  # bright aqua
+ansi_color15          = "#ebdbb2"  # fg           (bright white)
+
+# --- Semantic ---
+color_red             = "#fb4934"
+color_green           = "#b8bb26"
+color_yellow          = "#fabd2f"
+color_blue            = "#83a598"
+color_cyan            = "#8ec07c"
+color_magenta         = "#d3869b"
+
+# ---------------------------------------------------------------------------
+# Variants — Gruvbox Flavors
+# ---------------------------------------------------------------------------
+
+[variants.green]
+color_primary         = "#b8bb26" # Bright Green
+color_secondary       = "#8ec07c" # Bright Aqua
+color_border_active   = "#b8bb26"
+color_cursor          = "#b8bb26"
+
+[variants.blue]
+color_primary         = "#83a598" # Bright Blue
+color_secondary       = "#d3869b" # Bright Purple
+color_border_active   = "#83a598"
+color_cursor          = "#83a598"
+
+[variants.orange]
+color_primary         = "#fe8019" # Bright Orange
+color_secondary       = "#fabd2f" # Bright Yellow
+color_border_active   = "#fe8019"
+color_cursor          = "#fe8019"

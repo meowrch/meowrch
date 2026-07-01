@@ -44,6 +44,7 @@ end
 #####################################
 ##==> Shell Customization
 #####################################
+fish_config theme choose meowrch
 starship init fish | source
 set fish_greeting
 
