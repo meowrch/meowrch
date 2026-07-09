@@ -107,6 +107,13 @@ hl.window_rule({
     size = { "(monitor_w*0.45)", "(monitor_h*0.55)" }
 })
 
+hl.window_rule({
+    match = { class = "^(com.gabm.satty)$" },
+    float = true,
+    center = true,
+    size = { "(monitor_w*0.63)", "(monitor_h*0.74)" }
+})
+
 -- ##===> Modals
 -- ############################################
 hl.window_rule({ match = { title = "^(Open)$" }, float = true })
