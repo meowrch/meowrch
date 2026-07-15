@@ -447,10 +447,10 @@
 		"editor.lineHighlightBorder": "{{color_bg}}",
 		"editor.rangeHighlightBackground": "{{color_cyan}}3f",
 		"editor.rangeHighlightBorder": "#00000000",
-		"editor.selectionBackground": "{{color_selection_bg}}",
+		"editor.selectionBackground": "{{color_selection_bg | alpha 20}}",
 		"editor.selectionHighlightBackground": "{{color_border_inactive}}66",
 		"editor.selectionHighlightBorder": "{{color_cyan}}33",
-		"editor.wordHighlightBackground": "{{color_selection_bg}}b2",
+		"editor.wordHighlightBackground": "{{color_selection_bg | alpha 30}}",
 		"editor.wordHighlightStrongBackground": "{{color_selection_bg}}7f",
 
 		"editorBracketMatch.background": "{{color_border_inactive}}19",
