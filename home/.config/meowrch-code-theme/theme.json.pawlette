@@ -650,7 +650,7 @@
 		"sideBar.dropBackground": "{{color_surface}}99",
 		"sideBar.foreground": "{{color_text}}",
 		"sideBar.border": "#00000000",
-		"sideBarSectionHeader.background": "{{color_bg_alt}}",
+		"sideBarSectionHeader.background": "{{color_bg}}",
 		"sideBarSectionHeader.foreground": "{{color_text}}",
 		"sideBarTitle.foreground": "{{color_primary}}",
 		"sideBarTitle.background": "{{color_bg}}",
