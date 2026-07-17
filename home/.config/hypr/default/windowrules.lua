@@ -67,7 +67,7 @@ hl.window_rule({ match = { class = "^(org.kde.ark)$" }, float = true })
 hl.window_rule({ match = { class = "^(yad)$" }, float = true })
 
 hl.window_rule({
-    match = { class = "^(org.pulseaudio.pavucontrol)$" },
+    match = { class = "^(com.saivert.pwvucontrol)$" },
     float = true,
     size = { "(monitor_w*0.48)", "(monitor_h*0.42)" }
 })

@@ -33,4 +33,4 @@ bspc rule -a 'loupe' state=floating rectangle=$(rect 63 74) center=true
 bspc rule -a 'hotkeyhub' state=floating rectangle=$(rect 63 74) center=true
 bspc rule -a 'qalculate-gtk' state=floating rectangle=$(rect 45 55) center=true
 bspc rule -a 'satty' state=floating rectangle=$(rect 63 74) center=true
-bspc rule -a 'pavucontrol' state=floating rectangle=$(rect 48 42) center=true
+bspc rule -a 'pwvucontrol' state=floating rectangle=$(rect 48 42) center=true
