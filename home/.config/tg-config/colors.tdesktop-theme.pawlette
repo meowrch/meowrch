@@ -550,7 +550,8 @@ searchedBarBg: pwSurface0;
 searchedBarFg: windowFg;
 
 // === side bar (filters) ===
-sideBarBadgeBg:       pwOverlay2;
+sideBarBadgeBg:       pwOverlay1;
+sideBarBadgeFg:       pwMantle;
 sideBarBadgeBgMuted:  pwOverlay1;
 sideBarBg:            pwMantle;
 sideBarBgActive:      pwSurface0;
@@ -578,7 +579,7 @@ stickerPanDeleteFg: windowFgActive;
 stickerPreviewBg:   pwCrustT;
 
 // === title bar ===
-titleBg:                        pwSurface0;
+titleBg:                        pwMantle;
 titleBgActive:                  titleBg;
 titleButtonBg:                  titleBg;
 titleButtonBgActive:            titleButtonBg;
@@ -606,7 +607,7 @@ tooltipBorderFg: pwSurface1;
 tooltipFg:       pwSubtext1;
 
 // === top bar ===
-topBarBg: pwSurface0;
+topBarBg: pwMantle;
 
 // === tray ===
 trayCounterBg:           pwGreen;

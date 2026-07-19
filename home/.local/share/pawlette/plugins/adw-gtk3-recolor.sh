@@ -92,6 +92,10 @@ generate_css() {
 @define-color error_color          ${PAWLETTE_COLOR_RED};
 @define-color success_color        ${PAWLETTE_COLOR_GREEN};
 @define-color warning_color        ${PAWLETTE_COLOR_YELLOW};
+
+.text-button label {
+	color: ${PAWLETTE_COLOR_TEXT};
+}
 EOF
 }
 

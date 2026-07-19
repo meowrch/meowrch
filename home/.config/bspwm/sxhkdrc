@@ -23,7 +23,7 @@ super + shift + o
 
 # Description: Open audio control
 super + shift + p
-	pavucontrol
+	pwvucontrol
 
 # Description: Open CLI file manager
 super + shift + y

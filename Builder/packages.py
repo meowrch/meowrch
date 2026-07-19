@@ -14,7 +14,7 @@ BASE = Packages(
 			##==> Audio
             ###########################################
             "pipewire-jack", "pipewire-alsa", "wireplumber", 
-			"python-pyalsa", "pavucontrol", "pamixer", "pipewire", 
+			"python-pyalsa", "pamixer", "pipewire", 
 			"pipewire-pulse", "pipewire-audio", "sof-firmware",
             
 			##==> CLI-Tools
@@ -29,7 +29,7 @@ BASE = Packages(
 			##==> GUI 
 			###########################################
 			"sddm", "plymouth", "firefox", "kitty", "blueman", "file-roller", "nemo", 
-            "nemo-fileroller", "gvfs", "ffmpegthumbnailer", "imagemagick", 
+            "nemo-fileroller", "nemo-compare", "gvfs", "ffmpegthumbnailer", "imagemagick", 
             "vlc", "loupe", "qt5ct", "qt6ct", "qt5-graphicaleffects", 
             "qt5-svg", "qt5-multimedia", "qt5-quickcontrols2", "gst-plugins-good", 
             "redshift", "zenity", "polkit-gnome", "gnome-disk-utility","rofimoji",
@@ -63,6 +63,7 @@ BASE = Packages(
 			##==> GUI
             ###########################################
             "visual-studio-code-bin", "nemo-tags", "hotkeyhub-bin",
+            "pwvucontrol",
             
             ##==> Customization: Themes, icons and cursors
             ###########################################
