@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-swaync-client -rs
+if pgrep -x "swaync" > /dev/null; then
+    swaync-client -rs
+fi
