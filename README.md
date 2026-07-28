@@ -363,3 +363,4 @@ Share your impressions about the distribution
 **Made with ❤️ for the Linux community**
 
 </div>
+<!-- hey mom! they accepted my PR i love you <3-->
