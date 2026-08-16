@@ -348,11 +348,11 @@ Share your impressions about the distribution
 
 ## 📊 Project Statistics
 
-<a href="https://star-history.com/#meowrch/meowrch&Date">
+<a href="https://star-history.dera.page/#meowrch/meowrch&type=date">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
-<source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
-<img alt="Star History Chart" src="https://api.star-history.com/svg?repos=meowrch/meowrch&type=Date" />
+<source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=meowrch/meowrch&type=Date&theme=dark" />
+<source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=meowrch/meowrch&type=Date" />
+<img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=meowrch/meowrch&type=Date" />
 </picture>
 </a>
 
